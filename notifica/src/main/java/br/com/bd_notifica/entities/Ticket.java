@@ -82,6 +82,8 @@ public class Ticket {
         this.dataCriacao = dataCriacao;
     }
 
+    public Ticket(){}
+
     public Ticket(Long id, String descricao, Area area, String sala, Prioridade prioridade, LocalDate dataCriacao) {
         this.id = id;
         this.descricao = descricao;
