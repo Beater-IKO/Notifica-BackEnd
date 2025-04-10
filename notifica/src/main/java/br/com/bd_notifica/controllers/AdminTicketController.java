@@ -13,21 +13,23 @@ public class AdminTicketController {
     public static void menuAdm(TicketService service) {
         Scanner sc = new Scanner(System.in);
         int op;
-        service.criarTicketsPadrao(); // cria tickets ao iniciar
+
+        // Cria 3 tickets automaticamente no início
+        service.criarTicketsPadrao();
 
         do {
             System.out.println("\n===== MENU ADMIN =====");
             System.out.println("1 - Criar Ticket");
-            System.out.println("2 - Listar Todos");
-            System.out.println("3 - Buscar por ID");
+            System.out.println("2 - Listar Todos os Tickets");
+            System.out.println("3 - Buscar por ID do Ticket");
             System.out.println("4 - Editar Ticket");
             System.out.println("5 - Deletar Ticket");
-            System.out.println("6 - Buscar por ID de Aluno");
-            System.out.println("7 - Buscar por intervalo de datas");
+            System.out.println("6 - Buscar Tickets por ID do Aluno");
+            System.out.println("7 - Buscar Tickets por Intervalo de Datas");
             System.out.println("0 - Sair");
-            System.out.print("Opção: ");
+            System.out.print("Escolha a opção: ");
             op = sc.nextInt();
-            sc.nextLine();
+            sc.nextLine(); // limpa buffer
 
             switch (op) {
                 case 1 -> {
@@ -38,26 +40,29 @@ public class AdminTicketController {
                     t.setSala(sc.nextLine());
                     System.out.print("Área (INTERNA/EXTERNA): ");
                     t.setArea(Area.valueOf(sc.nextLine().toUpperCase()));
-                    System.out.print("Prioridade (GRAU_LEVE/..): ");
+                    System.out.print("Prioridade (GRAU_LEVE/GRAU_MEDIO/...): ");
                     t.setPrioridade(Prioridade.valueOf(sc.nextLine().toUpperCase()));
                     System.out.print("ID do aluno: ");
                     t.setAlunoId(sc.nextLong());
 
                     service.criarTicket(t);
-                    System.out.println("✅ Ticket criado.");
+                    System.out.println("✅ Ticket criado com sucesso!");
                 }
 
-                case 2 -> service.listarTodos().forEach(System.out::println);
+                case 2 -> {
+                    System.out.println("=== Lista de Tickets ===");
+                    service.listarTodos().forEach(System.out::println);
+                }
 
                 case 3 -> {
-                    System.out.print("ID do ticket: ");
+                    System.out.print("Digite o ID do ticket: ");
                     Long id = sc.nextLong();
                     Ticket encontrado = service.buscarPorId(id);
-                    System.out.println(encontrado != null ? encontrado : "❌ Não encontrado.");
+                    System.out.println(encontrado != null ? encontrado : "❌ Ticket não encontrado.");
                 }
 
                 case 4 -> {
-                    System.out.print("ID para editar: ");
+                    System.out.print("Digite o ID do ticket que deseja editar: ");
                     Long id = sc.nextLong();
                     sc.nextLine();
                     Ticket t = service.buscarPorId(id);
@@ -71,36 +76,36 @@ public class AdminTicketController {
                         System.out.print("Nova prioridade: ");
                         t.setPrioridade(Prioridade.valueOf(sc.nextLine().toUpperCase()));
                         service.editar(t);
-                        System.out.println("✏️ Editado com sucesso!");
+                        System.out.println("✏️ Ticket editado com sucesso!");
                     } else {
                         System.out.println("❌ Ticket não encontrado.");
                     }
                 }
 
                 case 5 -> {
-                    System.out.print("ID para deletar: ");
+                    System.out.print("Digite o ID do ticket para deletar: ");
                     Long id = sc.nextLong();
                     service.deletar(id);
                     System.out.println("🗑️ Ticket deletado.");
                 }
 
                 case 6 -> {
-                    System.out.print("ID do aluno: ");
+                    System.out.print("Digite o ID do aluno: ");
                     Long alunoId = sc.nextLong();
                     service.buscarPorAlunoId(alunoId).forEach(System.out::println);
                 }
 
                 case 7 -> {
-                    System.out.print("Data início (AAAA-MM-DD): ");
+                    System.out.print("Data inicial (AAAA-MM-DD): ");
                     LocalDate inicio = LocalDate.parse(sc.next());
-                    System.out.print("Data fim (AAAA-MM-DD): ");
+                    System.out.print("Data final (AAAA-MM-DD): ");
                     LocalDate fim = LocalDate.parse(sc.next());
                     service.buscarPorIntervalo(inicio, fim).forEach(System.out::println);
                 }
 
-                case 0 -> System.out.println("Saindo...");
+                case 0 -> System.out.println("Saindo do menu admin...");
 
-                default -> System.out.println("Opção inválida.");
+                default -> System.out.println("❌ Opção inválida.");
             }
 
         } while (op != 0);
