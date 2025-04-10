@@ -94,4 +94,15 @@ public class Ticket {
     }
     
 
+    @Column(name = "aluno_id")
+    private Long alunoId;
+    
+    public Long getAlunoId() {
+        return alunoId;
+    }
+    
+    public void setAlunoId(Long alunoId) {
+        this.alunoId = alunoId;
+    }
+    
 }

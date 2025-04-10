@@ -45,4 +45,37 @@ public class TicketRepository {
             em.close();
         }
     }
+
+    // Atualizar um ticket
+public Ticket editar(Ticket ticket) {
+    EntityManager em = CustomFactory.getEntityManager();
+    try {
+        em.getTransaction().begin();
+        ticket = em.merge(ticket);
+        em.getTransaction().commit();
+        return ticket;
+    } finally {
+        em.close();
+    }
+}
+
+// Buscar por ID do aluno
+public List<Ticket> buscarPorAlunoId(Long alunoId) {
+    EntityManager em = CustomFactory.getEntityManager();
+    TypedQuery<Ticket> query = em.createQuery(
+        "SELECT t FROM Ticket t WHERE t.alunoId = :alunoId", Ticket.class);
+    query.setParameter("alunoId", alunoId);
+    return query.getResultList();
+}
+
+// Buscar por intervalo de datas
+public List<Ticket> buscarPorIntervalo(LocalDate inicio, LocalDate fim) {
+    EntityManager em = CustomFactory.getEntityManager();
+    TypedQuery<Ticket> query = em.createQuery(
+        "SELECT t FROM Ticket t WHERE t.dataCriacao BETWEEN :inicio AND :fim", Ticket.class);
+    query.setParameter("inicio", inicio);
+    query.setParameter("fim", fim);
+    return query.getResultList();
+}
+
 }
