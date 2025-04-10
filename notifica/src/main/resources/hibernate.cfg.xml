@@ -8,6 +8,8 @@
         <property name="hibernate.hbm2ddl.auto">create</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-        <mapping class="br.com.models.UsersEntity"/>
+        
+        <mapping class="br.com.bd_notifica.entities.Ticket"/>
+        <mapping class="br.com.bd_notifica.entities.UserEntity"/>
     </session-factory>
 </hibernate-configuration>

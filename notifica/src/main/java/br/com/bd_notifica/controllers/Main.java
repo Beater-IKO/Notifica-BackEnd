@@ -8,13 +8,15 @@ import br.com.bd_notifica.enums.Area;
 import br.com.bd_notifica.enums.Prioridade;
 import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.services.TicketService;
+import br.com.bd_notifica.services.UserService;
 
 public class Main{
 
     public static void main(String[] args) {
         TicketService service = new TicketService(new TicketRepository());
         Scanner scanner = new Scanner(System.in);
-        
+        UserService userService = new UserService();
+        userService.login();        
         int opcao;
     
 
