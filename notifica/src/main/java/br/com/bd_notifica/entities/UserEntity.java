@@ -1,12 +1,16 @@
 package br.com.bd_notifica.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.com.bd_notifica.enums.UserRole;
@@ -35,19 +39,21 @@ public class UserEntity {
     @Column(name = "createOnDate", nullable = false)
     private LocalDate createOnDate;
 
-    
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> tickets = new ArrayList<>();
 
     public UserEntity() {
     }
 
-    public UserEntity(Long id, String name, String email, String password, UserRole role, LocalDate createOnDate) {
+    public UserEntity(Long id, String name, String email, String password, UserRole role, LocalDate createOnDate,
+            List<Ticket> tickets) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
         this.createOnDate = createOnDate;
+        this.tickets = tickets;
     }
 
     public Long getId() {
@@ -98,10 +104,26 @@ public class UserEntity {
         this.createOnDate = createOnDate;
     }
 
-    @Override
-    public String toString() {
-        return "UserEntity [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role="
-                + role + ", createOnDate=" + createOnDate + "]";
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", nome='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", dataCriacao=" + createOnDate +
+                // NÃO imprima os tickets aqui!
+                '}';
+    }
+
+    
+   
 }

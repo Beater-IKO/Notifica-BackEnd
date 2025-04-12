@@ -2,6 +2,7 @@ package br.com.bd_notifica.repositories;
 
 import br.com.bd_notifica.configs.CustomFactory;
 import br.com.bd_notifica.entities.Ticket;
+import br.com.bd_notifica.entities.UserEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -26,6 +27,18 @@ public class TicketRepository {
         EntityManager em = CustomFactory.getEntityManager();
         TypedQuery<Ticket> query = em.createQuery("FROM Ticket", Ticket.class);
         return query.getResultList();
+    }
+
+
+    public List<Ticket> buscarPorUsuario(UserEntity user){
+        EntityManager em = CustomFactory.getEntityManager();
+        try{
+            return em.createQuery("SELECT t FROM Ticket t WHERE t.user = :user", Ticket.class)
+                    .setParameter("user", user)
+                    .getResultList();
+        }finally{
+            em.close();
+        }
     }
 
     public Ticket buscarPorId(Long id) {
@@ -59,11 +72,11 @@ public class TicketRepository {
         }
     }
 
-    public List<Ticket> buscarPorAlunoId(Long alunoId) {
+    public List<Ticket> buscarPorAlunoId(UserEntity user) {
         EntityManager em = CustomFactory.getEntityManager();
         TypedQuery<Ticket> query = em.createQuery(
-                "SELECT t FROM Ticket t WHERE t.alunoId = :alunoId", Ticket.class);
-        query.setParameter("alunoId", alunoId);
+                "SELECT t FROM Ticket t WHERE t.user = :user", Ticket.class);
+        query.setParameter("user", user);
         return query.getResultList();
     }
 

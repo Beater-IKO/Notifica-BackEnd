@@ -31,6 +31,25 @@ public class Ticket {
     @Column(name = "status") // Novo campo 'status' adicionado
     private String status; // Campo de status, como String (pode ser "Pendente", "Em andamento", etc.)
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    public Ticket() {
+    }
+
+    public Ticket(Long id, String descricao, Area area, String sala, Prioridade prioridade, LocalDate dataCriacao,
+            String status, UserEntity user) {
+        this.id = id;
+        this.descricao = descricao;
+        this.area = area;
+        this.sala = sala;
+        this.prioridade = prioridade;
+        this.dataCriacao = dataCriacao;
+        this.status = status;
+        this.user = user;
+    }
+
     public Long getId() {
         return id;
     }
@@ -79,7 +98,6 @@ public class Ticket {
         this.dataCriacao = dataCriacao;
     }
 
-    // Getter e Setter para o campo 'status'
     public String getStatus() {
         return status;
     }
@@ -88,35 +106,27 @@ public class Ticket {
         this.status = status;
     }
 
-    public Ticket() {
+    public UserEntity getUser() {
+        return user;
     }
 
-    public Ticket(Long id, String descricao, Area area, String sala, Prioridade prioridade, LocalDate dataCriacao,
-            String status) {
-        this.id = id;
-        this.descricao = descricao;
-        this.area = area;
-        this.sala = sala;
-        this.prioridade = prioridade;
-        this.dataCriacao = dataCriacao;
-        this.status = status; // Agora o status também pode ser atribuído no construtor
-    }
-
-    @Column(name = "aluno_id")
-    private Long alunoId;
-
-    public Long getAlunoId() {
-        return alunoId;
-    }
-
-    public void setAlunoId(Long alunoId) {
-        this.alunoId = alunoId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     @Override
     public String toString() {
-        return "Ticket [id=" + id + ", descricao=" + descricao + ", area=" + area + ", sala=" + sala + ", prioridade="
-                + prioridade + ", dataCriacao=" + dataCriacao + ", status=" + status + ", alunoId=" + alunoId + "]";
+        return "Ticket{" +
+                "id=" + id +
+                ", descricao='" + descricao + '\'' +
+                ", area=" + area +
+                ", sala='" + sala + '\'' +
+                ", prioridade=" + prioridade +
+                ", dataCriacao=" + dataCriacao +
+                ", status='" + status + '\'' +
+                ", user=" + (user != null ? user.getName() : "null") +
+                '}';
     }
 
+    
 }

@@ -3,16 +3,17 @@ package br.com.bd_notifica.controllers;
 import java.util.Scanner;
 
 import br.com.bd_notifica.entities.Ticket;
+import br.com.bd_notifica.entities.UserEntity;
 import br.com.bd_notifica.enums.Area;
 import br.com.bd_notifica.enums.Prioridade;
-import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.services.TicketService;
+import br.com.bd_notifica.services.UserService;
 
 public class AlunoController {
 
-    public static void menuAluno(String[] args) {
-        TicketService service = new TicketService(new TicketRepository());
+    public static void menuAluno(UserService userService, TicketService service, UserEntity userLogado) {
         Scanner scanner = new Scanner(System.in);
+        service.criarTicketsPadrao();
 
         int opcao;
 
@@ -52,25 +53,45 @@ public class AlunoController {
                     int prioridadeOp = scanner.nextInt();
                     scanner.nextLine();
                     ticket.setPrioridade(Prioridade.fromOpcao(prioridadeOp));
+                    ticket.setUser(userLogado);
 
                     service.criarTicket(ticket);
                     System.out.println(" Ticket criado!");
                 }
 
-                case 2 -> service.listarTodos().forEach(System.out::println);
-
+                case 2 -> {
+                    System.out.println("Seus Tickets: ");
+                    service.listarPorUsuario(userLogado).forEach(System.out::println);
+                }
                 case 3 -> {
-                    System.out.println("ID: ");
+                    System.out.println("ID do Ticket: ");
                     Long id = scanner.nextLong();
+                    scanner.nextLine();
+
                     Ticket t = service.buscarPorId(id);
-                    System.out.println(t != null ? t : " Não encontrado");
+
+                    // Verifica se o ticket existe e se pertence ao usuário logado
+                    if (t != null && t.getUser().getId().equals(userLogado.getId())) {
+                        System.out.println(t);
+                    } else {
+                        System.out.println("Ticket não encontrado ou não pertence a você.");
+                    }
                 }
 
                 case 4 -> {
-                    System.out.println("ID para deletar: ");
+                    System.out.println("ID do Ticket para deletar: ");
                     Long id = scanner.nextLong();
-                    service.deletar(id);
-                    System.out.println(" Ticket deletado.");
+                    scanner.nextLine();
+
+                    Ticket t = service.buscarPorId(id);
+
+                    // Verificar se o ticket existe e se pertence ao usuário logado
+                    if (t != null && t.getUser().getId().equals(userLogado.getId())) {
+                        service.deletar(id);
+                        System.out.println("Ticket deletado com sucesso.");
+                    } else {
+                        System.out.println("Não foi possivel deletar o ticket pois não foi encontrado ou não pertence a você.");
+                    }
                 }
 
                 case 0 -> System.out.println("Saindo...");

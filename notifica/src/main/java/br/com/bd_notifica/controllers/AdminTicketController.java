@@ -3,14 +3,16 @@ package br.com.bd_notifica.controllers;
 import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.enums.Area;
 import br.com.bd_notifica.enums.Prioridade;
+import br.com.bd_notifica.entities.UserEntity;
 import br.com.bd_notifica.services.TicketService;
+import br.com.bd_notifica.services.UserService;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 
 public class AdminTicketController {
 
-    public static void menuAdm(TicketService service) {
+    public static void menuAdm(TicketService service, UserService userService, UserEntity usuarioLogado) {
         Scanner sc = new Scanner(System.in);
         int op;
 
@@ -42,15 +44,16 @@ public class AdminTicketController {
                     t.setArea(Area.valueOf(sc.nextLine().toUpperCase()));
                     System.out.print("Prioridade (GRAU_LEVE/GRAU_MEDIO/...): ");
                     t.setPrioridade(Prioridade.valueOf(sc.nextLine().toUpperCase()));
-                    System.out.print("ID do aluno: ");
-                    t.setAlunoId(sc.nextLong());
+
+                    // Aqui, o ticket será vinculado ao admin logado
+                    t.setUser(usuarioLogado); // Vincula o usuário admin ao ticket
 
                     service.criarTicket(t);
-                    System.out.println("✅ Ticket criado com sucesso!");
+                    System.out.println(" Ticket criado com sucesso!");
                 }
 
                 case 2 -> {
-                    System.out.println("=== Lista de Tickets ===");
+                    System.out.println("=== Lista de Todos os Tickets ===");
                     service.listarTodos().forEach(System.out::println);
                 }
 
@@ -58,7 +61,7 @@ public class AdminTicketController {
                     System.out.print("Digite o ID do ticket: ");
                     Long id = sc.nextLong();
                     Ticket encontrado = service.buscarPorId(id);
-                    System.out.println(encontrado != null ? encontrado : "❌ Ticket não encontrado.");
+                    System.out.println(encontrado != null ? encontrado : "Ticket não encontrado.");
                 }
 
                 case 4 -> {
@@ -76,9 +79,9 @@ public class AdminTicketController {
                         System.out.print("Nova prioridade: ");
                         t.setPrioridade(Prioridade.valueOf(sc.nextLine().toUpperCase()));
                         service.editar(t);
-                        System.out.println("✏️ Ticket editado com sucesso!");
+                        System.out.println("Ticket editado com sucesso!");
                     } else {
-                        System.out.println("❌ Ticket não encontrado.");
+                        System.out.println("Ticket não encontrado.");
                     }
                 }
 
@@ -86,7 +89,7 @@ public class AdminTicketController {
                     System.out.print("Digite o ID do ticket para deletar: ");
                     Long id = sc.nextLong();
                     service.deletar(id);
-                    System.out.println("🗑️ Ticket deletado.");
+                    System.out.println("Ticket deletado.");
                 }
 
                 case 6 -> {
@@ -105,7 +108,7 @@ public class AdminTicketController {
 
                 case 0 -> System.out.println("Saindo do menu admin...");
 
-                default -> System.out.println("❌ Opção inválida.");
+                default -> System.out.println("Opção inválida.");
             }
 
         } while (op != 0);
