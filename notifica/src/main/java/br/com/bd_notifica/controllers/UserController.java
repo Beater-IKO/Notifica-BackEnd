@@ -1,15 +1,15 @@
-package br.com.bd_notifica.services;
+package br.com.bd_notifica.controllers;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 
-import br.com.bd_notifica.controllers.AdminTicketController;
 import br.com.bd_notifica.entities.UserEntity;
 import br.com.bd_notifica.enums.UserRole;
 import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.repositories.UserRepository;
+import br.com.bd_notifica.services.TicketService;
 
-public class UserService {
+public class UserController {
     static Scanner input = new Scanner(System.in);
 
     public static void login() {
@@ -40,8 +40,11 @@ public class UserService {
                             // Redireciona para o menu do ADM
                             TicketService service = new TicketService(new TicketRepository());
                             AdminTicketController.menuAdm(service);
+                        } else if(user.getRole() == UserRole.STUDENT) {
+                            // Redireciona para o menu do Aluno
+                            AlunoController.menuAluno(null);
                         } else {
-                            System.out.println("🔒 Apenas administradores podem acessar o painel de tickets.");
+                            System.out.println("❌ Tipo de usuário inválido!");
                         }
                     } else {
                         System.out.println("❌ Email ou senha incorretos.");

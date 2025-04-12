@@ -109,5 +109,6 @@ public class AdminTicketController {
             }
 
         } while (op != 0);
+        sc.close();
     }
 }

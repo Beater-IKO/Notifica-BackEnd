@@ -95,5 +95,10 @@ public class UserEntity {
         this.createOnDate = createOnDate;
     }
 
-    
+    @Override
+    public String toString() {
+        return "UserEntity [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role="
+                + role + ", createOnDate=" + createOnDate + "]";
+    }
+
 }

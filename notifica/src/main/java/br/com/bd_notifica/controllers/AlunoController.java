@@ -8,15 +8,12 @@ import br.com.bd_notifica.enums.Area;
 import br.com.bd_notifica.enums.Prioridade;
 import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.services.TicketService;
-import br.com.bd_notifica.services.UserService;
 
-public class Main{
+public class AlunoController{
 
-    public static void main(String[] args) {
+    public static void menuAluno(String[] args) {
         TicketService service = new TicketService(new TicketRepository());
         Scanner scanner = new Scanner(System.in);
-        UserService userService = new UserService();
-        userService.login();        
         int opcao;
     
 
@@ -25,7 +22,8 @@ public class Main{
             System.out.println("\n====MENU===\n");
             System.out.println("1- Criar Ticket\n");
             System.out.println("2- Listar Ticket\n");
-            System.out.println("4- Buscar Ticket\n");
+            System.out.println("3- Buscar Ticket\n");
+            System.out.println("4- Deletar Ticket\n");
             System.out.println("0- Sair");
             opcao = scanner.nextInt();
             scanner.nextLine();
