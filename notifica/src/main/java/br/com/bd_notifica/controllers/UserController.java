@@ -8,13 +8,17 @@ import br.com.bd_notifica.enums.UserRole;
 import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.repositories.UserRepository;
 import br.com.bd_notifica.services.TicketService;
+import br.com.bd_notifica.services.UserService;
 
 public class UserController {
     static Scanner input = new Scanner(System.in);
 
     public static void login() {
         UserRepository userRepository = new UserRepository();
+        UserService userService = new UserService(userRepository);
         UserEntity user = null;
+
+        userService.criarUserPadrão();
 
         int op;
         do {
@@ -32,7 +36,7 @@ public class UserController {
                     System.out.print("Insira sua senha: ");
                     String password = input.nextLine();
 
-                    user = userRepository.findByEmailAndPassword(email, password);
+                    user = userService.buscarPorEmailESenha(email, password);
 
                     if (user != null) {
                         System.out.println("✅ Login bem-sucedido como: " + user.getRole());
@@ -44,6 +48,7 @@ public class UserController {
                             // Redireciona para o menu do Aluno
                             AlunoController.menuAluno(null);
                         } else if (user.getRole() == UserRole.AGENT) {
+                            // Redireciona para o menu do Agente de Campo
                             AgenteDeCampo.menuAgente(null);
                         } else {
                             System.out.println("❌ Tipo de usuário inválido!");

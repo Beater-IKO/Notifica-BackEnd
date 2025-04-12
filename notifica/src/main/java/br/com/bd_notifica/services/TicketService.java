@@ -59,7 +59,7 @@ public class TicketService {
                 LocalDate.now().minusDays(2), "Pendente");
         t2.setAlunoId(2L);
 
-        Ticket t3 = new Ticket(null, "Projetor queimado", Area.INTERNA, "Sala 105", Prioridade.GRAU_MUITO_ALTO,
+        Ticket t3 = new Ticket(null, "Projetor queimado", Area.INTERNA, "Sala 105", Prioridade.GRAU_URGENTE,
                 LocalDate.now().minusDays(5), "Pendente");
         t3.setAlunoId(3L);
 

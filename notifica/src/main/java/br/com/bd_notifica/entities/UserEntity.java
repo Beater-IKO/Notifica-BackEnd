@@ -35,6 +35,9 @@ public class UserEntity {
     @Column(name = "createOnDate", nullable = false)
     private LocalDate createOnDate;
 
+    
+
+
     public UserEntity() {
     }
 
