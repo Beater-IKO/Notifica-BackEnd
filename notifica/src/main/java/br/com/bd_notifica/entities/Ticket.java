@@ -3,7 +3,6 @@ package br.com.bd_notifica.entities;
 import br.com.bd_notifica.enums.*;
 
 import java.time.LocalDate;
-
 import javax.persistence.*;
 
 @Entity
@@ -24,11 +23,13 @@ public class Ticket {
     private String sala;
 
     @Enumerated(EnumType.STRING)
-
     @Column(name = "prioridade")
     private Prioridade prioridade;
 
     private LocalDate dataCriacao;
+
+    @Column(name = "status") // Novo campo 'status' adicionado
+    private String status; // Campo de status, como String (pode ser "Pendente", "Em andamento", etc.)
 
     public Long getId() {
         return id;
@@ -78,16 +79,27 @@ public class Ticket {
         this.dataCriacao = dataCriacao;
     }
 
+    // Getter e Setter para o campo 'status'
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Ticket() {
     }
 
-    public Ticket(Long id, String descricao, Area area, String sala, Prioridade prioridade, LocalDate dataCriacao) {
+    public Ticket(Long id, String descricao, Area area, String sala, Prioridade prioridade, LocalDate dataCriacao,
+            String status) {
         this.id = id;
         this.descricao = descricao;
         this.area = area;
         this.sala = sala;
         this.prioridade = prioridade;
         this.dataCriacao = dataCriacao;
+        this.status = status; // Agora o status também pode ser atribuído no construtor
     }
 
     @Column(name = "aluno_id")
@@ -104,7 +116,7 @@ public class Ticket {
     @Override
     public String toString() {
         return "Ticket [id=" + id + ", descricao=" + descricao + ", area=" + area + ", sala=" + sala + ", prioridade="
-                + prioridade + ", dataCriacao=" + dataCriacao + ", alunoId=" + alunoId + "]";
+                + prioridade + ", dataCriacao=" + dataCriacao + ", status=" + status + ", alunoId=" + alunoId + "]";
     }
 
 }

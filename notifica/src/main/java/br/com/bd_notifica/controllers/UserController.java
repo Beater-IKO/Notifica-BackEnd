@@ -40,9 +40,11 @@ public class UserController {
                             // Redireciona para o menu do ADM
                             TicketService service = new TicketService(new TicketRepository());
                             AdminTicketController.menuAdm(service);
-                        } else if(user.getRole() == UserRole.STUDENT) {
+                        } else if (user.getRole() == UserRole.STUDENT) {
                             // Redireciona para o menu do Aluno
                             AlunoController.menuAluno(null);
+                        } else if (user.getRole() == UserRole.AGENT) {
+                            AgenteDeCampo.menuAgente(null);
                         } else {
                             System.out.println("❌ Tipo de usuário inválido!");
                         }

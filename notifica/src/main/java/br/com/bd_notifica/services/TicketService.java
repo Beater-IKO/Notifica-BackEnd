@@ -18,6 +18,7 @@ public class TicketService {
 
     public Ticket criarTicket(Ticket ticket) {
         ticket.setDataCriacao(LocalDate.now());
+        ticket.setStatus("Pendente"); // Definindo o status como "Pendente" ao criar o ticket
         return ticketRepository.salvar(ticket);
     }
 
@@ -45,15 +46,22 @@ public class TicketService {
         return ticketRepository.buscarPorIntervalo(inicio, fim);
     }
 
+    public List<Ticket> buscarPorStatus(String status) {
+        return ticketRepository.buscarPorStatus(status);
+    }
+
     public void criarTicketsPadrao() {
-        Ticket t1 = new Ticket(null, "Internet não funciona", Area.INTERNA, "Lab 1", Prioridade.GRAU_ALTO, LocalDate.now());
+        Ticket t1 = new Ticket(null, "Internet não funciona", Area.INTERNA, "Lab 1", Prioridade.GRAU_ALTO,
+                LocalDate.now(), "Pendente");
         t1.setAlunoId(1L);
 
-        Ticket t2 = new Ticket(null, "Cadeira quebrada", Area.EXTERNA, "Sala 201", Prioridade.GRAU_LEVE, LocalDate.now().minusDays(2));
+        Ticket t2 = new Ticket(null, "Cadeira quebrada", Area.EXTERNA, "Sala 201", Prioridade.GRAU_LEVE,
+                LocalDate.now().minusDays(2), "Pendente");
         t2.setAlunoId(2L);
 
-        Ticket t3 = new Ticket(null, "Projetor queimado", Area.INTERNA, "Sala 105", Prioridade.GRAU_MUITO_ALTO, LocalDate.now().minusDays(5));
-        t3.setAlunoId(1L);
+        Ticket t3 = new Ticket(null, "Projetor queimado", Area.INTERNA, "Sala 105", Prioridade.GRAU_MUITO_ALTO,
+                LocalDate.now().minusDays(5), "Pendente");
+        t3.setAlunoId(3L);
 
         ticketRepository.salvar(t1);
         ticketRepository.salvar(t2);

@@ -75,4 +75,12 @@ public class TicketRepository {
         query.setParameter("fim", fim);
         return query.getResultList();
     }
+
+    public List<Ticket> buscarPorStatus(String status) {
+        EntityManager em = CustomFactory.getEntityManager();
+        TypedQuery<Ticket> query = em.createQuery(
+                "SELECT t FROM Ticket t WHERE t.status = :status", Ticket.class);
+        query.setParameter("status", status);
+        return query.getResultList();
+    }
 }
