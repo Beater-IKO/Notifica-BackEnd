@@ -4,6 +4,7 @@ import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.entities.UserEntity;
 import br.com.bd_notifica.enums.Area;
 import br.com.bd_notifica.enums.Prioridade;
+import br.com.bd_notifica.enums.UserRole;
 import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.repositories.UserRepository;
 
@@ -56,6 +57,18 @@ public class TicketService {
 
     public List<Ticket> buscarPorStatus(String status) {
         return ticketRepository.buscarPorStatus(status);
+    }
+
+    public List<Ticket> buscarPorTipoUsuario(String role) {
+        return ticketRepository.buscarChamadosPorTipoUsuario(UserRole.valueOf(role));
+    }
+
+    public List<Ticket> buscarPorNomeUsuario(String nomeParcial) {
+        return ticketRepository.buscarPorNomeUsuario(nomeParcial);
+    }
+
+    public List<Object[]> contarChamadosPorStatus() {
+        return ticketRepository.contarChamadosPorStatus();
     }
 
     public void criarTicketsPadrao() {

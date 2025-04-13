@@ -50,6 +50,17 @@ public class Ticket {
         this.user = user;
     }
 
+    public Ticket(Ticket outro) {
+        this.id = outro.id;
+        this.descricao = outro.descricao;
+        this.area = outro.area;
+        this.sala = outro.sala;
+        this.prioridade = outro.prioridade;
+        this.dataCriacao = outro.dataCriacao;
+        this.status = outro.status;
+        this.user = outro.user;
+    }
+
     public Long getId() {
         return id;
     }
@@ -116,17 +127,17 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket{" +
-                "id=" + id +
-                ", descricao='" + descricao + '\'' +
-                ", area=" + area +
-                ", sala='" + sala + '\'' +
-                ", prioridade=" + prioridade +
-                ", dataCriacao=" + dataCriacao +
-                ", status='" + status + '\'' +
-                ", user=" + (user != null ? user.getName() : "null") +
-                '}';
-    }
+    return "Ticket {" +
+            "id=" + id +
+            ", descrição='" + descricao + '\'' +
+            ", sala='" + sala + '\'' +
+            ", área=" + area +
+            ", prioridade=" + prioridade +
+            ", status=" + status +
+            ", dataCriacao=" + dataCriacao +
+            ", usuário=" + (user != null ? user.getName() + "[" + user.getRole() + "]" : "nenhum") +
+            '}';
+}
 
     
 }

@@ -28,6 +28,9 @@ public class AdminTicketController {
             System.out.println("5 - Deletar Ticket");
             System.out.println("6 - Buscar Tickets por ID do Aluno");
             System.out.println("7 - Buscar Tickets por Intervalo de Datas");
+            System.out.println("8 - Buscar Tickets por Tipo de Usuário (Role)");
+            System.out.println("9 - Buscar Tickets por Nome do Usuário (parcial)");
+            System.out.println("10 - Contar Tickets por Status");
             System.out.println("0 - Sair");
             System.out.print("Escolha a opção: ");
             op = sc.nextInt();
@@ -44,12 +47,10 @@ public class AdminTicketController {
                     t.setArea(Area.valueOf(sc.nextLine().toUpperCase()));
                     System.out.print("Prioridade (GRAU_LEVE/GRAU_MEDIO/...): ");
                     t.setPrioridade(Prioridade.valueOf(sc.nextLine().toUpperCase()));
-
-                    // Aqui, o ticket será vinculado ao admin logado
                     t.setUser(usuarioLogado); // Vincula o usuário admin ao ticket
 
                     service.criarTicket(t);
-                    System.out.println(" Ticket criado com sucesso!");
+                    System.out.println("Ticket criado com sucesso!");
                 }
 
                 case 2 -> {
@@ -104,6 +105,30 @@ public class AdminTicketController {
                     System.out.print("Data final (AAAA-MM-DD): ");
                     LocalDate fim = LocalDate.parse(sc.next());
                     service.buscarPorIntervalo(inicio, fim).forEach(System.out::println);
+                }
+
+                case 8 -> {
+                    System.out.print("Tipo de usuário (ADMIN, STUDENT, AGENT): ");
+                    String tipo = sc.nextLine().toUpperCase();
+                    try {
+                        service.buscarPorTipoUsuario(tipo).forEach(System.out::println);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Tipo de usuário inválido!");
+                    }
+                }
+
+                case 9 -> {
+                    System.out.print("Parte do nome do usuário: ");
+                    String nomeParcial = sc.nextLine();
+                    service.buscarPorNomeUsuario(nomeParcial).forEach(System.out::println);
+                }
+
+                case 10 -> {
+                    System.out.println("Quantidade de Tickets por Status:");
+                    service.contarChamadosPorStatus()
+                            .forEach(registro ->
+                                    System.out.println("Status: " + registro[0] + " | Quantidade: " + registro[1])
+                            );
                 }
 
                 case 0 -> System.out.println("Saindo do menu admin...");

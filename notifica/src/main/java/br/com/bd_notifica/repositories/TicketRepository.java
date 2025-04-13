@@ -3,6 +3,7 @@ package br.com.bd_notifica.repositories;
 import br.com.bd_notifica.configs.CustomFactory;
 import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.entities.UserEntity;
+import br.com.bd_notifica.enums.UserRole;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -94,6 +95,34 @@ public class TicketRepository {
         TypedQuery<Ticket> query = em.createQuery(
                 "SELECT t FROM Ticket t WHERE t.status = :status", Ticket.class);
         query.setParameter("status", status);
+        return query.getResultList();
+    }
+
+    public List<Object[]> contarChamadosPorStatus() {
+        EntityManager em = CustomFactory.getEntityManager();
+        TypedQuery<Object[]> query = em.createQuery(
+            "SELECT t.status, COUNT(t) FROM Ticket t GROUP BY t.status",
+            Object[].class
+        );
+        return query.getResultList();
+    }
+
+    public List<Ticket> buscarChamadosPorTipoUsuario(UserRole role) {
+        EntityManager em = CustomFactory.getEntityManager();
+        TypedQuery<Ticket> query = em.createQuery(
+            "SELECT t FROM Ticket t JOIN t.user u WHERE u.role = :role", Ticket.class
+        );
+        query.setParameter("role", role);
+        return query.getResultList();
+    }
+
+    public List<Ticket> buscarPorNomeUsuario(String nomeParcial) {
+        EntityManager em = CustomFactory.getEntityManager();
+        TypedQuery<Ticket> query = em.createQuery(
+            "SELECT t FROM Ticket t JOIN t.user u WHERE LOWER(u.name) LIKE LOWER(CONCAT('%', :name, '%'))",
+            Ticket.class
+        );
+        query.setParameter("name", nomeParcial);
         return query.getResultList();
     }
 }

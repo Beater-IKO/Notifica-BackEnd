@@ -56,6 +56,16 @@ public class UserEntity {
         this.tickets = tickets;
     }
 
+    public UserEntity(UserEntity outro) {
+        this.id = outro.id;
+        this.name = outro.name;
+        this.email = outro.email;
+        this.password = outro.password;
+        this.role = outro.role;
+        this.createOnDate = outro.createOnDate;
+        this.tickets = new ArrayList<>(outro.tickets);
+    }
+
     public Long getId() {
         return id;
     }
