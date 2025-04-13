@@ -19,7 +19,6 @@ public class UserController {
         UserEntity userLogado = new UserEntity();
         UserEntity user = null;
 
-    
         userService.criarUserPadrão();
 
         int op;
@@ -30,7 +29,7 @@ public class UserController {
             System.out.print("Escolha uma opção: ");
             op = input.nextInt();
             input.nextLine();
-            
+
             switch (op) {
                 case 1 -> {
                     System.out.print("Insira seu email: ");
@@ -53,7 +52,7 @@ public class UserController {
                             AlunoController.menuAluno(userService, service, user);
                         } else if (user.getRole() == UserRole.AGENT) {
                             // Redireciona para o menu do Agente de Campo
-                            AgenteDeCampo.menuAgente(null);
+                            AgenteDeCampo.executarMenuAgente();
                         } else {
                             System.out.println("Tipo de usuário inválido!");
                         }
