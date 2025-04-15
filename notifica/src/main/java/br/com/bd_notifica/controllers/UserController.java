@@ -9,6 +9,7 @@ import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.repositories.UserRepository;
 import br.com.bd_notifica.services.TicketService;
 import br.com.bd_notifica.services.UserService;
+import br.com.bd_notifica.utils.Criptografia;
 
 public class UserController {
     static Scanner input = new Scanner(System.in);
@@ -37,25 +38,25 @@ public class UserController {
                     System.out.print("Insira sua senha: ");
                     String password = input.nextLine();
 
-                    user = userService.buscarPorEmailESenha(email, password);
-                    userLogado = userService.buscarPorEmailESenha(email, password);
+                    user = userService.buscarPorEmail(email);
 
-                    if (user != null) {
-                        System.out.println("✅ Login bem-sucedido como: " + user.getRole());
+                    if (user != null && Criptografia.verificarSenha(password, user.getPassword())) {
+                        userLogado = user;
+
+                        System.out.println("Login bem-sucedido como: " + user.getRole());
+
                         if (user.getRole() == UserRole.ADMIN) {
-                            // Redireciona para o menu do ADM
                             TicketService service = new TicketService(new TicketRepository());
                             AdminTicketController.menuAdm(service, userService, userLogado);
                         } else if (user.getRole() == UserRole.STUDENT) {
-                            // Redireciona para o menu do Aluno
                             TicketService service = new TicketService(new TicketRepository());
                             AlunoController.menuAluno(userService, service, user);
                         } else if (user.getRole() == UserRole.AGENT) {
-                            // Redireciona para o menu do Agente de Campo
                             AgenteDeCampo.executarMenuAgente();
                         } else {
                             System.out.println("Tipo de usuário inválido!");
                         }
+
                     } else {
                         System.out.println("Email ou senha incorretos.");
                     }
@@ -86,7 +87,7 @@ public class UserController {
                         user = new UserEntity();
                         user.setName(name);
                         user.setEmail(email);
-                        user.setPassword(password);
+                        user.setPassword(Criptografia.gerarHash(password));  
                         user.setRole(role);
                         user.setCreateOnDate(LocalDate.now());
 

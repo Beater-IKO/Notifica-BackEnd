@@ -25,25 +25,22 @@ public class UserRepository {
         }
     }
 
-    public UserEntity findByEmailAndPassword(String email, String password) {
+    public UserEntity findByEmail(String email) {
         try {
-            UserEntity user = 
-            em.createQuery("SELECT u FROM UserEntity u WHERE u.email = :email AND u.password = :password",
-                            UserEntity.class)
+            UserEntity user = em.createQuery("SELECT u FROM UserEntity u WHERE u.email = :email", UserEntity.class)
                     .setParameter("email", email)
-                    .setParameter("password", password)
                     .getSingleResult();
 
-                    System.out.println("Usuário existente, conta logada com sucesso!: " + user.getEmail());
-                    return user;
+            System.out.println("Usuário encontrado: " + user.getEmail());
+            return user;
         } catch (Exception e) {
-            System.out.println("Usuário não encontrado, verifique o email e a senha!");
+            System.out.println("Erro ao buscar usuário por email: " + e.getMessage());
             return null;
         }
     }
 
     public UserEntity findByName(String name) {
-       
+
         return em.createQuery("SELECT u FROM UserEntity u WHERE u.name = :name", UserEntity.class)
                 .setParameter("name", name)
                 .getSingleResult();
