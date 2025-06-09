@@ -1,8 +1,10 @@
 package br.com.bd_notifica.repositories;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import br.com.bd_notifica.configs.CustomFactory;
 import br.com.bd_notifica.entities.UserEntity;
@@ -25,6 +27,12 @@ public class UserRepository {
         }
     }
 
+    public static List<UserEntity> listarTodos(){
+    	EntityManager em = CustomFactory.getEntityManager();
+    	TypedQuery<UserEntity> query = em.createQuery("FROM User", UserEntity.class);
+    	return query.getResultList();
+    }
+    
     public UserEntity findByEmail(String email) {
         try {
             UserEntity user = em.createQuery("SELECT u FROM UserEntity u WHERE u.email = :email", UserEntity.class)

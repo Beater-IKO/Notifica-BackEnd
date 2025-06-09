@@ -42,6 +42,8 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets = new ArrayList<>();
 
+    private List<UserEntity> users = new ArrayList<>();
+    
     public UserEntity() {
     }
 
@@ -113,7 +115,7 @@ public class UserEntity {
     public void setCreateOnDate(LocalDate createOnDate) {
         this.createOnDate = createOnDate;
     }
-
+    
     public List<Ticket> getTickets() {
         return tickets;
     }
@@ -121,7 +123,15 @@ public class UserEntity {
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
+    
+    public List<UserEntity> getUsers() {
+		return users;
+	}
 
+	public void setUsers(List<UserEntity> users) {
+		this.users = users;
+	}
+    
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -133,6 +143,8 @@ public class UserEntity {
                 // NÃO imprima os tickets aqui!
                 '}';
     }
+
+	
 
     
    

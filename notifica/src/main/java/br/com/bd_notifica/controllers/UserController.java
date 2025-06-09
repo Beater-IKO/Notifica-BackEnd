@@ -23,7 +23,7 @@ public class UserController {
         userService.criarUserPadrão();
 
         int op;
-        do {
+       
             System.out.println("1 - Login");
             System.out.println("2 - Registro");
             System.out.println("0 - Sair");
@@ -102,6 +102,6 @@ public class UserController {
                 default -> System.out.println("Opção inválida!");
             }
 
-        } while (op != 0);
+        
     }
 }
