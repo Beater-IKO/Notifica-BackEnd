@@ -41,8 +41,6 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets = new ArrayList<>();
-
-    private List<UserEntity> users = new ArrayList<>();
     
     public UserEntity() {
     }
@@ -124,13 +122,6 @@ public class UserEntity {
         this.tickets = tickets;
     }
     
-    public List<UserEntity> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<UserEntity> users) {
-		this.users = users;
-	}
     
     @Override
     public String toString() {
