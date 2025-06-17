@@ -11,7 +11,7 @@ public class AgenteDeCampo {
 
     public static void executarMenuAgente() {
         Scanner scanner = new Scanner(System.in);
-        TicketService ticketService = new TicketService(new TicketRepository());
+        TicketService ticketService = new TicketService(new TicketRepository(), null);
 
         // Criação automática de tickets padrão
         ticketService.criarTicketsPadrao();

@@ -12,6 +12,7 @@ import br.com.bd_notifica.enums.UserRole;
 import br.com.bd_notifica.repositories.UserRepository;
 import br.com.bd_notifica.services.UserService;
 import br.com.bd_notifica.utils.Criptografia;
+import br.com.bd_notifica.view.AdminPanelLauncher;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -126,20 +127,22 @@ public class LoginView extends JFrame {
 
         if (user != null && Criptografia.verificarSenha(senha, user.getPassword())) {
             JOptionPane.showMessageDialog(LoginView.this, "Login bem-sucedido como: " + user.getRole());
+            System.out.println("Login bem-sucedido para: " + user.getName() + " com perfil: " + user.getRole());
             
             // Direciona para o menu certo
             if (user.getRole().equals(UserRole.ADMIN)) {
-                // Chamar a tela de admin
-                // new AdminView(user).setVisible(true);
-                System.out.println("Abrir tela Admin");
+                // Usar a classe utilitária para iniciar o painel de administração
+                AdminPanelLauncher.launchAdminPanel(user);
+                dispose(); // Fecha a janela de login
             } else if (user.getRole().equals(UserRole.STUDENT)) {
                 // new AlunoView(user).setVisible(true);
                 System.out.println("Abrir tela Aluno");
+                dispose(); // Fecha a janela de login
             } else if (user.getRole().equals(UserRole.AGENT)) {
                 // new AgenteView(user).setVisible(true);
                 System.out.println("Abrir tela Agente");
+                dispose(); // Fecha a janela de login
             }
-            dispose(); // fecha a tela atual
         } else {
             JOptionPane.showMessageDialog(LoginView.this, "Email ou senha incorretos.");
         }

@@ -44,7 +44,11 @@ public class TicketRepository {
 
     public Ticket buscarPorId(Long id) {
         EntityManager em = CustomFactory.getEntityManager();
-        return em.find(Ticket.class, id);
+        try {
+            return em.find(Ticket.class, id);
+        } finally {
+            em.close();
+        }
     }
 
     public void deletar(Long id) {

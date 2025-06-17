@@ -19,6 +19,7 @@ public class CustomFactory {
         return emf.createEntityManager();
     }
 
+    
     public static void fechar() {
         emf.close();
     }
