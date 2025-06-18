@@ -39,8 +39,8 @@ public class TicketService {
         return ticketRepository.listarTodos();
     }
 
-    public List<Ticket> buscarPorId(UserEntity userLogado) {
-        return (List<Ticket>) ticketRepository.buscarPorId(userLogado);
+    public List<Ticket> buscarTicketsPorUsuario(UserEntity userLogado) {
+        return ticketRepository.buscarPorUsuario(userLogado);
     }
 
     public Ticket editar(Ticket ticket) {
