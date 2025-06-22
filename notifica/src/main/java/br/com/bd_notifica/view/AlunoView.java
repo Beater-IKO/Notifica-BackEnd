@@ -14,6 +14,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField; // Remova este import se você removeu a linha do JTextField
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JList;
@@ -47,7 +48,10 @@ public class AlunoView extends JFrame {
     private UserEntity loggedInUser;
 
     private JLabel imagePreviewLabel;
-    private String selectedImagePath; // Variável para armazenar o caminho da imagem selecionada
+    private String selectedImagePath;
+
+    // Se você removeu o JTextField, pode remover esta declaração também
+    // private JTextField textField;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -192,6 +196,12 @@ public class AlunoView extends JFrame {
         cbSubtipo.setEnabled(false);
         panelFormulario.add(cbSubtipo);
 
+        // Remove a declaração e uso do JTextField 'textField' se não for necessário
+        // textField = new JTextField();
+        // textField.setBounds(197, 271, 96, 19);
+        // panelFormulario.add(textField);
+        // textField.setColumns(10);
+
         JComboBox<String> cbTipo = new JComboBox<>(mapaDeProblemas.keySet().toArray(new String[0]));
         cbTipo.insertItemAt("-- Selecione um Tipo --", 0);
         cbTipo.setSelectedIndex(0);
@@ -272,7 +282,7 @@ public class AlunoView extends JFrame {
                 String selectedSala = listaDasSalas.getSelectedValue();
                 if (selectedSala == null ||
                     grupoArea.getSelection() == null ||
-                    grupoAndar.getSelection() == null ||
+                    grupoAndar.getSelection() == null || // Validação para o andar
                     grupoPrioridade.getSelection() == null ||
                     cbTipo.getSelectedIndex() <= 0 ||
                     cbSubtipo.getSelectedItem() == null) {
@@ -281,7 +291,11 @@ public class AlunoView extends JFrame {
                     return;
                 }
 
-                String descricaoProblema = cbTipo.getSelectedItem().toString() + " - " + cbSubtipo.getSelectedItem().toString();
+                // Coleta o tipo e subtipo para formar a nova string 'problema'
+                String tipoProblema = (String) cbTipo.getSelectedItem();
+                String subtipoProblema = (String) cbSubtipo.getSelectedItem();
+                String problemaCompleto = tipoProblema + " - " + subtipoProblema;
+
                 String sala = selectedSala;
 
                 Area area = null;
@@ -302,16 +316,14 @@ public class AlunoView extends JFrame {
                     prioridade = Prioridade.GRAU_URGENTE;
                 }
 
-                String andarSelecionado = "";
+                String andarSelecionado = ""; // Coleta o andar selecionado
                 if (Andar1.isSelected()) andarSelecionado = "1º Andar";
                 else if (Andar2.isSelected()) andarSelecionado = "2º Andar";
                 else if (Andar3.isSelected()) andarSelecionado = "3º Andar";
                 else if (Andar4.isSelected()) andarSelecionado = "4º Andar";
 
-                String descricaoFinal = "Local: " + sala + ", " + andarSelecionado + ". Problema: " + descricaoProblema;
-
-                // Passa o caminho da imagem para o controller
-                boolean sucesso = alunoController.criarTicket(descricaoFinal, sala, area, prioridade, selectedImagePath);
+                // Passa o 'problemaCompleto' (tipo + subtipo) e o 'andarSelecionado' para o controller
+                boolean sucesso = alunoController.criarTicket(problemaCompleto, sala, area, prioridade, selectedImagePath, andarSelecionado);
 
                 if (sucesso) {
                     JOptionPane.showMessageDialog(null, "Ticket criado com sucesso!");
