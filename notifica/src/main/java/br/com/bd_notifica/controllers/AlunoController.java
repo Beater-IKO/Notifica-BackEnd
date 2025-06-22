@@ -28,9 +28,10 @@ public class AlunoController {
      * @param sala A sala onde o problema ocorreu.
      * @param area A área (Interna/Externa) do problema.
      * @param prioridade O grau de prioridade do ticket.
+     * @param imagePath O caminho do arquivo da imagem anexada (pode ser null). // NOVO PARÂMETRO
      * @return true se o ticket foi criado com sucesso, false caso contrário.
      */
-    public boolean criarTicket(String descricao, String sala, Area area, Prioridade prioridade) {
+    public boolean criarTicket(String descricao, String sala, Area area, Prioridade prioridade, String imagePath) { // Assinatura atualizada
         try {
             Ticket novoTicket = new Ticket();
             novoTicket.setDescricao(descricao);
@@ -40,6 +41,7 @@ public class AlunoController {
             novoTicket.setUser(loggedInUser);
             novoTicket.setDataCriacao(LocalDate.now());
             novoTicket.setStatus("Pendente");
+            novoTicket.setImagePath(imagePath); // Define o caminho da imagem no ticket
 
             ticketService.criarTicket(novoTicket);
             System.out.println("Ticket criado pelo aluno com sucesso!");

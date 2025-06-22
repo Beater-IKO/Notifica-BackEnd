@@ -28,8 +28,11 @@ public class Ticket {
 
     private LocalDate dataCriacao;
 
-    @Column(name = "status") // Novo campo 'status' adicionado
-    private String status; // Campo de status, como String (pode ser "Pendente", "Em andamento", etc.)
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "image_path") // NOVO CAMPO: Para armazenar o caminho da imagem
+    private String imagePath;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -39,7 +42,7 @@ public class Ticket {
     }
 
     public Ticket(Long id, String descricao, Area area, String sala, Prioridade prioridade, LocalDate dataCriacao,
-            String status, UserEntity user) {
+            String status, UserEntity user, String imagePath) { // Construtor atualizado
         this.id = id;
         this.descricao = descricao;
         this.area = area;
@@ -48,6 +51,7 @@ public class Ticket {
         this.dataCriacao = dataCriacao;
         this.status = status;
         this.user = user;
+        this.imagePath = imagePath; // Inicializa o novo campo
     }
 
     public Ticket(Ticket outro) {
@@ -59,6 +63,7 @@ public class Ticket {
         this.dataCriacao = outro.dataCriacao;
         this.status = outro.status;
         this.user = outro.user;
+        this.imagePath = outro.imagePath; // Copia o novo campo
     }
 
     public Long getId() {
@@ -117,6 +122,14 @@ public class Ticket {
         this.status = status;
     }
 
+    public String getImagePath() { // NOVO GETTER
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) { // NOVO SETTER
+        this.imagePath = imagePath;
+    }
+
     public UserEntity getUser() {
         return user;
     }
@@ -135,9 +148,8 @@ public class Ticket {
             ", prioridade=" + prioridade +
             ", status=" + status +
             ", dataCriacao=" + dataCriacao +
+            ", imagemPath='" + (imagePath != null ? imagePath : "N/A") + '\'' + // Adiciona ao toString
             ", usuário=" + (user != null ? user.getName() + "[" + user.getRole() + "]" : "nenhum") +
             '}';
 }
-
-    
 }

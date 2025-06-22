@@ -22,6 +22,13 @@ import javax.swing.ListSelectionModel;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalDate;
+import java.io.File;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.BorderFactory;
+import java.awt.Image;
 
 import br.com.bd_notifica.entities.UserEntity;
 import br.com.bd_notifica.enums.Area;
@@ -29,7 +36,6 @@ import br.com.bd_notifica.enums.Prioridade;
 import br.com.bd_notifica.repositories.UserRepository;
 import br.com.bd_notifica.services.UserService;
 
-// Importa o AlunoController
 import br.com.bd_notifica.controllers.AlunoController;
 
 public class AlunoView extends JFrame {
@@ -37,8 +43,11 @@ public class AlunoView extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
-    private AlunoController alunoController; // Instância do AlunoController
-    private UserEntity loggedInUser; // Usuário logado
+    private AlunoController alunoController;
+    private UserEntity loggedInUser;
+
+    private JLabel imagePreviewLabel;
+    private String selectedImagePath; // Variável para armazenar o caminho da imagem selecionada
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -46,8 +55,8 @@ public class AlunoView extends JFrame {
                 try {
                     UserRepository tempUserRepository = new UserRepository();
                     UserService tempUserService = new UserService(tempUserRepository);
-                    tempUserService.criarUserPadrão(); // Garante que há usuários padrão
-                    UserEntity testUser = tempUserRepository.findByEmail("carlos@mail.com"); // Aluno padrão
+                    tempUserService.criarUserPadrão();
+                    UserEntity testUser = tempUserRepository.findByEmail("carlos@mail.com");
 
                     if (testUser == null) {
                         JOptionPane.showMessageDialog(null, "Usuário de teste 'carlos@mail.com' não encontrado. Certifique-se de que o método criarUserPadrão() está sendo executado.", "Erro de Inicialização", JOptionPane.ERROR_MESSAGE);
@@ -65,16 +74,9 @@ public class AlunoView extends JFrame {
 
     public AlunoView(UserEntity loggedInUser) {
         this.loggedInUser = loggedInUser;
-        this.alunoController = new AlunoController(loggedInUser); // Instancia o Controller
+        this.alunoController = new AlunoController(loggedInUser);
 
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                dispose();
-                new LoginView().setVisible(true);
-            }
-        });
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 836, 400);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(153, 204, 153));
@@ -82,8 +84,6 @@ public class AlunoView extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        // --- PAINEL DO MENU LATERAL ESQUERDO ---
-        // Estes botões existem na interface, mas suas ações não serão implementadas neste escopo simplificado.
         JPanel panelMenu = new JPanel();
         panelMenu.setBounds(10, 10, 140, 340);
         contentPane.add(panelMenu);
@@ -94,15 +94,7 @@ public class AlunoView extends JFrame {
         panelMenu.add(new JButton("Histórico de Tickets"));
         panelMenu.add(new JButton("Listar Tickets Finalizados"));
         panelMenu.add(new JButton("Suporte"));
-        
-        JButton btnLogout = new JButton("Logout");
-        btnLogout.addActionListener(e -> {
-            dispose();
-            new LoginView().setVisible(true);
-        });
-        panelMenu.add(btnLogout);
 
-        // --- PAINEL DO FORMULÁRIO PRINCIPAL (DIREITA) ---
         JPanel panelFormulario = new JPanel();
         panelFormulario.setBounds(154, 10, 658, 340);
         contentPane.add(panelFormulario);
@@ -113,7 +105,6 @@ public class AlunoView extends JFrame {
         lblTitulo.setBounds(66, 10, 526, 23);
         panelFormulario.add(lblTitulo);
 
-        // --- SEÇÃO 1: SELEÇÃO DE SALAS ---
         JLabel lblSalas = new JLabel("Selecione as salas");
         lblSalas.setFont(new Font("Calibri", Font.PLAIN, 12));
         lblSalas.setBounds(42, 51, 90, 13);
@@ -125,7 +116,6 @@ public class AlunoView extends JFrame {
         painelComRolagem.setBounds(42, 70, 122, 50);
         panelFormulario.add(painelComRolagem);
 
-        // --- SEÇÃO 2: ÁREA DA FACULDADE ---
         JLabel lblArea = new JLabel("Área da faculdade");
         lblArea.setFont(new Font("Calibri", Font.PLAIN, 12));
         lblArea.setBounds(197, 51, 101, 13);
@@ -140,7 +130,6 @@ public class AlunoView extends JFrame {
         grupoArea.add(radioInterno);
         grupoArea.add(radioExterno);
 
-        // --- SEÇÃO 3: SELEÇÃO DE ANDAR ---
         JLabel lblAndar = new JLabel("Selecione o andar");
         lblAndar.setFont(new Font("Calibri", Font.PLAIN, 12));
         lblAndar.setBounds(347, 51, 104, 13);
@@ -163,8 +152,6 @@ public class AlunoView extends JFrame {
         grupoAndar.add(Andar3);
         grupoAndar.add(Andar4);
 
-
-        // --- SEÇÃO 4: GRAU DE PRIORIDADE ---
         JLabel lblPrioridade = new JLabel("Grau de prioridade");
         lblPrioridade.setFont(new Font("Calibri", Font.PLAIN, 12));
         lblPrioridade.setBounds(512, 51, 110, 13);
@@ -187,7 +174,6 @@ public class AlunoView extends JFrame {
         grupoPrioridade.add(grauGrave);
         grupoPrioridade.add(grauUrgencia);
 
-        // --- SEÇÃO 5: PROBLEMA E SUBTIPO (COMBOBOX EM CASCATA) ---
         JLabel lblTipoProblema = new JLabel("Qual o tipo de problema:");
         lblTipoProblema.setBounds(42, 190, 140, 13);
         panelFormulario.add(lblTipoProblema);
@@ -225,6 +211,53 @@ public class AlunoView extends JFrame {
                     cbSubtipo.setEnabled(true);
                 } else {
                     cbSubtipo.setEnabled(false);
+                }
+            }
+        });
+
+        // --- SEÇÃO DE IMAGEM ---
+        JLabel lblImagem = new JLabel("Anexar Imagem:");
+        lblImagem.setBounds(42, 270, 120, 13);
+        panelFormulario.add(lblImagem);
+
+        JButton btnAdicionarImagem = new JButton("Adicionar Imagem");
+        btnAdicionarImagem.setBounds(197, 265, 150, 23);
+        panelFormulario.add(btnAdicionarImagem);
+
+        imagePreviewLabel = new JLabel();
+        imagePreviewLabel.setBounds(400, 180, 150, 100);
+        imagePreviewLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        imagePreviewLabel.setHorizontalAlignment(JLabel.CENTER);
+        imagePreviewLabel.setVerticalAlignment(JLabel.CENTER);
+        panelFormulario.add(imagePreviewLabel);
+
+        btnAdicionarImagem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "Arquivos de Imagem", "jpg", "jpeg", "png", "gif");
+                fileChooser.setFileFilter(filter);
+
+                int result = fileChooser.showOpenDialog(AlunoView.this);
+
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    selectedImagePath = selectedFile.getAbsolutePath();
+                    try {
+                        ImageIcon imageIcon = new ImageIcon(selectedImagePath);
+                        Image image = imageIcon.getImage().getScaledInstance(
+                                imagePreviewLabel.getWidth(), imagePreviewLabel.getHeight(), Image.SCALE_SMOOTH);
+                        imagePreviewLabel.setIcon(new ImageIcon(image));
+                        imagePreviewLabel.setText("");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(AlunoView.this,
+                                "Erro ao carregar imagem: " + ex.getMessage(),
+                                "Erro de Imagem", JOptionPane.ERROR_MESSAGE);
+                        imagePreviewLabel.setIcon(null);
+                        imagePreviewLabel.setText("Erro ao carregar");
+                        selectedImagePath = null;
+                    }
                 }
             }
         });
@@ -277,12 +310,15 @@ public class AlunoView extends JFrame {
 
                 String descricaoFinal = "Local: " + sala + ", " + andarSelecionado + ". Problema: " + descricaoProblema;
 
-                // Chama o método criarTicket do AlunoController para processar e salvar
-                boolean sucesso = alunoController.criarTicket(descricaoFinal, sala, area, prioridade);
+                // Passa o caminho da imagem para o controller
+                boolean sucesso = alunoController.criarTicket(descricaoFinal, sala, area, prioridade, selectedImagePath);
 
                 if (sucesso) {
                     JOptionPane.showMessageDialog(null, "Ticket criado com sucesso!");
                     limparFormulario(listaDasSalas, grupoArea, grupoAndar, grupoPrioridade, cbTipo, cbSubtipo);
+                    imagePreviewLabel.setIcon(null);
+                    imagePreviewLabel.setText("");
+                    selectedImagePath = null;
                 } else {
                     JOptionPane.showMessageDialog(null, "Erro ao salvar ticket. Verifique o console para detalhes.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
