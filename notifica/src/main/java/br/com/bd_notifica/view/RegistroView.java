@@ -42,7 +42,14 @@ public class RegistroView extends JFrame {
 	}
 
 	public RegistroView() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				dispose();
+				new LoginView().setVisible(true);
+			}
+		});
 		setBounds(100, 100, 450, 360);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 153, 51));

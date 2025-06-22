@@ -13,6 +13,7 @@ import br.com.bd_notifica.repositories.UserRepository;
 import br.com.bd_notifica.services.UserService;
 import br.com.bd_notifica.utils.Criptografia;
 import br.com.bd_notifica.view.AdminPanelLauncher;
+import br.com.bd_notifica.view.*;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -135,12 +136,12 @@ public class LoginView extends JFrame {
                 AdminPanelLauncher.launchAdminPanel(user);
                 dispose(); // Fecha a janela de login
             } else if (user.getRole().equals(UserRole.STUDENT)) {
-                // new AlunoView(user).setVisible(true);
+                 new AlunoView(user).setVisible(true);
                 System.out.println("Abrir tela Aluno");
                 dispose(); // Fecha a janela de login
             } else if (user.getRole().equals(UserRole.AGENT)) {
-                // new AgenteView(user).setVisible(true);
-                System.out.println("Abrir tela Agente");
+				 new AgenteDeCampo().setVisible(true);               
+				 System.out.println("Abrir tela Agente");
                 dispose(); // Fecha a janela de login
             }
         } else {
@@ -154,7 +155,7 @@ public class LoginView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistroView registro = new RegistroView();
-				JOptionPane.showMessageDialog(LoginView.this, "Direcionando ao login", "Informação",
+				JOptionPane.showMessageDialog(LoginView.this, "Direcionando ao Registro", "Informação",
 						JOptionPane.INFORMATION_MESSAGE);
 				registro.setVisible(true);
 				LoginView.this.dispose();

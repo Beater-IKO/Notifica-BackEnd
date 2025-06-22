@@ -67,7 +67,14 @@ public class AlunoView extends JFrame {
         this.loggedInUser = loggedInUser;
         this.alunoController = new AlunoController(loggedInUser); // Instancia o Controller
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                dispose();
+                new LoginView().setVisible(true);
+            }
+        });
         setBounds(100, 100, 836, 400);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(153, 204, 153));
@@ -87,6 +94,13 @@ public class AlunoView extends JFrame {
         panelMenu.add(new JButton("Histórico de Tickets"));
         panelMenu.add(new JButton("Listar Tickets Finalizados"));
         panelMenu.add(new JButton("Suporte"));
+        
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.addActionListener(e -> {
+            dispose();
+            new LoginView().setVisible(true);
+        });
+        panelMenu.add(btnLogout);
 
         // --- PAINEL DO FORMULÁRIO PRINCIPAL (DIREITA) ---
         JPanel panelFormulario = new JPanel();

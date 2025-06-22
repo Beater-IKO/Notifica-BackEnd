@@ -28,12 +28,32 @@ public class AdminPanelLauncher {
             
             // Cria e exibe a janela de administração
             JFrame adminFrame = new JFrame("Painel do Administrador");
-            adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            adminFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            adminFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                    adminFrame.dispose();
+                    new LoginView().setVisible(true);
+                }
+            });
             adminFrame.setSize(900, 600);
             
             // Cria o painel de administrador
             AdminTicketPanel adminPanel = new AdminTicketPanel(ticketService, userService, user);
             adminFrame.add(adminPanel);
+            
+            // Adiciona barra de menu com logout
+            JMenuBar menuBar = new JMenuBar();
+            JMenu fileMenu = new JMenu("Arquivo");
+            JMenuItem logoutItem = new JMenuItem("Logout");
+            logoutItem.addActionListener(e -> {
+                adminFrame.dispose();
+                new LoginView().setVisible(true);
+            });
+            fileMenu.add(logoutItem);
+            menuBar.add(fileMenu);
+            adminFrame.setJMenuBar(menuBar);
+            
             adminFrame.setLocationRelativeTo(null);
             adminFrame.setVisible(true);
             

@@ -59,21 +59,34 @@ public class AgenteDeCampo extends JFrame {
         
         setTitle("Chamado de Urgência");
         setSize(1200, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                dispose();
+                new LoginView().setVisible(true);
+            }
+        });
         setLocationRelativeTo(null);
         setLayout(null);
 
         JPanel painelLateral = new JPanel();
-        painelLateral.setLayout(new GridLayout(3, 1, 10, 10));
+        painelLateral.setLayout(new GridLayout(4, 1, 10, 10));
         painelLateral.setBounds(10, 10, 250, 640);
 
         JButton btnVisualizar = criarBotaoMenu("Visualizar chamados");
         JButton btnHistorico = criarBotaoMenu("Histórico de chamados");
         JButton btnProtocolos = criarBotaoMenu("Protocolos");
+        JButton btnLogout = criarBotaoMenu("Logout");
+        btnLogout.addActionListener(e -> {
+            dispose();
+            new LoginView().setVisible(true);
+        });
 
         painelLateral.add(btnVisualizar);
         painelLateral.add(btnHistorico);
         painelLateral.add(btnProtocolos);
+        painelLateral.add(btnLogout);
 
         add(painelLateral);
 
