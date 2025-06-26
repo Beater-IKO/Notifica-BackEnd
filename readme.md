@@ -25,4 +25,3 @@ Menu do agente: É possivel realizar a atualização do status do ticket como li
 Os metodos que realizam as conexões com o banco por exemplo adicionar ou buscar algum dado dentro do banco está tudo dentro dos repositories, e estão separados para cada entidade. 
 
 Os Enums servem para definir a area, prioridade do ticket e a role do usuario. Cada enum tem algumas opções dentro como grau_leve, grau_mediano e area interna ou externa.
-

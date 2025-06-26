@@ -8,7 +8,6 @@ import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.repositories.UserRepository;
 import br.com.bd_notifica.services.TicketService;
 import java.time.LocalDate;
-// import java.util.List; // Não é necessário para a funcionalidade de criar apenas
 
 public class AlunoController {
 
@@ -24,22 +23,26 @@ public class AlunoController {
 
     /**
      * Cria um novo ticket para o aluno logado e o persiste no banco de dados.
-     * @param descricao A descrição completa do problema.
+     * @param problema A descrição do problema (tipo + subtipo). // PARÂMETRO RENOMEADO
      * @param sala A sala onde o problema ocorreu.
      * @param area A área (Interna/Externa) do problema.
      * @param prioridade O grau de prioridade do ticket.
+     * @param imagePath O caminho do arquivo da imagem anexada (pode ser null).
+     * @param andar O andar onde o problema está localizado. // NOVO PARÂMETRO
      * @return true se o ticket foi criado com sucesso, false caso contrário.
      */
-    public boolean criarTicket(String descricao, String sala, Area area, Prioridade prioridade) {
+    public boolean criarTicket(String problema, String sala, Area area, Prioridade prioridade, String imagePath, String andar) { // Assinatura atualizada
         try {
             Ticket novoTicket = new Ticket();
-            novoTicket.setDescricao(descricao);
+            novoTicket.setProblema(problema); // Define 'problema'
             novoTicket.setSala(sala);
             novoTicket.setArea(area);
             novoTicket.setPrioridade(prioridade);
             novoTicket.setUser(loggedInUser);
             novoTicket.setDataCriacao(LocalDate.now());
             novoTicket.setStatus("Pendente");
+            novoTicket.setImagePath(imagePath);
+            novoTicket.setAndar(andar); // Define o andar
 
             ticketService.criarTicket(novoTicket);
             System.out.println("Ticket criado pelo aluno com sucesso!");

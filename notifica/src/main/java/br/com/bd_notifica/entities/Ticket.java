@@ -13,8 +13,8 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "descricao")
-    private String descricao;
+    @Column(name = "problema") 
+    private String problema;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "area")
@@ -28,8 +28,14 @@ public class Ticket {
 
     private LocalDate dataCriacao;
 
-    @Column(name = "status") // Novo campo 'status' adicionado
-    private String status; // Campo de status, como String (pode ser "Pendente", "Em andamento", etc.)
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "image_path")
+    private String imagePath;
+
+    @Column(name = "andar") 
+    private String andar;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -38,27 +44,31 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(Long id, String descricao, Area area, String sala, Prioridade prioridade, LocalDate dataCriacao,
-            String status, UserEntity user) {
+    public Ticket(Long id, String problema, Area area, String sala, Prioridade prioridade, LocalDate dataCriacao,
+            String status, UserEntity user, String imagePath, String andar) { 
         this.id = id;
-        this.descricao = descricao;
+        this.problema = problema; 
         this.area = area;
         this.sala = sala;
         this.prioridade = prioridade;
         this.dataCriacao = dataCriacao;
         this.status = status;
         this.user = user;
+        this.imagePath = imagePath;
+        this.andar = andar; 
     }
 
     public Ticket(Ticket outro) {
         this.id = outro.id;
-        this.descricao = outro.descricao;
+        this.problema = outro.problema; 
         this.area = outro.area;
         this.sala = outro.sala;
         this.prioridade = outro.prioridade;
         this.dataCriacao = outro.dataCriacao;
         this.status = outro.status;
         this.user = outro.user;
+        this.imagePath = outro.imagePath;
+        this.andar = outro.andar; 
     }
 
     public Long getId() {
@@ -69,12 +79,12 @@ public class Ticket {
         this.id = id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getProblema() {
+        return problema;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setProblema(String problema) { 
+        this.problema = problema;
     }
 
     public Area getArea() {
@@ -117,6 +127,22 @@ public class Ticket {
         this.status = status;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getAndar() { 
+        return andar;
+    }
+
+    public void setAndar(String andar) { 
+        this.andar = andar;
+    }
+
     public UserEntity getUser() {
         return user;
     }
@@ -129,15 +155,15 @@ public class Ticket {
     public String toString() {
     return "Ticket {" +
             "id=" + id +
-            ", descrição='" + descricao + '\'' +
+            ", problema='" + problema + '\'' + 
             ", sala='" + sala + '\'' +
             ", área=" + area +
             ", prioridade=" + prioridade +
             ", status=" + status +
             ", dataCriacao=" + dataCriacao +
+            ", imagemPath='" + (imagePath != null ? imagePath : "N/A") + '\'' +
+            ", andar='" + (andar != null ? andar : "N/A") + '\'' + // Adiciona 'andar'
             ", usuário=" + (user != null ? user.getName() + "[" + user.getRole() + "]" : "nenhum") +
             '}';
 }
-
-    
 }
