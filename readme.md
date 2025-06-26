@@ -1,11 +1,16 @@
 O notifica é um sistema de gerenciamento predial onde pode-se abrir chamados ou como chamamos tickets.
 
-As Tecnologias usadas foram Hibernate, JPA e o PostgreSQL(banco de dados)
+As Tecnologias usadas foram Hibernate, JPA, Swing e o PostgreSQL(banco de dados)
 
+Para iniciar o sistema é necessario abrir pela main, lá abrira a tela de login caso tenha um login precisa apenas logar normalmente, caso não tenha precisa ir para o registro
 
 Temos 3 tipos de usuario: Aluno, Admin e o Agente de Campo
 
-Sempre que o sistema reinicia ele apaga os dados novos por causa do metodo create, e popula automaticamente sempre 3 usuarios e 3 tickets. 
+![alt text]({D3561CB8-1DB9-4FA4-9DF1-B8592E50E4CF}.png)
+
+![alt text]({1103B153-B4EF-4817-AD58-8174B3105D6E}.png)
+
+![alt text]({D70A384B-0413-457F-8AC7-7172CEA285BC}.png)
 
 O codigo esta organizado em Controllers, Repositories, Entities, Enums, Services. Além de contar com uma pasta Configs e Utils.
 

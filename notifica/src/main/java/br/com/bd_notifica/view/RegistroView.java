@@ -63,7 +63,7 @@ public class RegistroView extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 
-		JLabel lblNewLabel = new JLabel("Bem-Vindo");
+		JLabel lblNewLabel = new JLabel("Registro");
 		lblNewLabel.setBounds(144, 11, 62, 14);
 		panel.add(lblNewLabel);
 
