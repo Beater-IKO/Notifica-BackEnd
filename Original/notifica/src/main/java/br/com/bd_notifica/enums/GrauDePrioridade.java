@@ -1,4 +1,4 @@
-package main.java.br.com.bd_notifica.entities;
+package br.com.bd_notifica.enums;
 
 
 public enum GrauDePrioridade {

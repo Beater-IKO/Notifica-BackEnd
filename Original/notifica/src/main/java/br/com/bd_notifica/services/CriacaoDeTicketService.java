@@ -1,13 +1,12 @@
-package main.java.br.com.bd_notifica.services;
-
+package br.com.bd_notifica.services;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.NotificaCRUD.NotificaCrud.model.Ticket;
-import br.com.NotificaCRUD.NotificaCrud.repository.CriacaoDeTicketRepository;
+import br.com.bd_notifica.entities.Ticket;
+import br.com.bd_notifica.repositories.CriacaoDeTicketRepository;
 
 @Service
 public class CriacaoDeTicketService {

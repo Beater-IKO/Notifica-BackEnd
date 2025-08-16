@@ -1,75 +1,76 @@
 package br.com.bd_notifica.services;
 
-import java.time.LocalDate;
+import org.springframework.stereotype.Service;
 
-import br.com.bd_notifica.entities.UserEntity;
+import br.com.bd_notifica.entities.User;
 import br.com.bd_notifica.enums.UserRole;
 import br.com.bd_notifica.repositories.UserRepository;
-import br.com.bd_notifica.utils.Criptografia; // Mantenha esta importação para a criptografia da senha
 
+import java.util.List;
+
+@Service
 public class UserService {
+    private final UserRepository userRepository;
 
-    private UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
-    public UserEntity criarUser(UserEntity user){
-        return userRepository.createUser(user);
+    public User save(User user){
+        return userRepository.save(user);
     }
 
-    public UserEntity buscarPorEmail(String email) {
-        return userRepository.findByEmail(email);
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 
-    public UserEntity buscarPorId(Long id) {
-        return userRepository.findById(id);
+    public User findById(Integer id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    /**
-     * Novo método para registrar um usuário com nome, email, senha e papel.
-     * A senha será criptografada antes de ser salva.
-     * @param name Nome do usuário.
-     * @param email Email do usuário (deve ser único).
-     * @param password Senha em texto simples.
-     * @param role Papel do usuário (ADMIN, STUDENT, AGENT).
-     * @return true se o usuário foi registrado com sucesso, false caso contrário (ex: email já em uso).
-     */
-    public boolean registrar(String name, String email, String password, UserRole role) {
-        // Verifica se já existe um usuário com este email para evitar duplicidade
-        if (userRepository.findByEmail(email) != null) {
-            System.out.println("Erro ao registrar: Email '" + email + "' já está em uso.");
-            return false;
+    public List<User> findByNome(String nome){
+        return userRepository.findByNomeIgnoreCase(nome);
+    }
+
+    public List<User> findByRole(UserRole role){
+        return userRepository.findByRole(role);
+    }
+
+    public User update(Integer id, User user){
+        User update = findById(id);
+
+        if(user.getNome() != null && !user.getNome().isBlank()){
+            update.setNome(user.getNome());
         }
 
-        // Cria uma nova instância de UserEntity
-        UserEntity newUser = new UserEntity();
-        newUser.setName(name);
-        newUser.setEmail(email);
-        // Criptografa a senha antes de definir
-        newUser.setPassword(Criptografia.gerarHash(password));
-        newUser.setRole(role);
-        newUser.setCreateOnDate(LocalDate.now()); // Define a data de criação como a data atual
+        if(user.getCpf() != null && !user.getCpf().isBlank()){
+            update.setCpf(user.getCpf());
+        }
 
-        // Tenta criar o usuário no repositório
-        UserEntity createdUser = userRepository.createUser(newUser);
-        return createdUser != null; // Retorna true se a criação foi bem-sucedida
+        if(user.getEmail() != null && !user.getEmail().isBlank()){
+            update.setEmail(user.getEmail());
+        }
+
+        if (user.getSenha() != null && !user.getSenha().isBlank()){
+            update.setSenha(user.getSenha());
+        }
+
+        if (user.getRole() != null){
+            update.setRole(user.getRole());
+        }
+
+        if (user.getSala() != null){
+            update.setSala(user.getSala());
+        }
+
+        return userRepository.save(update);
     }
 
-    public void criarUserPadrão() {
-        // Verifica se já existem usuários padrão para evitar duplicação em cada execução
-        if (userRepository.findByEmail("ari@mail.com") == null) {
-            UserEntity u1 = new UserEntity(null, "ari", "ari@mail.com", Criptografia.gerarHash("123"), UserRole.ADMIN, LocalDate.now().minusDays(5), null);
-            userRepository.createUser(u1);
-        }
-        if (userRepository.findByEmail("carlos@mail.com") == null) {
-            UserEntity u2 = new UserEntity(null, "carlos", "carlos@mail.com", Criptografia.gerarHash("123"), UserRole.STUDENT, LocalDate.now().minusDays(4), null);
-            userRepository.createUser(u2);
-        }
-        if (userRepository.findByEmail("diego@mail.com") == null) {
-            UserEntity u3 = new UserEntity(null, "diego", "diego@mail.com", Criptografia.gerarHash("123"), UserRole.AGENT, LocalDate.now().minusDays(3), null);
-            userRepository.createUser(u3);
-        }
+    public void delete(Integer id) {
+        User delete = findById(id);
+        userRepository.delete(delete);
     }
+
+
 }
