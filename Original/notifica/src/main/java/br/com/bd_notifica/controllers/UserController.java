@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import br.com.bd_notifica.entities.User;
 import br.com.bd_notifica.enums.UserRole;
 import br.com.bd_notifica.services.UserService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class UserController {
 
 
     @PostMapping("/save")
-public ResponseEntity<?> save(@RequestBody User user) { 
+public ResponseEntity<?> save(@Valid @RequestBody User user) { 
     try {
         var result = userService.save(user);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -76,7 +77,7 @@ public ResponseEntity<?> save(@RequestBody User user) {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<User> update(@PathVariable Integer id, @RequestBody User userUpdated){
+    public ResponseEntity<User> update(@Valid @PathVariable Integer id, @RequestBody User userUpdated){
         try {
             var result = userService.update(id, userUpdated);
             return new ResponseEntity<>(result, HttpStatus.OK);
