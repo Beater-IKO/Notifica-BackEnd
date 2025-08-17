@@ -43,7 +43,7 @@ public class User {
 
     @ManyToOne
     @JsonIgnoreProperties("alunos")
-    @JoinColumn(name = "sala_id", nullable = false)
+    @JoinColumn(name = "salas", nullable = false)
     private Sala sala;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -25,14 +25,15 @@ public class UserController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody User user) { 
-        try {
-            var result = userService.save(user);
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+public ResponseEntity<?> save(@RequestBody User user) { 
+    try {
+        var result = userService.save(user);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    } catch (Exception ex) {
+        ex.printStackTrace(); // Mostra erro no console
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+}
 
     @GetMapping("/findAll")
     public ResponseEntity<List<User>> findAll(){
