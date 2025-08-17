@@ -2,8 +2,6 @@ package br.com.bd_notifica.services;
 
 import br.com.bd_notifica.entities.Categoria;
 import br.com.bd_notifica.repositories.CategoriaRepository;
-import br.com.bd_notifica.repositories.UserRepository;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 public class CategoriaService {
     
     private final CategoriaRepository categoriaRepository;
-
 
     public CategoriaService(CategoriaRepository categoriaRepository){
         this.categoriaRepository = categoriaRepository;
@@ -28,7 +25,7 @@ public class CategoriaService {
 
     public Categoria findById(Integer id){
         return categoriaRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
     }
 
     public List<Categoria> findByNome(String nome){
@@ -43,4 +40,5 @@ public class CategoriaService {
         Categoria categoria = findById(id);
         categoriaRepository.delete(categoria);
     }
+
 }
