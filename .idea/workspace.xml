@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecd76068-797a-43f7-8555-ad5846cc707e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Original/notifica/src/main/java/br/com/bd_notifica/controllers/CriacaoDeTicketController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Original/notifica/src/main/java/br/com/bd_notifica/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Original/notifica/src/main/java/br/com/bd_notifica/controllers/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Original/notifica/src/main/java/br/com/bd_notifica/entities/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/Original/notifica/src/main/java/br/com/bd_notifica/entities/Ticket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Original/notifica/src/main/java/br/com/bd_notifica/repositories/CriacaoDeTicketRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Original/notifica/src/main/java/br/com/bd_notifica/services/CriacaoDeTicketService.java" beforeDir="false" />
-    </list>
+    <list default="true" id="ecd76068-797a-43f7-8555-ad5846cc707e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,21 +13,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Fabio-Augusto-Lorencini19"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Fabio-Augusto-Lorencini19&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Beater-IKO/Notifica-clone.git",
-    "accountId": "537ec98e-632c-4fa6-9d49-58954b62b656"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Beater-IKO/Notifica-clone.git&quot;,
+    &quot;accountId&quot;: &quot;537ec98e-632c-4fa6-9d49-58954b62b656&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="31PyiXXhqTDxIzHdwpOt6WCTdEB" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -48,6 +42,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/fabio/OneDrive/Documentos/GitHub/Notifica-clone",
     "settings.editor.selected.configurable": "MTContrastSettingsConfigurable"
   }
