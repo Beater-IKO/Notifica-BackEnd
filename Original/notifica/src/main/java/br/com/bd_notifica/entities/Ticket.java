@@ -26,7 +26,7 @@ import lombok.Setter;
 public class Ticket {
 
 
-      @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
@@ -52,7 +52,6 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
-    
     @JsonIgnoreProperties("ticket")
     private Categoria categoria;
 

@@ -14,22 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.bd_notifica.entities.Ticket;
-import br.com.bd_notifica.services.CriacaoDeTicketService;
+import br.com.bd_notifica.services.TicketService;
 
 @RestController
 @RequestMapping("/admin/tickets")
 public class AdminTicketController {
 
-    private final CriacaoDeTicketService criacaoDeTicketService;
-    
-    public AdminTicketController(CriacaoDeTicketService criacaoDeTicketService) {
-        this.criacaoDeTicketService = criacaoDeTicketService;
+    private final TicketService ticketService;
+
+    public AdminTicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> create(@RequestBody Ticket ticket) {
+    @PostMapping("/save")
+    public ResponseEntity<?> save(@RequestBody Ticket ticket) {
         try {
-            String mensagem = criacaoDeTicketService.save(ticket);
+            var mensagem = ticketService.save(ticket);
             return new ResponseEntity<>(mensagem, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,26 +37,26 @@ public class AdminTicketController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/findAll")
     public ResponseEntity<?> findAll() {
         try {
-            List<Ticket> tickets = criacaoDeTicketService.findAll();
+            List<Ticket> tickets = ticketService.findAll();
             return ResponseEntity.ok(tickets);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Erro: " + e.getMessage());
         }
     }
-    
+
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return new ResponseEntity<>("API funcionando!", HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/findById/{id}")
     public ResponseEntity<Ticket> findById(@PathVariable Integer id) {
         try {
-            Ticket ticket = criacaoDeTicketService.findById(id);
+            Ticket ticket = ticketService.findById(id);
             if (ticket != null) {
                 return new ResponseEntity<>(ticket, HttpStatus.OK);
             }
@@ -66,29 +66,23 @@ public class AdminTicketController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody Ticket ticket) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Ticket ticket) {
         try {
-            String mensagem = criacaoDeTicketService.update(id, ticket);
-            if (mensagem.contains("sucesso")) {
-                return new ResponseEntity<>(mensagem, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(mensagem, HttpStatus.NOT_FOUND);
+            var mensagem = ticketService.update(id, ticket);
+            return new ResponseEntity<>(mensagem, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Erro ao atualizar ticket", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Integer id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Ticket> delete(@PathVariable Integer id) {
         try {
-            String mensagem = criacaoDeTicketService.delete(id);
-            if (mensagem.contains("sucesso")) {
-                return new ResponseEntity<>(mensagem, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(mensagem, HttpStatus.NOT_FOUND);
+            ticketService.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return new ResponseEntity<>("Erro ao deletar ticket", HttpStatus.BAD_REQUEST);
+           return ResponseEntity.noContent().build();
         }
     }
 }

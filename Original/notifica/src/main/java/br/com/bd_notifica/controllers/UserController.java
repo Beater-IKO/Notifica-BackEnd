@@ -19,28 +19,20 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/usuarios")
 public class UserController {
 
-    // Adicione esta linha para habilitar o logging
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    // MODIFIQUE ESTE MÉTODO
+
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody User user) { // Use ResponseEntity<?> para retornar mensagens de erro
+    public ResponseEntity<?> save(@RequestBody User user) { 
         try {
             var result = userService.save(user);
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         } catch (Exception ex) {
-            // Isso irá imprimir o erro completo no console da sua aplicação
-            logger.error("### ERRO AO SALVAR USUÁRIO ###", ex);
-
-            // Isso irá retornar a mensagem de erro específica no Postman
-            String errorMessage = "Erro ao processar a requisição: " + ex.getMessage();
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

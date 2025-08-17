@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.bd_notifica.entities.Ticket;
-import br.com.bd_notifica.services.CriacaoDeTicketService;
+import br.com.bd_notifica.services.TicketService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,13 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/criacao")
 public class CriacaoDeTicketController {
 
-    @Autowired
-    private CriacaoDeTicketService criacaoDeTicketService;
+    private final TicketService ticketService;
+
+    public CriacaoDeTicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
+    }
 
     @PostMapping("/save")
-    public ResponseEntity<String> save(@RequestBody Ticket ticket) {
+    public ResponseEntity<?> save(@RequestBody Ticket ticket) {
         try {
-            String mensagem = criacaoDeTicketService.save(ticket);
+            var mensagem = ticketService.save(ticket);
             return new ResponseEntity<>(mensagem, HttpStatus.OK);
 
         } catch (Exception e) {
@@ -37,14 +40,12 @@ public class CriacaoDeTicketController {
     public ResponseEntity<Ticket> findById(@PathVariable Integer id) {
 
         try {
-            Ticket ticket = this.criacaoDeTicketService.findById(id);
-            return new ResponseEntity<>(ticket, HttpStatus.OK);
+            var result = ticketService.findById(id);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
     }
-
-    
 
 }
