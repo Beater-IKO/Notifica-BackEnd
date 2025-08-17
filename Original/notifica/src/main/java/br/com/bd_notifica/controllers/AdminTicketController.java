@@ -17,7 +17,7 @@ import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.services.TicketService;
 
 @RestController
-@RequestMapping("/admin/tickets")
+@RequestMapping("/admin/tickets/")
 public class AdminTicketController {
 
     private final TicketService ticketService;
@@ -51,6 +51,16 @@ public class AdminTicketController {
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return new ResponseEntity<>("API funcionando!", HttpStatus.OK);
+    }
+
+    @GetMapping("/findByCategoria/{id}")
+    public ResponseEntity<List<Ticket>> findByCategoria(@PathVariable Integer id) {
+        try {
+            List<Ticket> tickets = ticketService.findByCategoriaId(id);
+            return new ResponseEntity<>(tickets, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/findById/{id}")

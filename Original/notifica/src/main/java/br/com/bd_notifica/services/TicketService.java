@@ -33,6 +33,11 @@ public class TicketService {
         .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));
     }
 
+    public List<Ticket> findByCategoriaId(Integer categoriaId){
+        return ticketRepository.findByCategoriaId(categoriaId);
+    }
+
+
     public Ticket update(Integer id, Ticket ticket){
         Ticket update = findById(id);
 
@@ -51,6 +56,12 @@ public class TicketService {
         if(ticket.getStatus() != null){
             update.setStatus(ticket.getStatus());
         }
+
+        if(ticket.getUser() != null){
+            update.setUser(ticket.getUser());
+        }
+
+        
 
         return ticketRepository.save(update);
     }

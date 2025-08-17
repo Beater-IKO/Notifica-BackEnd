@@ -32,10 +32,6 @@ public class CategoriaService {
         return categoriaRepository.findByNomeIgnoreCase(nome);
     }
 
-    public List<Categoria> findByCategoria(String categoria){
-        return categoriaRepository.findByCategoriaIgnoreCase(categoria);
-    }
-
     public void delete(Integer id){
         Categoria categoria = findById(id);
         categoriaRepository.delete(categoria);

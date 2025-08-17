@@ -19,7 +19,7 @@ public class Sala {
     private Integer id;
 
     @NotNull(message = "Número da sala não pode ser vazio")
-    @Column(name = "numero", length = 3)
+    @Column(name = "numero")
     private String numero;
 
     @NotNull(message = "Andar deve existir")

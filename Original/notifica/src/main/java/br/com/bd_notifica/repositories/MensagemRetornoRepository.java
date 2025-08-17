@@ -9,6 +9,6 @@ import br.com.bd_notifica.entities.MensagemRetorno;
 
 @Repository
 public interface MensagemRetornoRepository extends JpaRepository <MensagemRetorno, Integer>{
-    List<MensagemRetorno> findByUserIgnoreCase(String user);
-    List<MensagemRetorno> findByTicketIgnoreCase(String ticket);
+    List<MensagemRetorno> findByUsuario_NomeIgnoreCase(String nome);
+    List<MensagemRetorno> findByTicketId(Integer id);
 }

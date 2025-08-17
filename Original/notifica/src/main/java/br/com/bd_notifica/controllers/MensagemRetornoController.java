@@ -51,20 +51,20 @@ public class MensagemRetornoController {
         }
     }
 
-    @GetMapping("/findByTicket/{ticket}")
-    public ResponseEntity<List<MensagemRetorno>> findByTicket(@PathVariable String ticket){
+    @GetMapping("/findByTicket/{id}")
+    public ResponseEntity<List<MensagemRetorno>> findByTicket(@PathVariable Integer id){
         try {
-            var result = mensagemRetornoService.findByTicket(ticket);    
+            var result = mensagemRetornoService.findByTicket(id);    
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/findByUser/{user}")
-    public ResponseEntity<List<MensagemRetorno>> findByUser(@PathVariable String user){
+    @GetMapping("/findByUser/{nome}")
+    public ResponseEntity<List<MensagemRetorno>> findByUser(@PathVariable String nome){
         try {
-            var result = mensagemRetornoService.findByUser(user);    
+            var result = mensagemRetornoService.findByUser(nome);    
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

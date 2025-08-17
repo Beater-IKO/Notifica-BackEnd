@@ -28,12 +28,12 @@ public class MensagemRetornoService {
         .orElseThrow(() -> new RuntimeException("Mensagem não encontrada"));
     }
 
-    public List<MensagemRetorno> findByTicket(String ticket){
-        return mensagemRetornoRepository.findByTicketIgnoreCase(ticket);
+    public List<MensagemRetorno> findByTicket(Integer id){
+        return mensagemRetornoRepository.findByTicketId(id);
     }
 
-    public List<MensagemRetorno> findByUser(String user){
-        return mensagemRetornoRepository.findByUserIgnoreCase(user);
+    public List<MensagemRetorno> findByUser(String nome){
+        return mensagemRetornoRepository.findByUsuario_NomeIgnoreCase(nome);
     }
 
     public void delete(Integer id){
