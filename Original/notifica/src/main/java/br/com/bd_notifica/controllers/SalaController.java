@@ -1,7 +1,7 @@
 package br.com.bd_notifica.controllers;
 
-import br.com.bd_notifica.entities.Categoria;
-import br.com.bd_notifica.services.CategoriaService;
+import br.com.bd_notifica.entities.Sala;
+import br.com.bd_notifica.services.SalaService;
 
 import java.util.List;
 
@@ -10,29 +10,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/categorias")
-public class CategoriaController {
+@RequestMapping("/salas")
+public class SalaController {
 
-    private final CategoriaService categoriaService;
+    private final SalaService salaService;
 
-    public CategoriaController(CategoriaService categoriaService) {
-        this.categoriaService = categoriaService;
+    public SalaController(SalaService salaService) {
+        this.salaService = salaService;
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Categoria categoria) { 
+    public ResponseEntity<?> save(@RequestBody Sala sala) { 
         try {
-            var result = categoriaService.save(categoria);
+            var result = salaService.save(sala);
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         } catch (Exception ex) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<List<Categoria>> findAll(){
+    public ResponseEntity<List<Sala>> findAll(){
         try{
-            var result = categoriaService.findAll();
+            var result = salaService.findAll();
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -40,19 +40,19 @@ public class CategoriaController {
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Categoria> findById(@PathVariable Integer id){
+    public ResponseEntity<Sala> findById(@PathVariable Integer id){
         try {
-            var result = categoriaService.findById(id);
+            var result = salaService.findById(id);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/findByNome/{nome}")
-    public ResponseEntity<List<Categoria>> findByNome(@PathVariable String nome){
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Sala> update(@PathVariable Integer id, @RequestBody Sala sala){
         try {
-            var result = categoriaService.findByNome(nome);    
+            var result = salaService.update(id, sala);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -60,9 +60,9 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Categoria> delete(@PathVariable Integer id){
+    public ResponseEntity<Sala> delete(@PathVariable Integer id){
         try {
-            categoriaService.delete(id);
+            salaService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.noContent().build();

@@ -71,7 +71,7 @@ public class MensagemRetornoController {
         }
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<MensagemRetorno> delete(@PathVariable Integer id){
         try {
             mensagemRetornoService.delete(id);

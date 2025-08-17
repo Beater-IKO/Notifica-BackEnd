@@ -86,7 +86,7 @@ public ResponseEntity<?> save(@RequestBody User user) {
     }
 
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<User> delete(@PathVariable Integer id){
         try {
             userService.delete(id);
