@@ -34,23 +34,20 @@ public class Ticket {
     @Column(name = "problema")
     private String problema;
 
-    @NotBlank(message = "A area não pode ser nula")
     @Enumerated(EnumType.STRING)
     @Column(name = "area")
     private Area area;
 
-    @NotBlank(message = "A prioridade não pode ser nula")
     @Enumerated(EnumType.STRING)
     @Column(name = "prioridade")
     private GrauDePrioridade prioridade;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "O status não pode ser vazio")
     @Column(name = "status")
     private Status status;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne

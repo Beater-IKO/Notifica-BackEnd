@@ -17,7 +17,7 @@ public class MensagemRetorno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NotBlank(message = "O conteudo não pode estar em branco")
     private String conteudo;

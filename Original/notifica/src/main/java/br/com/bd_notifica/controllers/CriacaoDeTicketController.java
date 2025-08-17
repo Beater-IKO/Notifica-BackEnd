@@ -34,7 +34,7 @@ public class CriacaoDeTicketController {
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Ticket> findById(@PathVariable Long id) {
+    public ResponseEntity<Ticket> findById(@PathVariable Integer id) {
 
         try {
             Ticket ticket = this.criacaoDeTicketService.findById(id);
@@ -44,5 +44,7 @@ public class CriacaoDeTicketController {
         }
 
     }
+
+    
 
 }
