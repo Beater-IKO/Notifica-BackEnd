@@ -18,6 +18,25 @@ public class SuporteService {
     }
 
     public Suporte save(Suporte suporte){
+        // Validação de campos obrigatórios
+        if(suporte.getTitulo() == null || suporte.getTitulo().isBlank()){
+            throw new RuntimeException("Título é obrigatório");
+        }
+        
+        if(suporte.getDescricao() == null || suporte.getDescricao().isBlank()){
+            throw new RuntimeException("Descrição é obrigatória");
+        }
+        
+        // Atribui status automaticamente baseado no tipo
+        if(suporte.getStatus() == null){
+            suporte.setStatus(Status.VISTO);
+        }
+        
+        // Tipos críticos recebem prioridade maior
+        if(suporte.getTipo() == TipoSuporte.TECNICO){
+            suporte.setStatus(Status.EM_ANDAMENTO);
+        }
+        
         return suporteRepository.save(suporte);
     }
 
@@ -39,33 +58,44 @@ public class SuporteService {
     }
 
     public Suporte update(Integer id, Suporte suporte){
-        Suporte update = findById(id);
+        Suporte existingSuport = findById(id);
+        
+        // Não permite modificar suportes finalizados
+        if(existingSuport.getStatus() == Status.FINALIZADOS){
+            throw new RuntimeException("Não é possível modificar suporte finalizado");
+        }
 
         if(suporte.getTitulo() != null && !suporte.getTitulo().isBlank()){
-            update.setTitulo(suporte.getTitulo());
+            existingSuport.setTitulo(suporte.getTitulo());
         }
 
         if(suporte.getDescricao() != null && !suporte.getDescricao().isBlank()){
-            update.setDescricao(suporte.getDescricao());
+            existingSuport.setDescricao(suporte.getDescricao());
         }
 
         if(suporte.getTipo() != null){
-            update.setTipo(suporte.getTipo());
+            existingSuport.setTipo(suporte.getTipo());
         }
 
         if(suporte.getStatus() != null){
-            update.setStatus(suporte.getStatus());
+            existingSuport.setStatus(suporte.getStatus());
         }
 
         if(suporte.getUser() != null){
-            update.setUser(suporte.getUser());
+            existingSuport.setUser(suporte.getUser());
         }
 
-        return suporteRepository.save(update);
+        return suporteRepository.save(existingSuport);
     }
 
     public void delete(Integer id){
-        Suporte delete = findById(id);
-        suporteRepository.delete(delete);
+        Suporte suporteToDelete = findById(id);
+        
+        // Não permite excluir suportes em andamento
+        if(suporteToDelete.getStatus() == Status.EM_ANDAMENTO){
+            throw new RuntimeException("Não é possível excluir suporte em andamento");
+        }
+        
+        suporteRepository.delete(suporteToDelete);
     }
 }

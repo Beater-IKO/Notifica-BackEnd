@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// API para requisições de materiais
 @RestController
 @RequestMapping("/protocolos")
 public class ProtocoloController {
@@ -20,6 +21,7 @@ public class ProtocoloController {
         this.protocoloService = protocoloService;
     }
 
+    // Criar nova requisição
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Protocolo protocolo) { 
         try {
@@ -30,6 +32,7 @@ public class ProtocoloController {
         }
     }
 
+    // Listar todas as requisições
     @GetMapping("/findAll")
     public ResponseEntity<List<Protocolo>> findAll(){
         try{
@@ -50,6 +53,7 @@ public class ProtocoloController {
         }
     }
 
+    // Filtrar por status (PENDENTE, APROVADO, etc)
     @GetMapping("/findByStatus/{status}")
     public ResponseEntity<List<Protocolo>> findByStatus(@PathVariable String status){
         try {
@@ -60,6 +64,7 @@ public class ProtocoloController {
         }
     }
 
+    // Ver requisições de um usuário
     @GetMapping("/findByUser/{userId}")
     public ResponseEntity<List<Protocolo>> findByUserId(@PathVariable Integer userId){
         try {
@@ -70,6 +75,7 @@ public class ProtocoloController {
         }
     }
 
+    // Atualizar requisição
     @PutMapping("/update/{id}")
     public ResponseEntity<Protocolo> update(@PathVariable Integer id, @RequestBody Protocolo protocolo){
         try {
@@ -80,6 +86,7 @@ public class ProtocoloController {
         }
     }
 
+    // Cancelar requisição
     @DeleteMapping("/{id}")
     public ResponseEntity<Protocolo> delete(@PathVariable Integer id){
         try {

@@ -8,8 +8,14 @@ import br.com.bd_notifica.repositories.ProtocoloRepository;
 
 import java.util.List;
 
+/**
+ * Serviço de negócio para sistema de requisição de materiais
+ * Implementa regras complexas de aprovação e controle de estoque
+ * Gerencia o fluxo completo desde solicitação até entrega dos materiais
+ */
 @Service
 public class ProtocoloService {
+    // Repositório para persistência de protocolos de requisição
     private final ProtocoloRepository protocoloRepository;
 
     public ProtocoloService(ProtocoloRepository protocoloRepository){
@@ -32,51 +38,67 @@ public class ProtocoloService {
         return protocoloRepository.save(protocolo);
     }
 
+    /**
+     * Lista todos os protocolos para gestão administrativa
+     * Utilizado para controle de estoque e aprovações pendentes
+     */
     public List<Protocolo> findAll(){
         return protocoloRepository.findAll();
     }
 
+    /**
+     * Busca protocolo específico com tratamento de erro
+     * Essencial para acompanhamento de solicitações
+     */
     public Protocolo findById(Integer id){
         return protocoloRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Protocolo não encontrado"));
     }
 
+    /**
+     * Filtra protocolos por status usando query method
+     * Permite gestão de filas de aprovação e acompanhamento
+     */
     public List<Protocolo> findByStatus(StatusProtocolo status){
         return protocoloRepository.findByStatus(status);
     }
 
+    /**
+     * Lista protocolos de um usuário específico
+     * Permite ao usuário acompanhar suas próprias solicitações
+     */
     public List<Protocolo> findByUserId(Integer userId){
         return protocoloRepository.findByUserId(userId);
     }
 
     public Protocolo update(Integer id, Protocolo protocolo){
-        Protocolo update = findById(id);
+        Protocolo existingProtocolo = findById(id);
 
         if(protocolo.getDescricao() != null && !protocolo.getDescricao().isBlank()){
-            update.setDescricao(protocolo.getDescricao());
+            existingProtocolo.setDescricao(protocolo.getDescricao());
         }
 
         if(protocolo.getQuantidadeSolicitada() != null){
-            update.setQuantidadeSolicitada(protocolo.getQuantidadeSolicitada());
+            existingProtocolo.setQuantidadeSolicitada(protocolo.getQuantidadeSolicitada());
         }
 
         if(protocolo.getObservacoes() != null){
-            update.setObservacoes(protocolo.getObservacoes());
+            existingProtocolo.setObservacoes(protocolo.getObservacoes());
         }
 
         if(protocolo.getStatus() != null){
-            update.setStatus(protocolo.getStatus());
+            existingProtocolo.setStatus(protocolo.getStatus());
         }
 
         if(protocolo.getMaterial() != null){
-            update.setMaterial(protocolo.getMaterial());
+            existingProtocolo.setMaterial(protocolo.getMaterial());
         }
 
-        return protocoloRepository.save(update);
+        return protocoloRepository.save(existingProtocolo);
     }
 
     public void delete(Integer id){
-        Protocolo delete = findById(id);
-        protocoloRepository.delete(delete);
+        Protocolo protocoloToDelete = findById(id);
+        protocoloRepository.delete(protocoloToDelete);
     }
 }

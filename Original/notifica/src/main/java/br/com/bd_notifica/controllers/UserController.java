@@ -14,10 +14,12 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 
+// API para gerenciar usuários
 @RestController
 @RequestMapping("/usuarios")
 public class UserController {
 
+    // Serviço de usuários
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -25,17 +27,19 @@ public class UserController {
     }
 
 
+    // Criar novo usuário
     @PostMapping("/save")
-public ResponseEntity<?> save(@Valid @RequestBody User user) { 
-    try {
-        var result = userService.save(user);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    } catch (Exception ex) {
-        ex.printStackTrace(); // Mostra erro no console
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> save(@Valid @RequestBody User user) { 
+        try {
+            var result = userService.save(user);
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Mostra erro no console
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-}
 
+    // Listar todos os usuários
     @GetMapping("/findAll")
     public ResponseEntity<List<User>> findAll(){
         try{
@@ -46,6 +50,7 @@ public ResponseEntity<?> save(@Valid @RequestBody User user) {
         }
     }
 
+    // Buscar por ID
     @GetMapping("/findById/{id}")
     public ResponseEntity<User> findById(@PathVariable Integer id){
         try {
@@ -56,6 +61,7 @@ public ResponseEntity<?> save(@Valid @RequestBody User user) {
         }
     }
 
+    // Buscar por nome (ignora maiúscula/minúscula)
     @GetMapping("/findByNome/{nome}")
     public ResponseEntity<List<User>> findByNome(@PathVariable String nome){
         try {
@@ -66,6 +72,7 @@ public ResponseEntity<?> save(@Valid @RequestBody User user) {
         }
     }
 
+    // Buscar por tipo de usuário
     @GetMapping("/findByRole/{role}")
     public ResponseEntity<List<User>> findByRole(@PathVariable String role){
         try {
@@ -76,6 +83,7 @@ public ResponseEntity<?> save(@Valid @RequestBody User user) {
         }
     }
 
+    // Atualizar usuário
     @PutMapping("/update/{id}")
     public ResponseEntity<User> update(@Valid @PathVariable Integer id, @RequestBody User userUpdated){
         try {
@@ -87,6 +95,7 @@ public ResponseEntity<?> save(@Valid @RequestBody User user) {
     }
 
 
+    // Excluir usuário (não pode excluir admin)
     @DeleteMapping("/{id}")
     public ResponseEntity<User> delete(@PathVariable Integer id){
         try {

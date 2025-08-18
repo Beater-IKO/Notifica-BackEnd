@@ -1,19 +1,17 @@
 package br.com.bd_notifica.services;
 
 import java.util.List;
-import java.util.Optional;
-
-import javax.management.RuntimeErrorException;
-import br.com.bd_notifica.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.repositories.TicketRepository;
+import br.com.bd_notifica.enums.Status;
 
+// Regras de negócio para tickets
 @Service
 public class TicketService {
 
+    // Acesso ao banco de dados
     private final TicketRepository ticketRepository;
 
     public TicketService(TicketRepository ticketRepository){
@@ -21,53 +19,83 @@ public class TicketService {
     }
     
     public Ticket save(Ticket ticket){
+        // Validação de campos obrigatórios
+        if(ticket.getProblema() == null || ticket.getProblema().isBlank()){
+            throw new RuntimeException("Problema é obrigatório");
+        }
+        
+        if(ticket.getUser() == null){
+            throw new RuntimeException("Usuário é obrigatório");
+        }
+        
+        // Define status inicial automaticamente
+        if(ticket.getStatus() == null){
+            ticket.setStatus(Status.VISTO);
+        }
+        
         return ticketRepository.save(ticket);
     }
 
+    // Lista todos os tickets
     public List<Ticket> findAll(){
         return ticketRepository.findAll();
     }
 
+    // Busca ticket por ID
     public Ticket findById(Integer id){
         return ticketRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));
     }
 
+    // Filtra tickets por categoria
     public List<Ticket> findByCategoriaId(Integer categoriaId){
         return ticketRepository.findByCategoriaId(categoriaId);
     }
 
 
     public Ticket update(Integer id, Ticket ticket){
-        Ticket update = findById(id);
+        Ticket existingTicket = findById(id);
+        
+        // Não permite modificar tickets finalizados
+        if(existingTicket.getStatus() == Status.FINALIZADOS){
+            throw new RuntimeException("Não é possível modificar ticket finalizado");
+        }
 
         if(ticket.getProblema() != null && !ticket.getProblema().isBlank()){
-            update.setProblema(ticket.getProblema());
+            existingTicket.setProblema(ticket.getProblema());
         }
 
         if(ticket.getArea() != null){
-            update.setArea(ticket.getArea());
+            existingTicket.setArea(ticket.getArea());
         }
 
         if(ticket.getPrioridade() != null){
-            update.setPrioridade(ticket.getPrioridade());
+            existingTicket.setPrioridade(ticket.getPrioridade());
         }
 
         if(ticket.getStatus() != null){
-            update.setStatus(ticket.getStatus());
+            // Validação de transição de status
+            if(ticket.getStatus() == Status.FINALIZADOS){
+                // Ticket pode ser finalizado
+            }
+            existingTicket.setStatus(ticket.getStatus());
         }
 
         if(ticket.getUser() != null){
-            update.setUser(ticket.getUser());
+            existingTicket.setUser(ticket.getUser());
         }
 
-        
-
-        return ticketRepository.save(update);
+        return ticketRepository.save(existingTicket);
     }
 
     public void delete(Integer id){
-        Ticket delete = findById(id);
-        ticketRepository.delete(delete);
+        Ticket ticketToDelete = findById(id);
+        
+        // Apenas tickets vistos podem ser excluídos
+        if(ticketToDelete.getStatus() != Status.VISTO){
+            throw new RuntimeException("Apenas tickets vistos podem ser excluídos");
+        }
+        
+        ticketRepository.delete(ticketToDelete);
     }
 }

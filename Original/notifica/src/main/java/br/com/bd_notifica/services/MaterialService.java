@@ -41,25 +41,25 @@ public class MaterialService {
     }
 
     public Material update(Integer id, Material material){
-        Material update = findById(id);
+        Material existingMaterial = findById(id);
 
         if(material.getNome() != null && !material.getNome().isBlank()){
-            update.setNome(material.getNome());
+            existingMaterial.setNome(material.getNome());
         }
 
         if(material.getDescricao() != null && !material.getDescricao().isBlank()){
-            update.setDescricao(material.getDescricao());
+            existingMaterial.setDescricao(material.getDescricao());
         }
 
         if(material.getQuantidadeEstoque() != null){
-            update.setQuantidadeEstoque(material.getQuantidadeEstoque());
+            existingMaterial.setQuantidadeEstoque(material.getQuantidadeEstoque());
         }
 
-        return materialRepository.save(update);
+        return materialRepository.save(existingMaterial);
     }
 
     public void delete(Integer id) {
-        Material delete = findById(id);
-        materialRepository.delete(delete);
+        Material materialToDelete = findById(id);
+        materialRepository.delete(materialToDelete);
     }
 }

@@ -10,12 +10,13 @@ import br.com.bd_notifica.enums.UserRole;
 
 import java.util.List;
 
+// Acesso aos dados de usuários
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    @Query("SELECT u FROM User u WHERE UPPER(u.nome) = UPPER(:nome)")
-    List<User> findByNomeIgnoreCase(@Param("nome") String nome);
+    // Busca por nome sem diferenciar maiúscula/minúscula - query gerada automaticamente
+    List<User> findByNomeIgnoreCase(String nome);
 
-    @Query("SELECT u FROM User u WHERE u.role = :role")
-    List<User> findByRole(@Param("role") UserRole role);
+    // Filtra usuários por tipo (ADMIN, USER) - query gerada automaticamente
+    List<User> findByRole(UserRole role);
 }
