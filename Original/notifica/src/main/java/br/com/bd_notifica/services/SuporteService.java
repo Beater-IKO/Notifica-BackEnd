@@ -9,6 +9,7 @@ import br.com.bd_notifica.repositories.SuporteRepository;
 
 import java.util.List;
 
+// Serviço para suporte
 @Service
 public class SuporteService {
     private final SuporteRepository suporteRepository;
@@ -17,6 +18,7 @@ public class SuporteService {
         this.suporteRepository = suporteRepository;
     }
 
+    // Salvar suporte
     public Suporte save(Suporte suporte){
         // Validação de campos obrigatórios
         if(suporte.getTitulo() == null || suporte.getTitulo().isBlank()){
@@ -40,23 +42,28 @@ public class SuporteService {
         return suporteRepository.save(suporte);
     }
 
+    // Listar suportes
     public List<Suporte> findAll(){
         return suporteRepository.findAll();
     }
 
+    // Buscar por ID
     public Suporte findById(Integer id){
         return suporteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Suporte não encontrado"));
     }
 
+    // Filtrar por tipo
     public List<Suporte> findByTipo(TipoSuporte tipo){
         return suporteRepository.findByTipo(tipo);
     }
 
+    // Filtrar por status
     public List<Suporte> findByStatus(Status status){
         return suporteRepository.findByStatus(status);
     }
 
+    // Atualizar suporte
     public Suporte update(Integer id, Suporte suporte){
         Suporte existingSuport = findById(id);
         
@@ -88,6 +95,7 @@ public class SuporteService {
         return suporteRepository.save(existingSuport);
     }
 
+    // Excluir suporte
     public void delete(Integer id){
         Suporte suporteToDelete = findById(id);
         

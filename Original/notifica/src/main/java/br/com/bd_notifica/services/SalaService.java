@@ -7,6 +7,7 @@ import br.com.bd_notifica.repositories.SalaRepository;
 
 import java.util.List;
 
+// Serviço para salas
 @Service
 public class SalaService {
     private final SalaRepository salaRepository;
@@ -15,39 +16,44 @@ public class SalaService {
         this.salaRepository = salaRepository;
     }
 
+    // Salvar sala
     public Sala save(Sala sala){
         return salaRepository.save(sala);
     }
 
+    // Listar salas
     public List<Sala> findAll(){
         return salaRepository.findAll();
     }
 
+    // Buscar por ID
     public Sala findById(Integer id){
         return salaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sala não encontrada"));
     }
 
+    // Atualizar sala
     public Sala update(Integer id, Sala sala){
-        Sala update = findById(id);
+        Sala existingSala = findById(id);
 
         if(sala.getNumero() != null && !sala.getNumero().isBlank()){
-            update.setNumero(sala.getNumero());
+            existingSala.setNumero(sala.getNumero());
         }
 
         if(sala.getAndar() != null){
-            update.setAndar(sala.getAndar());
+            existingSala.setAndar(sala.getAndar());
         }
 
         if(sala.getCurso() != null){
-            update.setCurso(sala.getCurso());
+            existingSala.setCurso(sala.getCurso());
         }
 
-        return salaRepository.save(update);
+        return salaRepository.save(existingSala);
     }
 
+    // Excluir sala
     public void delete(Integer id) {
-        Sala delete = findById(id);
-        salaRepository.delete(delete);
+        Sala salaToDelete = findById(id);
+        salaRepository.delete(salaToDelete);
     }
 }

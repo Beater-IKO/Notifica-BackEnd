@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
+// Controller para gestão de cursos
 @RestController
 @RequestMapping("/cursos")
 public class CursoController {
@@ -20,6 +21,7 @@ public class CursoController {
         this.cursoService = cursoService;
     }
 
+    // Criar curso
     @PostMapping("/save")
     public ResponseEntity<?> save(@Valid @RequestBody Curso curso) { 
         try {
@@ -30,6 +32,7 @@ public class CursoController {
         }
     }
 
+    // Listar cursos
     @GetMapping("/findAll")
     public ResponseEntity<List<Curso>> findAll(){
         try{
@@ -50,6 +53,7 @@ public class CursoController {
         }
     }
 
+    // Atualizar curso
     @PutMapping("/update/{id}")
     public ResponseEntity<Curso> update(@PathVariable Integer id, @RequestBody Curso curso){
         try {
@@ -60,6 +64,7 @@ public class CursoController {
         }
     }
 
+    // Excluir curso
     @DeleteMapping("/{id}")
     public ResponseEntity<Curso> delete(@PathVariable Integer id){
         try {

@@ -8,24 +8,29 @@ import lombok.Data;
 
 import java.util.List;
 
+// Cursos oferecidos pela instituição
 @Entity
 @Data
 @Table(name = "cursos")
 public class Curso {
 
+    // ID do curso
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    // Nome do curso
     @NotBlank(message = "O nome do curso não pode estar em branco")
     @Column(name = "nome")
     private String nome;
 
+    // Duração em horas
     @NotNull(message = "O número não pode ser vazio")
     @Column(name = "duração")
     private int duracao;
 
 
+    // Salas do curso
     @OneToMany(mappedBy = "curso")
     @JsonIgnoreProperties("curso")
     private List<Sala> salas;

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Controller para categorias de tickets
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
@@ -19,6 +20,7 @@ public class CategoriaController {
         this.categoriaService = categoriaService;
     }
 
+    // Criar categoria
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Categoria categoria) { 
         try {
@@ -29,6 +31,7 @@ public class CategoriaController {
         }
     }
 
+    // Listar categorias
     @GetMapping("/findAll")
     public ResponseEntity<List<Categoria>> findAll(){
         try{
@@ -49,6 +52,7 @@ public class CategoriaController {
         }
     }
 
+    // Buscar por nome
     @GetMapping("/findByNome/{nome}")
     public ResponseEntity<List<Categoria>> findByNome(@PathVariable String nome){
         try {
@@ -59,6 +63,7 @@ public class CategoriaController {
         }
     }
 
+    // Excluir categoria
     @DeleteMapping("/{id}")
     public ResponseEntity<Categoria> delete(@PathVariable Integer id){
         try {

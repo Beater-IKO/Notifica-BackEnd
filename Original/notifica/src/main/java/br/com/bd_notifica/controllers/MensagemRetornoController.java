@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Controller para mensagens de retorno
 @RestController
 @RequestMapping("/mensagemretorno")
 public class MensagemRetornoController {
@@ -21,6 +22,7 @@ public class MensagemRetornoController {
         this.mensagemRetornoService = mensagemRetornoService;
     }
 
+    // Criar mensagem
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody MensagemRetorno mensagemRetorno) { 
         try {
@@ -31,6 +33,7 @@ public class MensagemRetornoController {
         }
     }
 
+    // Listar mensagens
     @GetMapping("/findAll")
     public ResponseEntity<List<MensagemRetorno>> findAll(){
         try{
@@ -51,6 +54,7 @@ public class MensagemRetornoController {
         }
     }
 
+    // Mensagens de um ticket
     @GetMapping("/findByTicket/{id}")
     public ResponseEntity<List<MensagemRetorno>> findByTicket(@PathVariable Integer id){
         try {
@@ -61,6 +65,7 @@ public class MensagemRetornoController {
         }
     }
 
+    // Mensagens de um usuário
     @GetMapping("/findByUser/{nome}")
     public ResponseEntity<List<MensagemRetorno>> findByUser(@PathVariable String nome){
         try {
@@ -71,6 +76,7 @@ public class MensagemRetornoController {
         }
     }
 
+    // Excluir mensagem
     @DeleteMapping("/{id}")
     public ResponseEntity<MensagemRetorno> delete(@PathVariable Integer id){
         try {

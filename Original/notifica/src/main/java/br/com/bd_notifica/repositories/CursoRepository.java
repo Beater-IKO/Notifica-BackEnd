@@ -7,8 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import br.com.bd_notifica.entities.Curso;
 
+// Repositório para cursos
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, Integer> {
+    // Busca curso por nome
     List<Curso> findByNomeIgnoreCase(String nome);
+    // Cursos com duração maior que X horas
     List<Curso> findByDuracaoGreaterThan(Integer duracao);
 }

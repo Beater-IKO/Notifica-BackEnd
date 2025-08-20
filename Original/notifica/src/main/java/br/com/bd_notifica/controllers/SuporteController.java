@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Controller para chamados de suporte
 @RestController
 @RequestMapping("/suportes")
 public class SuporteController {
@@ -21,6 +22,7 @@ public class SuporteController {
         this.suporteService = suporteService;
     }
 
+    // Criar chamado de suporte
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Suporte suporte) { 
         try {
@@ -31,6 +33,7 @@ public class SuporteController {
         }
     }
 
+    // Listar chamados
     @GetMapping("/findAll")
     public ResponseEntity<List<Suporte>> findAll(){
         try{
@@ -51,6 +54,7 @@ public class SuporteController {
         }
     }
 
+    // Buscar por tipo de suporte
     @GetMapping("/findByTipo/{tipo}")
     public ResponseEntity<List<Suporte>> findByTipo(@PathVariable String tipo){
         try {
@@ -61,6 +65,7 @@ public class SuporteController {
         }
     }
 
+    // Buscar por status
     @GetMapping("/findByStatus/{status}")
     public ResponseEntity<List<Suporte>> findByStatus(@PathVariable String status){
         try {
@@ -71,6 +76,7 @@ public class SuporteController {
         }
     }
 
+    // Atualizar chamado
     @PutMapping("/update/{id}")
     public ResponseEntity<Suporte> update(@PathVariable Integer id, @RequestBody Suporte suporte){
         try {
@@ -81,6 +87,7 @@ public class SuporteController {
         }
     }
 
+    // Excluir chamado
     @DeleteMapping("/{id}")
     public ResponseEntity<Suporte> delete(@PathVariable Integer id){
         try {

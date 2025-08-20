@@ -9,27 +9,33 @@ import lombok.Data;
 
 import java.util.List;
 
+// Salas de aula da instituição
 @Entity
 @Data
 @Table(name = "salas")
 public class Sala {
 
+    // ID da sala
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    // Número da sala
     @NotNull(message = "Número da sala não pode ser vazio")
     @Column(name = "numero")
     private String numero;
 
+    // Andar onde fica a sala
     @NotNull(message = "Andar deve existir")
     @Column(name = "Andar")
     private Andar andar;
 
+    // Alunos da sala
     @OneToMany(mappedBy = "sala")
     @JsonIgnoreProperties("sala")
     private List<User> alunos;
 
+    // Professores da sala
     @ManyToMany
     @JoinTable(
             name = "sala_professor",
@@ -39,6 +45,7 @@ public class Sala {
     @JsonIgnoreProperties("salasProfessor")
     private List<User> professores;
 
+    // Curso da sala
     @ManyToOne
     @JoinColumn(name = "curso_id")
     @NotNull(message = "A sala precisa estar vinculada a um curso")

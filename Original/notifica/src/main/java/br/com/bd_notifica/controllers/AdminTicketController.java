@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.services.TicketService;
 
+// Controller administrativo para gestão de tickets
 @RestController
 @RequestMapping("/admin/tickets/")
 public class AdminTicketController {
@@ -26,6 +27,7 @@ public class AdminTicketController {
         this.ticketService = ticketService;
     }
 
+    // Criar novo ticket (admin)
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Ticket ticket) {
         try {
@@ -37,6 +39,7 @@ public class AdminTicketController {
         }
     }
 
+    // Listar todos os tickets
     @GetMapping("/findAll")
     public ResponseEntity<?> findAll() {
         try {
@@ -48,11 +51,13 @@ public class AdminTicketController {
         }
     }
 
+    // Teste da API
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return new ResponseEntity<>("API funcionando!", HttpStatus.OK);
     }
 
+    // Buscar tickets por categoria
     @GetMapping("/findByCategoria/{id}")
     public ResponseEntity<List<Ticket>> findByCategoria(@PathVariable Integer id) {
         try {
@@ -76,6 +81,7 @@ public class AdminTicketController {
         }
     }
 
+    // Atualizar ticket
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Ticket ticket) {
         try {
@@ -86,6 +92,7 @@ public class AdminTicketController {
         }
     }
 
+    // Excluir ticket
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Ticket> delete(@PathVariable Integer id) {
         try {

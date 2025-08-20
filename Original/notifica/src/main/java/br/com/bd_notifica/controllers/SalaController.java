@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Controller para gestão de salas
 @RestController
 @RequestMapping("/salas")
 public class SalaController {
@@ -19,6 +20,7 @@ public class SalaController {
         this.salaService = salaService;
     }
 
+    // Criar sala
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Sala sala) { 
         try {
@@ -29,6 +31,7 @@ public class SalaController {
         }
     }
 
+    // Listar salas
     @GetMapping("/findAll")
     public ResponseEntity<List<Sala>> findAll(){
         try{
@@ -49,6 +52,7 @@ public class SalaController {
         }
     }
 
+    // Atualizar sala
     @PutMapping("/update/{id}")
     public ResponseEntity<Sala> update(@PathVariable Integer id, @RequestBody Sala sala){
         try {
@@ -59,6 +63,7 @@ public class SalaController {
         }
     }
 
+    // Excluir sala
     @DeleteMapping("/{id}")
     public ResponseEntity<Sala> delete(@PathVariable Integer id){
         try {
