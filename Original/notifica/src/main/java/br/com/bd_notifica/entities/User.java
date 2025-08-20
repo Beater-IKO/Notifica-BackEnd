@@ -56,6 +56,7 @@ public class User {
 
     // Tickets criados pelo usuário
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("user")
     private List<Ticket> tickets = new ArrayList<>();
 
     // Protocolos de requisição

@@ -3,6 +3,7 @@ package br.com.bd_notifica.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.bd_notifica.enums.Area;
@@ -55,6 +56,7 @@ public class Ticket {
     // Quem criou o ticket
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("ticket")
     private User user;
 
     // Categoria do problema
