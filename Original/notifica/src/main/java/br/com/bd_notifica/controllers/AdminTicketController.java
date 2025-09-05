@@ -29,77 +29,70 @@ public class AdminTicketController {
 
     // Criar novo ticket (admin)
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Ticket ticket) {
-        try {
-            var mensagem = ticketService.save(ticket);
-            return new ResponseEntity<>(mensagem, HttpStatus.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("Erro: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Ticket> save(@RequestBody Ticket ticket) {
+
+        Ticket ticketSalvo = ticketService.save(ticket); 
+        //ticketSalvo existe para armazenar temporariamente o resultado
+
+        return new ResponseEntity<>(ticketSalvo, HttpStatus.CREATED);
+
     }
 
     // Listar todos os tickets
     @GetMapping("/findAll")
     public ResponseEntity<?> findAll() {
-        try {
+        
             List<Ticket> tickets = ticketService.findAll();
             return ResponseEntity.ok(tickets);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Erro: " + e.getMessage());
-        }
+    
     }
 
-    // Teste da API
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return new ResponseEntity<>("API funcionando!", HttpStatus.OK);
-    }
 
     // Buscar tickets por categoria
     @GetMapping("/findByCategoria/{id}")
     public ResponseEntity<List<Ticket>> findByCategoria(@PathVariable Integer id) {
-        try {
+        
             List<Ticket> tickets = ticketService.findByCategoriaId(id);
-            return new ResponseEntity<>(tickets, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+            return ResponseEntity.ok(tickets);
+      
     }
 
     @GetMapping("/findById/{id}")
     public ResponseEntity<Ticket> findById(@PathVariable Integer id) {
-        try {
+     
             Ticket ticket = ticketService.findById(id);
-            if (ticket != null) {
-                return new ResponseEntity<>(ticket, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return ResponseEntity.ok(ticket);
+  
     }
 
     // Atualizar ticket
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Ticket ticket) {
-        try {
-            var mensagem = ticketService.update(id, ticket);
-            return new ResponseEntity<>(mensagem, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Erro ao atualizar ticket", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Ticket> update(@PathVariable Integer id, @RequestBody Ticket ticket) {
+        
+            Ticket ticketAtualizado = ticketService.update(id, ticket);
+            return ResponseEntity.ok(ticketAtualizado);
+            
+            
+       
     }
 
     // Excluir ticket
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Ticket> delete(@PathVariable Integer id) {
-        try {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+      
             ticketService.delete(id);
+
+
             return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-           return ResponseEntity.noContent().build();
-        }
+
+
+
+    }
+
+    
+    // Teste da API
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("API funcionando!", HttpStatus.OK);
     }
 }
