@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// Controller para gestão de salas
 @RestController
 @RequestMapping("/salas")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SalaController {
 
     private final SalaService salaService;
@@ -20,9 +20,8 @@ public class SalaController {
         this.salaService = salaService;
     }
 
-    // Criar sala
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Sala sala) { 
+    public ResponseEntity<?> save(@RequestBody Sala sala) {
         try {
             var result = salaService.save(sala);
             return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -31,10 +30,9 @@ public class SalaController {
         }
     }
 
-    // Listar salas
     @GetMapping("/findAll")
-    public ResponseEntity<List<Sala>> findAll(){
-        try{
+    public ResponseEntity<List<Sala>> findAll() {
+        try {
             var result = salaService.findAll();
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
@@ -43,7 +41,7 @@ public class SalaController {
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Sala> findById(@PathVariable Integer id){
+    public ResponseEntity<Sala> findById(@PathVariable Integer id) {
         try {
             var result = salaService.findById(id);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -52,9 +50,8 @@ public class SalaController {
         }
     }
 
-    // Atualizar sala
     @PutMapping("/update/{id}")
-    public ResponseEntity<Sala> update(@PathVariable Integer id, @RequestBody Sala sala){
+    public ResponseEntity<Sala> update(@PathVariable Integer id, @RequestBody Sala sala) {
         try {
             var result = salaService.update(id, sala);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -63,9 +60,8 @@ public class SalaController {
         }
     }
 
-    // Excluir sala
     @DeleteMapping("/{id}")
-    public ResponseEntity<Sala> delete(@PathVariable Integer id){
+    public ResponseEntity<Sala> delete(@PathVariable Integer id) {
         try {
             salaService.delete(id);
             return ResponseEntity.noContent().build();

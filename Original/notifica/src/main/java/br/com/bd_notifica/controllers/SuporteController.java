@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 // Controller para chamados de suporte
 @RestController
 @RequestMapping("/suportes")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SuporteController {
 
     private final SuporteService suporteService;
@@ -24,7 +25,7 @@ public class SuporteController {
 
     // Criar chamado de suporte
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Suporte suporte) { 
+    public ResponseEntity<?> save(@RequestBody Suporte suporte) {
         try {
             var result = suporteService.save(suporte);
             return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -35,8 +36,8 @@ public class SuporteController {
 
     // Listar chamados
     @GetMapping("/findAll")
-    public ResponseEntity<List<Suporte>> findAll(){
-        try{
+    public ResponseEntity<List<Suporte>> findAll() {
+        try {
             var result = suporteService.findAll();
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
@@ -45,7 +46,7 @@ public class SuporteController {
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Suporte> findById(@PathVariable Integer id){
+    public ResponseEntity<Suporte> findById(@PathVariable Integer id) {
         try {
             var result = suporteService.findById(id);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -56,7 +57,7 @@ public class SuporteController {
 
     // Buscar por tipo de suporte
     @GetMapping("/findByTipo/{tipo}")
-    public ResponseEntity<List<Suporte>> findByTipo(@PathVariable String tipo){
+    public ResponseEntity<List<Suporte>> findByTipo(@PathVariable String tipo) {
         try {
             var result = suporteService.findByTipo(TipoSuporte.valueOf(tipo));
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -67,7 +68,7 @@ public class SuporteController {
 
     // Buscar por status
     @GetMapping("/findByStatus/{status}")
-    public ResponseEntity<List<Suporte>> findByStatus(@PathVariable String status){
+    public ResponseEntity<List<Suporte>> findByStatus(@PathVariable String status) {
         try {
             var result = suporteService.findByStatus(Status.valueOf(status));
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -78,7 +79,7 @@ public class SuporteController {
 
     // Atualizar chamado
     @PutMapping("/update/{id}")
-    public ResponseEntity<Suporte> update(@PathVariable Integer id, @RequestBody Suporte suporte){
+    public ResponseEntity<Suporte> update(@PathVariable Integer id, @RequestBody Suporte suporte) {
         try {
             var result = suporteService.update(id, suporte);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -89,7 +90,7 @@ public class SuporteController {
 
     // Excluir chamado
     @DeleteMapping("/{id}")
-    public ResponseEntity<Suporte> delete(@PathVariable Integer id){
+    public ResponseEntity<Suporte> delete(@PathVariable Integer id) {
         try {
             suporteService.delete(id);
             return ResponseEntity.noContent().build();

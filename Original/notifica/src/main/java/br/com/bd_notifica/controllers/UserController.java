@@ -1,6 +1,5 @@
 package br.com.bd_notifica.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +12,10 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
-
 // API para gerenciar usuários
 @RestController
 @RequestMapping("/usuarios")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     // Serviço de usuários
@@ -26,10 +25,9 @@ public class UserController {
         this.userService = userService;
     }
 
-
     // Criar novo usuário
     @PostMapping("/save")
-    public ResponseEntity<?> save(@Valid @RequestBody User user) { 
+    public ResponseEntity<?> save(@Valid @RequestBody User user) {
         try {
             var result = userService.save(user);
             return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -41,8 +39,8 @@ public class UserController {
 
     // Listar todos os usuários
     @GetMapping("/findAll")
-    public ResponseEntity<List<User>> findAll(){
-        try{
+    public ResponseEntity<List<User>> findAll() {
+        try {
             var result = userService.findAll();
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
@@ -52,7 +50,7 @@ public class UserController {
 
     // Buscar por ID
     @GetMapping("/findById/{id}")
-    public ResponseEntity<User> findById(@PathVariable Integer id){
+    public ResponseEntity<User> findById(@PathVariable Integer id) {
         try {
             var result = userService.findById(id);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -63,9 +61,9 @@ public class UserController {
 
     // Buscar por nome (ignora maiúscula/minúscula)
     @GetMapping("/findByNome/{nome}")
-    public ResponseEntity<List<User>> findByNome(@PathVariable String nome){
+    public ResponseEntity<List<User>> findByNome(@PathVariable String nome) {
         try {
-            var result = userService.findByNome(nome);    
+            var result = userService.findByNome(nome);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -74,7 +72,7 @@ public class UserController {
 
     // Buscar por tipo de usuário
     @GetMapping("/findByRole/{role}")
-    public ResponseEntity<List<User>> findByRole(@PathVariable String role){
+    public ResponseEntity<List<User>> findByRole(@PathVariable String role) {
         try {
             var result = userService.findByRole(UserRole.valueOf(role));
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -85,7 +83,7 @@ public class UserController {
 
     // Atualizar usuário
     @PutMapping("/update/{id}")
-    public ResponseEntity<User> update(@Valid @PathVariable Integer id, @RequestBody User userUpdated){
+    public ResponseEntity<User> update(@Valid @PathVariable Integer id, @RequestBody User userUpdated) {
         try {
             var result = userService.update(id, userUpdated);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -94,10 +92,9 @@ public class UserController {
         }
     }
 
-
     // Excluir usuário (não pode excluir admin)
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> delete(@PathVariable Integer id){
+    public ResponseEntity<User> delete(@PathVariable Integer id) {
         try {
             userService.delete(id);
             return ResponseEntity.noContent().build();

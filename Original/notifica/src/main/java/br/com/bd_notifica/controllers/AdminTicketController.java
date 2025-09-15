@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,80 +20,74 @@ import br.com.bd_notifica.services.TicketService;
 // Controller administrativo para gestão de tickets
 @RestController
 @RequestMapping("/admin/tickets/")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AdminTicketController {
 
-    private final TicketService ticketService;
+        private final TicketService ticketService;
 
-    public AdminTicketController(TicketService ticketService) {
-        this.ticketService = ticketService;
-    }
+        public AdminTicketController(TicketService ticketService) {
+                this.ticketService = ticketService;
+        }
 
-    // Criar novo ticket (admin)
-    @PostMapping("/save")
-    public ResponseEntity<Ticket> save(@RequestBody Ticket ticket) {
+        // Criar novo ticket (admin)
+        @PostMapping("/save")
+        public ResponseEntity<Ticket> save(@RequestBody Ticket ticket) {
 
-        Ticket ticketSalvo = ticketService.save(ticket); 
-        //ticketSalvo existe para armazenar temporariamente o resultado
+                Ticket ticketSalvo = ticketService.save(ticket);
+                // ticketSalvo existe para armazenar temporariamente o resultado
 
-        return new ResponseEntity<>(ticketSalvo, HttpStatus.CREATED);
+                return new ResponseEntity<>(ticketSalvo, HttpStatus.CREATED);
 
-    }
+        }
 
-    // Listar todos os tickets
-    @GetMapping("/findAll")
-    public ResponseEntity<?> findAll() {
-        
-            List<Ticket> tickets = ticketService.findAll();
-            return ResponseEntity.ok(tickets);
-    
-    }
+        // Listar todos os tickets
+        @GetMapping("/findAll")
+        public ResponseEntity<?> findAll() {
 
+                List<Ticket> tickets = ticketService.findAll();
+                return ResponseEntity.ok(tickets);
 
-    // Buscar tickets por categoria
-    @GetMapping("/findByCategoria/{id}")
-    public ResponseEntity<List<Ticket>> findByCategoria(@PathVariable Integer id) {
-        
-            List<Ticket> tickets = ticketService.findByCategoriaId(id);
-            return ResponseEntity.ok(tickets);
-      
-    }
+        }
 
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<Ticket> findById(@PathVariable Integer id) {
-     
-            Ticket ticket = ticketService.findById(id);
-            return ResponseEntity.ok(ticket);
-  
-    }
+        // Buscar tickets por categoria
+        @GetMapping("/findByCategoria/{id}")
+        public ResponseEntity<List<Ticket>> findByCategoria(@PathVariable Integer id) {
 
-    // Atualizar ticket
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Ticket> update(@PathVariable Integer id, @RequestBody Ticket ticket) {
-        
-            Ticket ticketAtualizado = ticketService.update(id, ticket);
-            return ResponseEntity.ok(ticketAtualizado);
-            
-            
-       
-    }
+                List<Ticket> tickets = ticketService.findByCategoriaId(id);
+                return ResponseEntity.ok(tickets);
 
-    // Excluir ticket
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-      
-            ticketService.delete(id);
+        }
 
+        @GetMapping("/findById/{id}")
+        public ResponseEntity<Ticket> findById(@PathVariable Integer id) {
 
-            return ResponseEntity.noContent().build();
+                Ticket ticket = ticketService.findById(id);
+                return ResponseEntity.ok(ticket);
 
+        }
 
+        // Atualizar ticket
+        @PutMapping("/update/{id}")
+        public ResponseEntity<Ticket> update(@PathVariable Integer id, @RequestBody Ticket ticket) {
 
-    }
+                Ticket ticketAtualizado = ticketService.update(id, ticket);
+                return ResponseEntity.ok(ticketAtualizado);
 
-    
-    // Teste da API
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return new ResponseEntity<>("API funcionando!", HttpStatus.OK);
-    }
+        }
+
+        // Excluir ticket
+        @DeleteMapping("/delete/{id}")
+        public ResponseEntity<Void> delete(@PathVariable Integer id) {
+
+                ticketService.delete(id);
+
+                return ResponseEntity.noContent().build();
+
+        }
+
+        // Teste da API
+        @GetMapping("/test")
+        public ResponseEntity<String> test() {
+                return new ResponseEntity<>("API funcionando!", HttpStatus.OK);
+        }
 }
