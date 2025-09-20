@@ -23,77 +23,49 @@ public class MaterialController {
 
     // Cadastrar material
     @PostMapping("/save")
-    public ResponseEntity<?> save(@Valid @RequestBody Material material) { 
-        try {
-            var result = materialService.save(material);
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> save(@Valid @RequestBody Material material) {
+        var result = materialService.save(material);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     // Listar materiais
     @GetMapping("/findAll")
-    public ResponseEntity<List<Material>> findAll(){
-        try{
-            var result = materialService.findAll();
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<Material>> findAll() {
+        var result = materialService.findAll();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Material> findById(@PathVariable Integer id){
-        try {
-            var result = materialService.findById(id);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Material> findById(@PathVariable Integer id) {
+        var result = materialService.findById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Buscar por nome
     @GetMapping("/findByNome/{nome}")
-    public ResponseEntity<List<Material>> findByNome(@PathVariable String nome){
-        try {
-            var result = materialService.findByNome(nome);    
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<Material>> findByNome(@PathVariable String nome) {
+        var result = materialService.findByNome(nome);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Materiais com estoque maior que X
     @GetMapping("/findComEstoque/{quantidade}")
-    public ResponseEntity<List<Material>> findByQuantidadeEstoqueGreaterThan(@PathVariable Integer quantidade){
-        try {
-            var result = materialService.findByQuantidadeEstoqueGreaterThan(quantidade);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<Material>> findByQuantidadeEstoqueGreaterThan(@PathVariable Integer quantidade) {
+        var result = materialService.findByQuantidadeEstoqueGreaterThan(quantidade);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Atualizar material
     @PutMapping("/update/{id}")
-    public ResponseEntity<Material> update(@PathVariable Integer id, @RequestBody Material material){
-        try {
-            var result = materialService.update(id, material);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Material> update(@PathVariable Integer id, @RequestBody Material material) {
+        var result = materialService.update(id, material);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Excluir material
     @DeleteMapping("/{id}")
-    public ResponseEntity<Material> delete(@PathVariable Integer id){
-        try {
-            materialService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.noContent().build();
-        }
+    public ResponseEntity<Material> delete(@PathVariable Integer id) {
+        materialService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

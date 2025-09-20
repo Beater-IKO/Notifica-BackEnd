@@ -25,54 +25,34 @@ public class CursoController {
     // Criar curso
     @PostMapping("/save")
     public ResponseEntity<?> save(@Valid @RequestBody Curso curso) {
-        try {
-            var result = cursoService.save(curso);
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        var result = cursoService.save(curso);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     // Listar cursos
     @GetMapping("/findAll")
     public ResponseEntity<List<Curso>> findAll() {
-        try {
-            var result = cursoService.findAll();
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        var result = cursoService.findAll();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/findById/{id}")
     public ResponseEntity<Curso> findById(@PathVariable Integer id) {
-        try {
-            var result = cursoService.findById(id);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        var result = cursoService.findById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Atualizar curso
     @PutMapping("/update/{id}")
     public ResponseEntity<Curso> update(@PathVariable Integer id, @RequestBody Curso curso) {
-        try {
-            var result = cursoService.update(id, curso);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        var result = cursoService.update(id, curso);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Excluir curso
     @DeleteMapping("/{id}")
     public ResponseEntity<Curso> delete(@PathVariable Integer id) {
-        try {
-            cursoService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.noContent().build();
-        }
+        cursoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

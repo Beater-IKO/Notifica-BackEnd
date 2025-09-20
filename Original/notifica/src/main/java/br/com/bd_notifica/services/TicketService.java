@@ -2,11 +2,12 @@ package br.com.bd_notifica.services;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+
+import br.com.bd_notifica.config.RecursoNaoEncontradoException;
+import br.com.bd_notifica.config.RegraDeNegocioException;
+import br.com.bd_notifica.config.ValidationException;
 import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.repositories.TicketRepository;
-import br.com.bd_notifica.exceptions.RegraDeNegocioException; 
-import br.com.bd_notifica.exceptions.RecursoNaoEncontradoException; 
-import br.com.bd_notifica.exceptions.ValidationException; 
 import br.com.bd_notifica.enums.Status;
 
 // Regras de negócio para tickets
@@ -60,9 +61,6 @@ public class TicketService {
         return ticketRepository.findByCategoriaId(categoriaId);
     }
 
-
-
-
     public Ticket update(Integer id, Ticket ticket) {
         Ticket existingTicket = findById(id);
 
@@ -72,14 +70,13 @@ public class TicketService {
         }
 
         if (ticket.getProblema() != null && ticket.getProblema().isBlank()) {
-            throw new ValidationException("O campo  'problema'  foi enviado mas está vazio" );
-            };
+            throw new ValidationException("O campo  'problema'  foi enviado mas está vazio");
+        }
+        ;
 
-        if(ticket.getProblema() != null){
+        if (ticket.getProblema() != null) {
             existingTicket.setProblema(ticket.getProblema());
-        }   
-        
-    
+        }
 
         if (ticket.getArea() != null) {
             existingTicket.setArea(ticket.getArea());
@@ -103,19 +100,6 @@ public class TicketService {
 
         return ticketRepository.save(existingTicket);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void delete(Integer id) {
         Ticket ticketToDelete = findById(id);

@@ -22,55 +22,35 @@ public class CategoriaController {
 
     // Criar categoria
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Categoria categoria) { 
-        try {
-            var result = categoriaService.save(categoria);
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> save(@RequestBody Categoria categoria) {
+        var result = categoriaService.save(categoria);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     // Listar categorias
     @GetMapping("/findAll")
-    public ResponseEntity<List<Categoria>> findAll(){
-        try{
-            var result = categoriaService.findAll();
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<Categoria>> findAll() {
+        var result = categoriaService.findAll();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Categoria> findById(@PathVariable Integer id){
-        try {
-            var result = categoriaService.findById(id);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Categoria> findById(@PathVariable Integer id) {
+        var result = categoriaService.findById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Buscar por nome
     @GetMapping("/findByNome/{nome}")
-    public ResponseEntity<List<Categoria>> findByNome(@PathVariable String nome){
-        try {
-            var result = categoriaService.findByNome(nome);    
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<Categoria>> findByNome(@PathVariable String nome) {
+        var result = categoriaService.findByNome(nome);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Excluir categoria
     @DeleteMapping("/{id}")
-    public ResponseEntity<Categoria> delete(@PathVariable Integer id){
-        try {
-            categoriaService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.noContent().build();
-        }
+    public ResponseEntity<Categoria> delete(@PathVariable Integer id) {
+        categoriaService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

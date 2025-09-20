@@ -2,6 +2,9 @@ package br.com.bd_notifica.services;
 
 import org.springframework.stereotype.Service;
 
+import br.com.bd_notifica.config.RegraDeNegocioException;
+import br.com.bd_notifica.config.RecursoNaoEncontradoException;
+
 import br.com.bd_notifica.entities.Suporte;
 import br.com.bd_notifica.enums.TipoSuporte;
 import br.com.bd_notifica.enums.Status;
@@ -14,81 +17,81 @@ import java.util.List;
 public class SuporteService {
     private final SuporteRepository suporteRepository;
 
-    public SuporteService(SuporteRepository suporteRepository){
+    public SuporteService(SuporteRepository suporteRepository) {
         this.suporteRepository = suporteRepository;
     }
 
     // Salvar suporte
-    public Suporte save(Suporte suporte){
+    public Suporte save(Suporte suporte) {
         // Validação de campos obrigatórios
-        if(suporte.getTitulo() == null || suporte.getTitulo().isBlank()){
-            throw new RuntimeException("Título é obrigatório");
+        if (suporte.getTitulo() == null || suporte.getTitulo().isBlank()) {
+            throw new RegraDeNegocioException("Título é obrigatório");
         }
-        
-        if(suporte.getDescricao() == null || suporte.getDescricao().isBlank()){
-            throw new RuntimeException("Descrição é obrigatória");
+
+        if (suporte.getDescricao() == null || suporte.getDescricao().isBlank()) {
+            throw new RegraDeNegocioException("Descrição é obrigatória");
         }
-        
+
         // Atribui status automaticamente baseado no tipo
-        if(suporte.getStatus() == null){
+        if (suporte.getStatus() == null) {
             suporte.setStatus(Status.VISTO);
         }
-        
+
         // Tipos críticos recebem prioridade maior
-        if(suporte.getTipo() == TipoSuporte.TECNICO){
+        if (suporte.getTipo() == TipoSuporte.TECNICO) {
             suporte.setStatus(Status.EM_ANDAMENTO);
         }
-        
+
         return suporteRepository.save(suporte);
     }
 
     // Listar suportes
-    public List<Suporte> findAll(){
+    public List<Suporte> findAll() {
         return suporteRepository.findAll();
     }
 
     // Buscar por ID
-    public Suporte findById(Integer id){
+    public Suporte findById(Integer id) {
         return suporteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Suporte não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Suporte não encontrado"));
     }
 
     // Filtrar por tipo
-    public List<Suporte> findByTipo(TipoSuporte tipo){
+    public List<Suporte> findByTipo(TipoSuporte tipo) {
         return suporteRepository.findByTipo(tipo);
     }
 
     // Filtrar por status
-    public List<Suporte> findByStatus(Status status){
+    public List<Suporte> findByStatus(Status status) {
         return suporteRepository.findByStatus(status);
     }
 
     // Atualizar suporte
-    public Suporte update(Integer id, Suporte suporte){
+    public Suporte update(Integer id, Suporte suporte) {
         Suporte existingSuport = findById(id);
-        
+
         // Não permite modificar suportes finalizados
-        if(existingSuport.getStatus() == Status.FINALIZADOS){
-            throw new RuntimeException("Não é possível modificar suporte finalizado");
+        if (existingSuport.getStatus() == Status.FINALIZADOS) {
+            throw new RegraDeNegocioException("Não é possível modificar suporte finalizado");
         }
 
-        if(suporte.getTitulo() != null && !suporte.getTitulo().isBlank()){
+        if (suporte.getTitulo() != null && !suporte.getTitulo().isBlank()) {
             existingSuport.setTitulo(suporte.getTitulo());
         }
 
-        if(suporte.getDescricao() != null && !suporte.getDescricao().isBlank()){
+        if (suporte.getDescricao() != null && !suporte.getDescricao().isBlank()) {
             existingSuport.setDescricao(suporte.getDescricao());
         }
 
-        if(suporte.getTipo() != null){
+        if (suporte.getTipo() != null) {
             existingSuport.setTipo(suporte.getTipo());
         }
 
-        if(suporte.getStatus() != null){
+        if (suporte.getStatus() != null) {
             existingSuport.setStatus(suporte.getStatus());
         }
 
-        if(suporte.getUser() != null){
+        if (suporte.getUser() != null) {
             existingSuport.setUser(suporte.getUser());
         }
 
@@ -96,14 +99,14 @@ public class SuporteService {
     }
 
     // Excluir suporte
-    public void delete(Integer id){
+    public void delete(Integer id) {
         Suporte suporteToDelete = findById(id);
-        
+
         // Não permite excluir suportes em andamento
-        if(suporteToDelete.getStatus() == Status.EM_ANDAMENTO){
-            throw new RuntimeException("Não é possível excluir suporte em andamento");
+        if (suporteToDelete.getStatus() == Status.EM_ANDAMENTO) {
+            throw new RegraDeNegocioException("Não é possível excluir suporte em andamento");
         }
-        
+
         suporteRepository.delete(suporteToDelete);
     }
 }

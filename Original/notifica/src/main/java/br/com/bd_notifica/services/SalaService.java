@@ -1,6 +1,7 @@
 package br.com.bd_notifica.services;
 
 import org.springframework.stereotype.Service;
+import br.com.bd_notifica.config.RecursoNaoEncontradoException;
 
 import br.com.bd_notifica.entities.Sala;
 import br.com.bd_notifica.repositories.SalaRepository;
@@ -12,39 +13,39 @@ import java.util.List;
 public class SalaService {
     private final SalaRepository salaRepository;
 
-    public SalaService(SalaRepository salaRepository){
+    public SalaService(SalaRepository salaRepository) {
         this.salaRepository = salaRepository;
     }
 
     // Salvar sala
-    public Sala save(Sala sala){
+    public Sala save(Sala sala) {
         return salaRepository.save(sala);
     }
 
     // Listar salas
-    public List<Sala> findAll(){
+    public List<Sala> findAll() {
         return salaRepository.findAll();
     }
 
     // Buscar por ID
-    public Sala findById(Integer id){
+    public Sala findById(Integer id) {
         return salaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sala não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Sala não encontrada"));
     }
 
     // Atualizar sala
-    public Sala update(Integer id, Sala sala){
+    public Sala update(Integer id, Sala sala) {
         Sala existingSala = findById(id);
 
-        if(sala.getNumero() != null && !sala.getNumero().isBlank()){
+        if (sala.getNumero() != null && !sala.getNumero().isBlank()) {
             existingSala.setNumero(sala.getNumero());
         }
 
-        if(sala.getAndar() != null){
+        if (sala.getAndar() != null) {
             existingSala.setAndar(sala.getAndar());
         }
 
-        if(sala.getCurso() != null){
+        if (sala.getCurso() != null) {
             existingSala.setCurso(sala.getCurso());
         }
 

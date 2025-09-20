@@ -37,18 +37,13 @@ public class Sala {
 
     // Professores da sala
     @ManyToMany
-    @JoinTable(
-            name = "sala_professor",
-            joinColumns = @JoinColumn(name = "sala_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @JoinTable(name = "sala_professor", joinColumns = @JoinColumn(name = "sala_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnoreProperties("salasProfessor")
     private List<User> professores;
 
     // Curso da sala
     @ManyToOne
     @JoinColumn(name = "curso_id")
-    @NotNull(message = "A sala precisa estar vinculada a um curso")
     @JsonIgnoreProperties("salas")
     private Curso curso;
 }

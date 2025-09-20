@@ -1,8 +1,6 @@
 package br.com.bd_notifica.controllers;
 
 import br.com.bd_notifica.entities.MensagemRetorno;
-import br.com.bd_notifica.entities.User;
-import br.com.bd_notifica.enums.UserRole;
 import br.com.bd_notifica.services.MensagemRetornoService;
 
 import java.util.List;
@@ -24,66 +22,42 @@ public class MensagemRetornoController {
 
     // Criar mensagem
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody MensagemRetorno mensagemRetorno) { 
-        try {
-            var result = mensagemRetornoService.save(mensagemRetorno);
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> save(@RequestBody MensagemRetorno mensagemRetorno) {
+        var result = mensagemRetornoService.save(mensagemRetorno);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     // Listar mensagens
     @GetMapping("/findAll")
-    public ResponseEntity<List<MensagemRetorno>> findAll(){
-        try{
-            var result = mensagemRetornoService.findAll();
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<MensagemRetorno>> findAll() {
+        var result = mensagemRetornoService.findAll();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<MensagemRetorno> findById(@PathVariable Integer id){
-        try {
-            var result = mensagemRetornoService.findById(id);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<MensagemRetorno> findById(@PathVariable Integer id) {
+        var result = mensagemRetornoService.findById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Mensagens de um ticket
     @GetMapping("/findByTicket/{id}")
-    public ResponseEntity<List<MensagemRetorno>> findByTicket(@PathVariable Integer id){
-        try {
-            var result = mensagemRetornoService.findByTicket(id);    
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<MensagemRetorno>> findByTicket(@PathVariable Integer id) {
+        var result = mensagemRetornoService.findByTicket(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Mensagens de um usuário
     @GetMapping("/findByUser/{nome}")
-    public ResponseEntity<List<MensagemRetorno>> findByUser(@PathVariable String nome){
-        try {
-            var result = mensagemRetornoService.findByUser(nome);    
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<MensagemRetorno>> findByUser(@PathVariable String nome) {
+        var result = mensagemRetornoService.findByUser(nome);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Excluir mensagem
     @DeleteMapping("/{id}")
-    public ResponseEntity<MensagemRetorno> delete(@PathVariable Integer id){
-        try {
-            mensagemRetornoService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.noContent().build();
-        }
+    public ResponseEntity<MensagemRetorno> delete(@PathVariable Integer id) {
+        mensagemRetornoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

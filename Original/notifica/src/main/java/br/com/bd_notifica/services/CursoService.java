@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.bd_notifica.entities.Curso;
 import br.com.bd_notifica.repositories.CursoRepository;
+import br.com.bd_notifica.config.RecursoNaoEncontradoException;
+import br.com.bd_notifica.config.RegraDeNegocioException;
+import br.com.bd_notifica.config.ValidationException;
 
 import java.util.List;
 
@@ -18,6 +21,15 @@ public class CursoService {
 
     // Salvar curso
     public Curso save(Curso curso){
+        if (curso == null || curso.getNome() == null || curso.getNome().isBlank()) {
+            throw new ValidationException("Curso e nome não podem ser nulos ou vazios");
+        }
+        
+        // Validação de duplicação
+        if (!cursoRepository.findByNomeIgnoreCase(curso.getNome()).isEmpty()) {
+            throw new RegraDeNegocioException("Já existe um curso com o nome '" + curso.getNome() + "'");
+        }
+        
         return cursoRepository.save(curso);
     }
 
@@ -29,14 +41,23 @@ public class CursoService {
     // Buscar por ID
     public Curso findById(Integer id){
         return cursoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Curso com ID " + id + " não encontrado"));
     }
 
     // Atualizar curso
     public Curso update(Integer id, Curso curso){
+        if (curso == null) {
+            throw new ValidationException("Dados do curso não podem ser nulos");
+        }
+        
         Curso existingCurso = findById(id);
 
         if(curso.getNome() != null && !curso.getNome().isBlank()){
+            // Verificar duplicação apenas se o nome for diferente
+            if (!curso.getNome().equalsIgnoreCase(existingCurso.getNome()) && 
+                !cursoRepository.findByNomeIgnoreCase(curso.getNome()).isEmpty()) {
+                throw new RegraDeNegocioException("Já existe um curso com o nome '" + curso.getNome() + "'");
+            }
             existingCurso.setNome(curso.getNome());
         }
 

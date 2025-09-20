@@ -1,8 +1,6 @@
 package br.com.bd_notifica.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.com.bd_notifica.entities.User;
@@ -14,7 +12,8 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    // Busca por nome sem diferenciar maiúscula/minúscula - query gerada automaticamente
+    // Busca por nome sem diferenciar maiúscula/minúscula - query gerada
+    // automaticamente
     List<User> findByNomeIgnoreCase(String nome);
 
     // Filtra usuários por tipo (ADMIN, USER) - query gerada automaticamente
