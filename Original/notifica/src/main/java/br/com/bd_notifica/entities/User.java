@@ -41,7 +41,7 @@ public class User {
     // Senha
     @NotBlank(message = "Senha não pode estar vazia")
     @Column(name = "senha", nullable = false)
-    private String senha;   
+    private String senha;
 
     // Tipo de usuário (ADMIN, USER)
     @NotNull(message = "A role tem que estar no tipo correto")
@@ -51,7 +51,7 @@ public class User {
     // Sala do usuário
     @ManyToOne
     @JsonIgnoreProperties("alunos")
-    @JoinColumn(name = "salas", nullable = false)
+    @JoinColumn(name = "sala_id")
     private Sala sala;
 
     // Tickets criados pelo usuário

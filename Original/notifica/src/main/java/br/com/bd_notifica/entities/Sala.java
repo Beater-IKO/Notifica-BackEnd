@@ -1,5 +1,6 @@
 package br.com.bd_notifica.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.bd_notifica.enums.Andar;
@@ -31,12 +32,14 @@ public class Sala {
     private Andar andar;
 
     // Alunos da sala
+    @JsonIgnore
     @OneToMany(mappedBy = "sala")
     @JsonIgnoreProperties("sala")
     private List<User> alunos;
 
     // Professores da sala
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "sala_professor", joinColumns = @JoinColumn(name = "sala_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnoreProperties("salasProfessor")
     private List<User> professores;
