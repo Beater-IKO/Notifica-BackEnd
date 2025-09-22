@@ -5,5 +5,6 @@ public enum UserRole {
     ADMIN,      // Administrador do sistema
     ESTUDANTE,  // Aluno
     PROFESSOR,  // Docente
-    FUNCIONARIO // Funcionário da instituição
+    FUNCIONARIO, // Funcionário da instituição
+    GESTOR      // Gestor da instituição
 }

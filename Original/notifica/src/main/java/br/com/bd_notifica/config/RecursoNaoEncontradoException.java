@@ -1,4 +1,3 @@
-// Move this file to a package like "br.com.bd_notifica.exception"
 package br.com.bd_notifica.config;
 
 import org.springframework.http.HttpStatus;

@@ -14,7 +14,7 @@ import java.util.List;
 // API para gerenciar usuários
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:60058")
 public class UserController {
 
     // Serviço de usuários

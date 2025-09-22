@@ -27,15 +27,7 @@ public class TicketService {
             throw new ValidationException("Problema é obrigatório");
         }
 
-        if (ticket.getUser() == null) {
-            throw new ValidationException("Usuário é obrigatório");
-        }
 
-        if (ticket.getCategoria() == null) {
-
-            throw new ValidationException("O ticket deve ser associoado a uma categoria.");
-
-        }
 
         // Define status inicial automaticamente
         if (ticket.getStatus() == null) {
@@ -70,9 +62,8 @@ public class TicketService {
         }
 
         if (ticket.getProblema() != null && ticket.getProblema().isBlank()) {
-            throw new ValidationException("O campo  'problema'  foi enviado mas está vazio");
+            throw new ValidationException("O campo 'problema' foi enviado mas está vazio");
         }
-        ;
 
         if (ticket.getProblema() != null) {
             existingTicket.setProblema(ticket.getProblema());
@@ -87,7 +78,6 @@ public class TicketService {
         }
 
         if (ticket.getStatus() != null) {
-            // Validação de transição de status
             if (ticket.getStatus() == Status.FINALIZADOS) {
                 // Ticket pode ser finalizado
             }

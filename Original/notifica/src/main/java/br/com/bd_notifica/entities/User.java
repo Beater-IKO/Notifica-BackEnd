@@ -38,13 +38,16 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    // Nome de usuário para login
+    @Column(name = "usuario", unique = true)
+    private String usuario;
+
     // Senha
     @NotBlank(message = "Senha não pode estar vazia")
     @Column(name = "senha", nullable = false)
     private String senha;
 
-    // Tipo de usuário (ADMIN, USER)
-    @NotNull(message = "A role tem que estar no tipo correto")
+    // Tipo de usuário (opcional, será definido como ESTUDANTE por padrão)
     @Enumerated(EnumType.STRING)
     private UserRole role;
 

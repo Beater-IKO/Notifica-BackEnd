@@ -18,4 +18,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     // Filtra usuários por tipo (ADMIN, USER) - query gerada automaticamente
     List<User> findByRole(UserRole role);
+
+    // Busca usuário para autenticação
+    User findByUsuarioAndSenha(String usuario, String senha);
+    
+    // Busca usuário por nome de usuário
+    User findByUsuario(String usuario);
 }

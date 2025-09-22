@@ -13,7 +13,7 @@ import jakarta.validation.Valid;
 // Controller para gestão de cursos
 @RestController
 @RequestMapping("/cursos")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:60058")
 public class CursoController {
 
     private final CursoService cursoService;

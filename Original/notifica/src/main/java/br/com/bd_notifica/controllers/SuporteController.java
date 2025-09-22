@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 // Controller para chamados de suporte
 @RestController
 @RequestMapping("/suportes")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:60058")
 public class SuporteController {
 
     private final SuporteService suporteService;

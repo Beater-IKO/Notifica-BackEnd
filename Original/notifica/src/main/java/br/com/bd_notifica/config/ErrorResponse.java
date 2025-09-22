@@ -1,22 +1,17 @@
-package br.com.bd_notifica.config; // Make sure this package name is correct for your project
+package br.com.bd_notifica.config;
 
 import java.time.LocalDateTime;
 
 public class ErrorResponse {
 
-    // 1. Fields (Campos)
     private LocalDateTime timestamp;
     private int status;
     private String error;
     private String message;
     private String path;
 
-    // 2. Constructor (Construtor) - This is what "new ErrorResponse()" needs
     public ErrorResponse() {
     }
-
-    // 3. Getters and Setters - These are the methods like ".setStatus()",
-    // ".getMessage()", etc.
     public LocalDateTime getTimestamp() {
         return timestamp;
     }

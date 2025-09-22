@@ -1,7 +1,6 @@
 package br.com.bd_notifica.services;
 
 import org.springframework.stereotype.Service;
-// --- ADIÇÃO FINAL E CRUCIAL ---
 import org.springframework.transaction.annotation.Transactional;
 import br.com.bd_notifica.config.RegraDeNegocioException;
 import br.com.bd_notifica.config.RecursoNaoEncontradoException;
@@ -22,11 +21,8 @@ public class UserService {
         this.salaRepository = salaRepository;
     }
 
-    // A anotação @Transactional garante que todas as operações de banco de dados
-    // dentro deste método ocorram na mesma "sessão" segura.
     @Transactional
     public User save(User user) {
-        // ... (suas validações de CPF, Email, Role) ...
         if (user.getCpf() != null && !isValidCPF(user.getCpf())) {
             throw new RegraDeNegocioException("CPF inválido");
         }
@@ -36,8 +32,16 @@ public class UserService {
         if (user.getRole() == null) {
             user.setRole(UserRole.ESTUDANTE);
         }
+        
 
-        // Esta lógica agora funcionará dentro da transação
+        if (user.getUsuario() != null) {
+            User existingUser = userRepository.findByUsuario(user.getUsuario());
+            if (existingUser != null) {
+                throw new RegraDeNegocioException("Nome de usuário já existe");
+            }
+        }
+
+
         if (user.getSala() != null && user.getSala().getId() != null) {
             Sala salaGerenciada = salaRepository.findById(user.getSala().getId())
                     .orElseThrow(() -> new RecursoNaoEncontradoException(
@@ -52,7 +56,7 @@ public class UserService {
     public User update(Integer id, User user) {
         User existingUser = findById(id);
 
-        // ... (sua lógica de update para nome, cpf, etc) ...
+
         if (user.getNome() != null && !user.getNome().isBlank()) {
             existingUser.setNome(user.getNome());
         }
@@ -81,8 +85,6 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
-    // Métodos de apenas leitura não precisam da anotação, mas é uma boa prática
-    // adicioná-la.
     @Transactional(readOnly = true)
     public List<User> findAll() {
         return userRepository.findAll();
@@ -94,13 +96,12 @@ public class UserService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
     }
 
-    // ... (O resto dos seus métodos) ...
     private boolean isValidCPF(String cpf) {
         return cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}") || cpf.matches("\\d{11}");
     }
 
     private boolean isValidEmail(String email) {
-        return email.matches("^[A-Za-z0-g+_.-]+@[A-Za-z0-g.-]+\\.[A-Za-z]{2,}$");
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     }
 
     public List<User> findByNome(String nome) {
@@ -117,5 +118,9 @@ public class UserService {
             throw new RegraDeNegocioException("Não é possível excluir usuários administradores");
         }
         userRepository.delete(userToDelete);
+    }
+
+    public User authenticate(String usuario, String senha) {
+        return userRepository.findByUsuarioAndSenha(usuario, senha);
     }
 }
