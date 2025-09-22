@@ -14,27 +14,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
             RecursoNaoEncontradoException ex, WebRequest request) {
-
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setTimestamp(LocalDateTime.now());
-        errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
-        errorResponse.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
-        errorResponse.setMessage(ex.getMessage());
-        errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex, WebRequest request) {
+        return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno do servidor", request);
+    }
 
+    // método auxiliar para criar respostas de erro padronizadas
+    private ResponseEntity<ErrorResponse> createErrorResponse(HttpStatus status, String message, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(LocalDateTime.now());
-        errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorResponse.setError(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        errorResponse.setMessage("Erro interno do servidor: " + ex.getMessage());
+        errorResponse.setStatus(status.value());
+        errorResponse.setError(status.getReasonPhrase());
+        errorResponse.setMessage(message);
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorResponse, status);
     }
 }

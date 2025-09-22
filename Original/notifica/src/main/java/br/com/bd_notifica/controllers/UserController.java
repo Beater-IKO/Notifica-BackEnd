@@ -72,4 +72,11 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Endpoint para atualizar perfil (compatível com frontend)
+    @PutMapping("/profile/{id}")
+    public ResponseEntity<User> updateProfile(@PathVariable Integer id, @RequestBody User userUpdated) {
+        var result = userService.update(id, userUpdated);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

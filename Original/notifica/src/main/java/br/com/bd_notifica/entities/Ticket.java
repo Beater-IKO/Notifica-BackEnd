@@ -1,5 +1,6 @@
 package br.com.bd_notifica.entities;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -67,6 +68,28 @@ public class Ticket {
     @JoinColumn(name = "categoria_id")
     @JsonIgnoreProperties("ticket")
     private Categoria categoria;
+
+    // Usuário responsável pelo ticket
+    @ManyToOne
+    @JoinColumn(name = "assigned_to_id")
+    @JsonIgnoreProperties("assignedTickets")
+    private User assignedTo;
+
+    // Sala onde ocorreu o problema
+    @Column(name = "sala", length = 100)
+    private String sala;
+
+    // Andar onde ocorreu o problema
+    @Column(name = "andar", length = 50)
+    private String andar;
+
+    // Data de criação
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    // Data de atualização
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     // Mensagens de retorno
     @OneToMany(mappedBy = "ticket")

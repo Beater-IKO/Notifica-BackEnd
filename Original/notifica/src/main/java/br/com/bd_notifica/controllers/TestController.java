@@ -18,7 +18,7 @@ public class TestController {
     
     // Endpoint de teste simples
     @GetMapping("/hello")
-    public String hello() {
-        return "Hello World!";
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("Hello World!");
     }
 }

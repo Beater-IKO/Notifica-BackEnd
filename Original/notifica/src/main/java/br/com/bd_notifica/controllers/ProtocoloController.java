@@ -23,7 +23,7 @@ public class ProtocoloController {
 
     // Criar nova requisição
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Protocolo protocolo) {
+    public ResponseEntity<Protocolo> save(@RequestBody Protocolo protocolo) {
         var result = protocoloService.save(protocolo);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

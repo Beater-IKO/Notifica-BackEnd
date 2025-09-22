@@ -19,7 +19,7 @@ public class Categoria {
     private Integer id;
 
     // Nome da categoria
-    @JoinColumn(name = "nome")
+    @Column(name = "nome")
     @NotBlank(message = "O nome não pode estar em branco")
     private String nome;
 

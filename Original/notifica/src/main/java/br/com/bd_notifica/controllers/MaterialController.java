@@ -23,7 +23,7 @@ public class MaterialController {
 
     // Cadastrar material
     @PostMapping("/save")
-    public ResponseEntity<?> save(@Valid @RequestBody Material material) {
+    public ResponseEntity<Material> save(@Valid @RequestBody Material material) {
         var result = materialService.save(material);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

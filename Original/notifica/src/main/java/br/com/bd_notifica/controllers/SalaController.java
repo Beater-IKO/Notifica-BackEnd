@@ -21,7 +21,7 @@ public class SalaController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Sala sala) {
+    public ResponseEntity<Sala> save(@RequestBody Sala sala) {
         var result = salaService.save(sala);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

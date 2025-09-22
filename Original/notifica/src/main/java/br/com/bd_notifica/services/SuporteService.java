@@ -71,7 +71,7 @@ public class SuporteService {
         Suporte existingSuport = findById(id);
 
         // Não permite modificar suportes finalizados
-        if (existingSuport.getStatus() == Status.FINALIZADOS) {
+        if (existingSuport.getStatus() == Status.FINALIZADO) {
             throw new RegraDeNegocioException("Não é possível modificar suporte finalizado");
         }
 

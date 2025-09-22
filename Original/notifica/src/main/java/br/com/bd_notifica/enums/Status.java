@@ -5,5 +5,5 @@ public enum Status {
     VISTO,        // Chamado visualizado
     INICIADO,     // Atendimento iniciado
     EM_ANDAMENTO, // Em processo de resolução
-    FINALIZADOS   // Chamado resolvido
+    FINALIZADO    // Chamado resolvido
 }

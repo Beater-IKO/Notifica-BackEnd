@@ -6,7 +6,6 @@ import br.com.bd_notifica.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -37,6 +36,14 @@ public class User {
     @Email(message = "O email precisa estar no formato correto")
     @Column(name = "email", nullable = false)
     private String email;
+
+    // Telefone
+    @Column(name = "telefone", length = 20)
+    private String telefone;
+
+    // URL da foto do perfil
+    @Column(name = "photo_url", length = 500)
+    private String photoUrl;
 
     // Nome de usuário para login
     @Column(name = "usuario", unique = true)
@@ -71,4 +78,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties("user")
     private List<Suporte> suportes = new ArrayList<>();
+
+    // Notificações do usuário
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    private List<Notification> notifications = new ArrayList<>();
 }

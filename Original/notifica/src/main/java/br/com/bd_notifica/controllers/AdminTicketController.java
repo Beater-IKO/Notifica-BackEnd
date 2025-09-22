@@ -34,8 +34,6 @@ public class AdminTicketController {
         public ResponseEntity<Ticket> save(@RequestBody Ticket ticket) {
 
                 Ticket ticketSalvo = ticketService.save(ticket);
-                // ticketSalvo existe para armazenar temporariamente o resultado
-
                 return new ResponseEntity<>(ticketSalvo, HttpStatus.CREATED);
 
         }
@@ -58,6 +56,7 @@ public class AdminTicketController {
 
         }
 
+        // buscar ticket por ID
         @GetMapping("/findById/{id}")
         public ResponseEntity<Ticket> findById(@PathVariable Integer id) {
 

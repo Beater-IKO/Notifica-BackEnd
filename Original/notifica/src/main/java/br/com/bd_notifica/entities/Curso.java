@@ -25,8 +25,8 @@ public class Curso {
     private String nome;
 
     // Duração em horas
-    @NotNull(message = "O número não pode ser vazio")
-    @Column(name = "duração")
+    @NotNull(message = "A duração não pode ser vazia")
+    @Column(name = "duracao")
     private int duracao;
 
 
