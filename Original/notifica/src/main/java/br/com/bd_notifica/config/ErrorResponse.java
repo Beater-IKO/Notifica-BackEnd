@@ -2,53 +2,26 @@ package br.com.bd_notifica.config;
 
 import java.time.LocalDateTime;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ErrorResponse {
 
-    private LocalDateTime timestamp;
-    private int status;
-    private String error;
-    private String message;
-    private String path;
+  private LocalDateTime timestamp;
+  private int status;
+  private String error;
+  private String message;
 
-    public ErrorResponse() {
-    }
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
+  public ErrorResponse(LocalDateTime timestamp, int status, String error, String message) {
+    this.timestamp = timestamp;
+    this.status = status;
+    this.error = error;
+    this.message = message;
+  }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
+  public ErrorResponse(String string, String message2) {
+    // TODO Auto-generated constructor stub
+  }
 }

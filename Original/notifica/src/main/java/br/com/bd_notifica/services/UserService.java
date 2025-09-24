@@ -2,8 +2,11 @@ package br.com.bd_notifica.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import br.com.bd_notifica.config.RegraDeNegocioException;
-import br.com.bd_notifica.config.RecursoNaoEncontradoException;
+
+import br.com.bd_notifica.config.GenericExceptions.AlreadyExists;
+import br.com.bd_notifica.config.GenericExceptions.InvalidData;
+import br.com.bd_notifica.config.GenericExceptions.NotFound;
+import br.com.bd_notifica.config.GenericExceptions.Unauthorized;
 import br.com.bd_notifica.entities.User;
 import br.com.bd_notifica.entities.Sala;
 import br.com.bd_notifica.enums.UserRole;
@@ -24,27 +27,25 @@ public class UserService {
     @Transactional
     public User save(User user) {
         if (user.getCpf() != null && !isValidCPF(user.getCpf())) {
-            throw new RegraDeNegocioException("CPF inválido");
+            throw new InvalidData("CPF inválido");
         }
         if (user.getEmail() != null && !isValidEmail(user.getEmail())) {
-            throw new RegraDeNegocioException("Email inválido");
+            throw new InvalidData("Email inválido");
         }
         if (user.getRole() == null) {
             user.setRole(UserRole.ESTUDANTE);
         }
-        
 
         if (user.getUsuario() != null) {
             User existingUser = userRepository.findByUsuario(user.getUsuario());
             if (existingUser != null) {
-                throw new RegraDeNegocioException("Nome de usuário já existe");
+                throw new AlreadyExists("Nome de usuário já existe");
             }
         }
 
-
         if (user.getSala() != null && user.getSala().getId() != null) {
             Sala salaGerenciada = salaRepository.findById(user.getSala().getId())
-                    .orElseThrow(() -> new RecursoNaoEncontradoException(
+                    .orElseThrow(() -> new NotFound(
                             "Sala não encontrada com o ID: " + user.getSala().getId()));
             user.setSala(salaGerenciada);
         }
@@ -55,7 +56,6 @@ public class UserService {
     @Transactional
     public User update(Integer id, User user) {
         User existingUser = findById(id);
-
 
         if (user.getNome() != null && !user.getNome().isBlank()) {
             existingUser.setNome(user.getNome());
@@ -75,7 +75,7 @@ public class UserService {
 
         if (user.getSala() != null && user.getSala().getId() != null) {
             Sala salaGerenciada = salaRepository.findById(user.getSala().getId())
-                    .orElseThrow(() -> new RecursoNaoEncontradoException(
+                    .orElseThrow(() -> new NotFound(
                             "Sala não encontrada com o ID: " + user.getSala().getId()));
             existingUser.setSala(salaGerenciada);
         } else {
@@ -93,7 +93,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findById(Integer id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+                .orElseThrow(() -> new NotFound("Usuário não encontrado"));
     }
 
     private boolean isValidCPF(String cpf) {
@@ -115,7 +115,7 @@ public class UserService {
     public void delete(Integer id) {
         User userToDelete = findById(id);
         if (userToDelete.getRole() == UserRole.ADMIN) {
-            throw new RegraDeNegocioException("Não é possível excluir usuários administradores");
+            throw new Unauthorized("Não é possível excluir usuários administradores");
         }
         userRepository.delete(userToDelete);
     }

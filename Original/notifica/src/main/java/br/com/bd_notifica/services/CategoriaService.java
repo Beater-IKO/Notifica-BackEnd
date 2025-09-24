@@ -1,10 +1,11 @@
 package br.com.bd_notifica.services;
 
+import br.com.bd_notifica.config.ValidationException;
+import br.com.bd_notifica.config.GenericExceptions.AlreadyExists;
+import br.com.bd_notifica.config.GenericExceptions.NotFound;
 import br.com.bd_notifica.entities.Categoria;
 import br.com.bd_notifica.repositories.CategoriaRepository;
 import br.com.bd_notifica.repositories.TicketRepository;
-import br.com.bd_notifica.config.RecursoNaoEncontradoException;
-import br.com.bd_notifica.config.RegraDeNegocioException;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,10 @@ public class CategoriaService {
         if (categoria == null || categoria.getNome() == null) {
             throw new IllegalArgumentException("Categoria e nome não podem ser nulos");
         }
-        
+
         // Validação de Regra de Negócio: Evitar nomes duplicados
         if (!categoriaRepository.findByNomeIgnoreCase(categoria.getNome()).isEmpty()) {
-            throw new RegraDeNegocioException("Já existe uma categoria com o nome '" + categoria.getNome() + "'");
+            throw new AlreadyExists("Já existe uma categoria com o nome '" + categoria.getNome() + "'");
         }
         return categoriaRepository.save(categoria);
     }
@@ -43,7 +44,7 @@ public class CategoriaService {
     public Categoria findById(Integer id) {
         return categoriaRepository.findById(id)
                 // <<< Lança a exceção correta (404 Not Found) quando não encontra
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria com ID " + id + " não encontrada"));
+                .orElseThrow(() -> new NotFound("Categoria com ID " + id + " não encontrada"));
     }
 
     // Buscar por nome
@@ -59,7 +60,7 @@ public class CategoriaService {
 
         // Validação de Regra de Negócio: Não permitir excluir categoria em uso
         if (!ticketRepository.findByCategoriaId(id).isEmpty()) {
-            throw new RegraDeNegocioException("Não é possível excluir a categoria '" + categoria.getNome()
+            throw new ValidationException("Não é possível excluir a categoria '" + categoria.getNome()
                     + "' pois ela já está sendo utilizada em tickets.");
         }
 

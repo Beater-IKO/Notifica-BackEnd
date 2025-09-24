@@ -2,8 +2,7 @@ package br.com.bd_notifica.services;
 
 import org.springframework.stereotype.Service;
 
-import br.com.bd_notifica.config.RecursoNaoEncontradoException;
-
+import br.com.bd_notifica.config.GenericExceptions.NotFound;
 import br.com.bd_notifica.entities.Material;
 import br.com.bd_notifica.repositories.MaterialRepository;
 
@@ -31,7 +30,7 @@ public class MaterialService {
     // Buscar por ID
     public Material findById(Integer id) {
         return materialRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Material não encontrado"));
+                .orElseThrow(() -> new NotFound("Material não encontrado"));
     }
 
     // Buscar por nome

@@ -1,8 +1,8 @@
 package br.com.bd_notifica.services;
 
 import org.springframework.stereotype.Service;
-import br.com.bd_notifica.config.RecursoNaoEncontradoException;
 
+import br.com.bd_notifica.config.GenericExceptions.NotFound;
 import br.com.bd_notifica.entities.Sala;
 import br.com.bd_notifica.repositories.SalaRepository;
 
@@ -30,7 +30,7 @@ public class SalaService {
     // Buscar por ID
     public Sala findById(Integer id) {
         return salaRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Sala não encontrada"));
+                .orElseThrow(() -> new NotFound("Sala não encontrada"));
     }
 
     // Atualizar sala

@@ -1,9 +1,8 @@
 package br.com.bd_notifica.services;
 
+import br.com.bd_notifica.config.GenericExceptions.NotFound;
 import br.com.bd_notifica.entities.MensagemRetorno;
 import br.com.bd_notifica.repositories.MensagemRetornoRepository;
-
-import br.com.bd_notifica.config.RecursoNaoEncontradoException;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class MensagemRetornoService {
     // Buscar por ID
     public MensagemRetorno findById(Integer id) {
         return mensagemRetornoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Mensagem não encontrada"));
+                .orElseThrow(() -> new NotFound("Mensagem não encontrada"));
     }
 
     // Mensagens de um ticket

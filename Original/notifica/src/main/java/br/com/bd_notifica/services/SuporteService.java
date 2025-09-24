@@ -2,9 +2,9 @@ package br.com.bd_notifica.services;
 
 import org.springframework.stereotype.Service;
 
-import br.com.bd_notifica.config.RegraDeNegocioException;
-import br.com.bd_notifica.config.RecursoNaoEncontradoException;
-
+import br.com.bd_notifica.config.ValidationException;
+import br.com.bd_notifica.config.GenericExceptions.NotFound;
+import br.com.bd_notifica.config.GenericExceptions.Unauthorized;
 import br.com.bd_notifica.entities.Suporte;
 import br.com.bd_notifica.enums.TipoSuporte;
 import br.com.bd_notifica.enums.Status;
@@ -25,11 +25,11 @@ public class SuporteService {
     public Suporte save(Suporte suporte) {
         // Validação de campos obrigatórios
         if (suporte.getTitulo() == null || suporte.getTitulo().isBlank()) {
-            throw new RegraDeNegocioException("Título é obrigatório");
+            throw new ValidationException("Título é obrigatório");
         }
 
         if (suporte.getDescricao() == null || suporte.getDescricao().isBlank()) {
-            throw new RegraDeNegocioException("Descrição é obrigatória");
+            throw new ValidationException("Descrição é obrigatória");
         }
 
         // Atribui status automaticamente baseado no tipo
@@ -53,7 +53,7 @@ public class SuporteService {
     // Buscar por ID
     public Suporte findById(Integer id) {
         return suporteRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Suporte não encontrado"));
+                .orElseThrow(() -> new NotFound("Suporte não encontrado"));
     }
 
     // Filtrar por tipo
@@ -72,7 +72,7 @@ public class SuporteService {
 
         // Não permite modificar suportes finalizados
         if (existingSuport.getStatus() == Status.FINALIZADOS) {
-            throw new RegraDeNegocioException("Não é possível modificar suporte finalizado");
+            throw new Unauthorized("Não é possível modificar suporte finalizado");
         }
 
         if (suporte.getTitulo() != null && !suporte.getTitulo().isBlank()) {
@@ -104,7 +104,7 @@ public class SuporteService {
 
         // Não permite excluir suportes em andamento
         if (suporteToDelete.getStatus() == Status.EM_ANDAMENTO) {
-            throw new RegraDeNegocioException("Não é possível excluir suporte em andamento");
+            throw new Unauthorized("Não é possível excluir suporte em andamento");
         }
 
         suporteRepository.delete(suporteToDelete);

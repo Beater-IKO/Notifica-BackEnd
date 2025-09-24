@@ -3,9 +3,9 @@ package br.com.bd_notifica.services;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
-import br.com.bd_notifica.config.RecursoNaoEncontradoException;
-import br.com.bd_notifica.config.RegraDeNegocioException;
 import br.com.bd_notifica.config.ValidationException;
+import br.com.bd_notifica.config.GenericExceptions.NotFound;
+import br.com.bd_notifica.config.GenericExceptions.Unauthorized;
 import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.repositories.TicketRepository;
 import br.com.bd_notifica.enums.Status;
@@ -27,8 +27,6 @@ public class TicketService {
             throw new ValidationException("Problema é obrigatório");
         }
 
-
-
         // Define status inicial automaticamente
         if (ticket.getStatus() == null) {
             ticket.setStatus(Status.VISTO);
@@ -45,7 +43,7 @@ public class TicketService {
     // Busca ticket por ID
     public Ticket findById(Integer id) {
         return ticketRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Ticket não encontrado"));
+                .orElseThrow(() -> new NotFound("Ticket não encontrado"));
     }
 
     // Filtra tickets por categoria
@@ -58,7 +56,7 @@ public class TicketService {
 
         // Não permite modificar tickets finalizados
         if (existingTicket.getStatus() == Status.FINALIZADOS) {
-            throw new RegraDeNegocioException("Não é possível modificar ticket finalizado");
+            throw new Unauthorized("Não é possível modificar ticket finalizado");
         }
 
         if (ticket.getProblema() != null && ticket.getProblema().isBlank()) {
@@ -96,7 +94,7 @@ public class TicketService {
 
         // Apenas tickets vistos podem ser excluídos
         if (ticketToDelete.getStatus() != Status.VISTO) {
-            throw new RegraDeNegocioException("Apenas tickets vistos podem ser excluídos");
+            throw new Unauthorized("Apenas tickets vistos podem ser excluídos");
         }
 
         ticketRepository.delete(ticketToDelete);

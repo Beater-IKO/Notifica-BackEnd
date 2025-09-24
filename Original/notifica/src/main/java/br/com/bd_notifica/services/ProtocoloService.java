@@ -2,9 +2,8 @@ package br.com.bd_notifica.services;
 
 import org.springframework.stereotype.Service;
 
-import br.com.bd_notifica.config.RegraDeNegocioException;
-import br.com.bd_notifica.config.RecursoNaoEncontradoException;
-
+import br.com.bd_notifica.config.ValidationException;
+import br.com.bd_notifica.config.GenericExceptions.NotFound;
 import br.com.bd_notifica.entities.Protocolo;
 import br.com.bd_notifica.enums.StatusProtocolo;
 import br.com.bd_notifica.repositories.ProtocoloRepository;
@@ -35,7 +34,7 @@ public class ProtocoloService {
 
         // Regra de negócio: exception para validação complexa
         if (protocolo.getMaterial() == null) {
-            throw new RegraDeNegocioException("Não é possível criar protocolo sem material associado");
+            throw new ValidationException("Não é possível criar protocolo sem material associado");
         }
 
         return protocoloRepository.save(protocolo);
@@ -55,7 +54,7 @@ public class ProtocoloService {
      */
     public Protocolo findById(Integer id) {
         return protocoloRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Protocolo não encontrado"));
+                .orElseThrow(() -> new NotFound("Protocolo não encontrado"));
     }
 
     /**
