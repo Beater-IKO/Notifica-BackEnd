@@ -19,7 +19,7 @@ import br.com.bd_notifica.services.TicketService;
 
 // Controller administrativo para gestão de tickets
 @RestController
-@RequestMapping("/admin/tickets/")
+@RequestMapping("/api/admin/tickets/")
 @CrossOrigin(origins = "http://localhost:60058")
 public class AdminTicketController {
 

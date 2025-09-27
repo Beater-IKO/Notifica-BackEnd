@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 // Controller para testes da API
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/api/test")
 public class TestController {
 
     // Teste básico da API

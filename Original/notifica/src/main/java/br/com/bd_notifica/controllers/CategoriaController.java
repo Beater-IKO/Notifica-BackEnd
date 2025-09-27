@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 // Controller para categorias de tickets
 @RestController
-@RequestMapping("/categorias")
+@RequestMapping("/api/categorias")
 public class CategoriaController {
 
     private final CategoriaService categoriaService;

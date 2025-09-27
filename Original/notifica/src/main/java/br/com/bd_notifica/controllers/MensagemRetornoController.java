@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 // Controller para mensagens de retorno
 @RestController
-@RequestMapping("/mensagemretorno")
+@RequestMapping("/api/mensagemretorno")
 public class MensagemRetornoController {
 
     private final MensagemRetornoService mensagemRetornoService;

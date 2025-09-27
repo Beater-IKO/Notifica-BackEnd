@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * Base URL: /criacao
  */
 @RestController
-@RequestMapping("/criacao")
+@RequestMapping("/api/criacao")
 public class CriacaoDeTicketController {
 
     // Injeção de dependência do serviço de tickets

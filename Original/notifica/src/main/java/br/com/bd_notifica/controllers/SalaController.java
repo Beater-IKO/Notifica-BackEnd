@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/salas")
+@RequestMapping("/api/salas")
 @CrossOrigin(origins = "http://localhost:60058")
 public class SalaController {
 
