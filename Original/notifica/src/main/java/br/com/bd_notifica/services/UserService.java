@@ -1,5 +1,6 @@
 package br.com.bd_notifica.services;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +19,12 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final SalaRepository salaRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, SalaRepository salaRepository) {
+    public UserService(UserRepository userRepository, SalaRepository salaRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.salaRepository = salaRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -50,6 +53,11 @@ public class UserService {
             user.setSala(salaGerenciada);
         }
 
+        // Criptografar senha antes de salvar
+        if (user.getSenha() != null) {
+            user.setSenha(passwordEncoder.encode(user.getSenha()));
+        }
+
         return userRepository.save(user);
     }
 
@@ -67,7 +75,7 @@ public class UserService {
             existingUser.setEmail(user.getEmail());
         }
         if (user.getSenha() != null && !user.getSenha().isBlank()) {
-            existingUser.setSenha(user.getSenha());
+            existingUser.setSenha(passwordEncoder.encode(user.getSenha()));
         }
         if (user.getRole() != null) {
             existingUser.setRole(user.getRole());

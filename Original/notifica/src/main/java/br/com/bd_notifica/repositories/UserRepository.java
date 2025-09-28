@@ -7,6 +7,7 @@ import br.com.bd_notifica.entities.User;
 import br.com.bd_notifica.enums.UserRole;
 
 import java.util.List;
+import java.util.Optional;
 
 // Acesso aos dados de usuários
 @Repository
@@ -24,4 +25,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     
     // Busca usuário por nome de usuário
     User findByUsuario(String usuario);
+    
+    // Busca usuário por email para autenticação
+    Optional<User> findByEmail(String email);
 }

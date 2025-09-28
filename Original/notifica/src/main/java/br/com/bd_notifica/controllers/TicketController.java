@@ -17,15 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.bd_notifica.entities.Ticket;
 import br.com.bd_notifica.services.TicketService;
 
-// Controller administrativo para gestão de tickets
 @RestController
-@RequestMapping("/admin/tickets/")
+@RequestMapping("/api/tickets/")
 @CrossOrigin(origins = "http://localhost:60058")
-public class AdminTicketController {
+public class TicketController {
 
         private final TicketService ticketService;
 
-        public AdminTicketController(TicketService ticketService) {
+        public TicketController(TicketService ticketService) {
                 this.ticketService = ticketService;
         }
 
@@ -83,11 +82,5 @@ public class AdminTicketController {
 
                 return ResponseEntity.noContent().build();
 
-        }
-
-        // Teste da API
-        @GetMapping("/test")
-        public ResponseEntity<String> test() {
-                return new ResponseEntity<>("API funcionando!", HttpStatus.OK);
         }
 }

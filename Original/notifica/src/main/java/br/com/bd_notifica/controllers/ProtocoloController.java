@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 // API para requisições de materiais
 @RestController
-@RequestMapping("/protocolos")
+@RequestMapping("/api/protocolos")
 public class ProtocoloController {
 
     private final ProtocoloService protocoloService;

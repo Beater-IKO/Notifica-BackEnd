@@ -1,0 +1,36 @@
+package br.com.bd_notifica.services;
+
+import br.com.bd_notifica.entities.User;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+
+@Service
+public class TokenService {
+
+    @Value("${api.security.token.secret}")
+    private String secret;
+
+    public String gerarToken(User usuario) {
+        try {
+            return Jwts.builder()
+                    .issuer("API Notifica")
+                    .subject(usuario.getEmail())
+                    .expiration(Date.from(dataExpiracao()))
+                    .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .compact();
+        } catch (Exception exception){
+            throw new RuntimeException("Erro ao gerar token jwt", exception);
+        }
+    }
+
+    private Instant dataExpiracao() {
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+}

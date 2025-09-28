@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 
 // Controller para gestão de materiais
 @RestController
-@RequestMapping("/materiais")
+@RequestMapping("/api/materiais")
 public class MaterialController {
 
     private final MaterialService materialService;
