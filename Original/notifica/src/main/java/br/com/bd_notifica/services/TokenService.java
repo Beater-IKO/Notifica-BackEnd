@@ -18,6 +18,13 @@ public class TokenService {
     private String secret;
 
     public String gerarToken(User usuario) {
+        if (usuario == null) {
+            throw new RuntimeException("Usuário não pode ser nulo");
+        }
+        if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
+            throw new RuntimeException("Email do usuário não pode ser nulo ou vazio");
+        }
+        
         try {
             return Jwts.builder()
                     .issuer("API Notifica")
