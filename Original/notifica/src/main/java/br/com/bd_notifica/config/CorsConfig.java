@@ -1,4 +1,4 @@
-package br.com.bd_notifica.config;
+package main.java.br.com.bd_notifica.config;
 
 import org.springframework.context.annotation.Configuration;
 
