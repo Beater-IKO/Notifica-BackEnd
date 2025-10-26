@@ -1,4 +1,4 @@
-package br.com.bd_notifica.services.services;
+package br.com.bd_notifica.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -61,6 +62,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE INTEGRAÇÃO – Cenário de salvamento de usuário válido com repositories mockados")
     void testSaveValidUser() {
         when(userRepository.findByUsuario(anyString())).thenReturn(null);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
@@ -79,6 +81,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE UNIDADE – Cenário com CPF inválido que lança exceção InvalidData")
     void testSaveUserWithInvalidCPF() {
         testUser.setCpf("invalid-cpf");
         assertThrows(InvalidData.class, () -> userService.save(testUser));
@@ -95,6 +98,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE INTEGRAÇÃO – Cenário de busca por ID inexistente que lança exceção NotFound")
     void testFindByIdNotFound() {
         when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
 
@@ -114,6 +118,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE INTEGRAÇÃO – Cenário de tentativa de deletar usuário ADMIN que lança exceção Unauthorized")
     void testDeleteAdminUser() {
         testUser.setRole(UserRole.ADMIN);
         when(userRepository.findById(1)).thenReturn(Optional.of(testUser));
@@ -148,12 +153,14 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE UNIDADE – Cenário com email inválido que lança exceção InvalidData")
     void testSaveUserWithInvalidEmail() {
         testUser.setEmail("invalid-email");
         assertThrows(InvalidData.class, () -> userService.save(testUser));
     }
 
     @Test
+    @DisplayName("TESTE DE INTEGRAÇÃO – Cenário de usuário já existente que lança exceção AlreadyExists")
     void testSaveUserWithExistingUsuario() {
         when(userRepository.findByUsuario(testUser.getUsuario())).thenReturn(testUser);
         assertThrows(AlreadyExists.class, () -> userService.save(testUser));
