@@ -1,4 +1,4 @@
-package br.com.bd_notifica.services.services;
+package br.com.bd_notifica.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +42,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE INTEGRAÇÃO – Cenário de salvamento de categoria válida com repositories mockados")
     void testSaveValidCategoria() {
         when(categoriaRepository.findByNomeIgnoreCase(anyString())).thenReturn(Arrays.asList());
         when(categoriaRepository.save(any(Categoria.class))).thenReturn(testCategoria);
@@ -54,6 +56,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE INTEGRAÇÃO – Cenário de categoria com nome duplicado que lança exceção AlreadyExists")
     void testSaveCategoriaWithDuplicateName() {
         when(categoriaRepository.findByNomeIgnoreCase(anyString())).thenReturn(Arrays.asList(testCategoria));
 
@@ -61,6 +64,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE UNIDADE – Cenário com categoria nula que lança exceção IllegalArgumentException")
     void testSaveNullCategoria() {
         assertThrows(IllegalArgumentException.class, () -> categoriaService.save(null));
     }
@@ -116,6 +120,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE INTEGRAÇÃO – Cenário de exclusão de categoria com tickets vinculados que lança exceção ValidationException")
     void testDeleteCategoriaWithTickets() {
         when(categoriaRepository.findById(1)).thenReturn(Optional.of(testCategoria));
         when(ticketRepository.findByCategoriaId(1)).thenReturn(Arrays.asList(mock(br.com.bd_notifica.entities.Ticket.class))); // Simula tickets existentes

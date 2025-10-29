@@ -1,4 +1,4 @@
-package br.com.bd_notifica.services.services;
+package br.com.bd_notifica.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

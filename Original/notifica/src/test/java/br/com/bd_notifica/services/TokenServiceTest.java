@@ -1,7 +1,8 @@
-package br.com.bd_notifica.services.services;
+package br.com.bd_notifica.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,6 +36,7 @@ public class TokenServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE UNIDADE – Cenário de geração de token JWT com sucesso")
     void testGerarTokenSuccess() {
         String token = tokenService.gerarToken(testUser);
 
@@ -44,13 +46,36 @@ public class TokenServiceTest {
     }
 
     @Test
+    @DisplayName("TESTE DE UNIDADE – Cenário com usuário nulo que lança exceção RuntimeException")
     void testGerarTokenWithNullUser() {
         assertThrows(RuntimeException.class, () -> tokenService.gerarToken(null));
     }
 
     @Test
+    @DisplayName("TESTE DE UNIDADE – Cenário de geração de token com usuário sem email")
     void testGerarTokenWithUserWithoutEmail() {
         testUser.setEmail(null);
+        assertDoesNotThrow(() -> {
+            String token = tokenService.gerarToken(testUser);
+            assertNotNull(token);
+        });
+    }
+
+    @Test
+    @DisplayName("TESTE DE UNIDADE – Cenário de validação de secret vazio que lança exceção")
+    void testGerarTokenWithEmptySecret() {
+        ReflectionTestUtils.setField(tokenService, "secret", "");
         assertThrows(RuntimeException.class, () -> tokenService.gerarToken(testUser));
+    }
+
+    @Test
+    @DisplayName("TESTE DE UNIDADE – Cenário de validação de formato de token gerado")
+    void testTokenFormat() {
+        String token = tokenService.gerarToken(testUser);
+        
+        assertNotNull(token);
+        assertTrue(token.split("\\.").length == 3, "Token JWT deve ter 3 partes separadas por ponto");
+        assertFalse(token.isEmpty());
+        assertTrue(token.length() > 50, "Token deve ter tamanho mínimo");
     }
 }
