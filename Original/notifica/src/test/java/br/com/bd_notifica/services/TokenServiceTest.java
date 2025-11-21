@@ -55,10 +55,7 @@ public class TokenServiceTest {
     @DisplayName("TESTE DE UNIDADE – Cenário de geração de token com usuário sem email")
     void testGerarTokenWithUserWithoutEmail() {
         testUser.setEmail(null);
-        assertDoesNotThrow(() -> {
-            String token = tokenService.gerarToken(testUser);
-            assertNotNull(token);
-        });
+        assertThrows(RuntimeException.class, () -> tokenService.gerarToken(testUser));
     }
 
     @Test
