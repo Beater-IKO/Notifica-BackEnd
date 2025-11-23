@@ -12,4 +12,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     // Busca tickets por categoria
     List<Ticket> findByCategoriaId(Integer categoriaId);
 
+    // Busca tickets por usuário
+    List<Ticket> findByUserId(Integer userId);
+
 }

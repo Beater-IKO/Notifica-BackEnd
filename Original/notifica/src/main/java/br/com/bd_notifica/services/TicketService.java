@@ -51,6 +51,11 @@ public class TicketService {
         return ticketRepository.findByCategoriaId(categoriaId);
     }
 
+    // Busca tickets por usuário
+    public List<Ticket> findByUserId(Integer userId) {
+        return ticketRepository.findByUserId(userId);
+    }
+
     public Ticket update(Integer id, Ticket ticket) {
         Ticket existingTicket = findById(id);
 

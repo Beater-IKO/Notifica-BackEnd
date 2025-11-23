@@ -39,13 +39,19 @@ public class TicketController {
 
         }
 
-        // Listar todos os tickets
+        // Listar todos os tickets (admin) ou apenas do usuário logado
         @GetMapping("/findAll")
-        public ResponseEntity<?> findAll() {
-
-                List<Ticket> tickets = ticketService.findAll();
+        public ResponseEntity<?> findAll(org.springframework.security.core.Authentication auth) {
+                br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
+                
+                List<Ticket> tickets;
+                if (user.getRole() == br.com.bd_notifica.enums.UserRole.ADMIN || 
+                    user.getRole() == br.com.bd_notifica.enums.UserRole.GESTOR) {
+                    tickets = ticketService.findAll();
+                } else {
+                    tickets = ticketService.findByUserId(user.getId());
+                }
                 return ResponseEntity.ok(tickets);
-
         }
 
         // Buscar tickets por categoria

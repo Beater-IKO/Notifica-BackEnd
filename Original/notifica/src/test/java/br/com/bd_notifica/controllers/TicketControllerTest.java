@@ -1,9 +1,11 @@
 package br.com.bd_notifica.controllers;
 
 import br.com.bd_notifica.entities.Ticket;
+import br.com.bd_notifica.entities.User;
 import br.com.bd_notifica.enums.Area;
 import br.com.bd_notifica.enums.GrauDePrioridade;
 import br.com.bd_notifica.enums.Status;
+import br.com.bd_notifica.enums.UserRole;
 import br.com.bd_notifica.services.TicketService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -24,10 +27,14 @@ public class TicketControllerTest {
     @Mock
     private TicketService ticketService;
 
+    @Mock
+    private Authentication authentication;
+
     @InjectMocks
     private TicketController ticketController;
 
     private Ticket ticket;
+    private User user;
 
     @BeforeEach
     void setUp() {
@@ -40,6 +47,11 @@ public class TicketControllerTest {
         ticket.setArea(Area.INTERNA);
         ticket.setPrioridade(GrauDePrioridade.URGENTE);
         ticket.setStatus(Status.EM_ANDAMENTO);
+
+        // Configuração de um usuário simulado
+        user = new User();
+        user.setId(1);
+        user.setRole(UserRole.ADMIN);
     }
 
     @Test
@@ -55,9 +67,10 @@ public class TicketControllerTest {
 
     @Test
     void deveListarTodosOsTickets() {
+        when(authentication.getPrincipal()).thenReturn(user);
         when(ticketService.findAll()).thenReturn(List.of(ticket));
 
-        ResponseEntity<?> response = ticketController.findAll();
+        ResponseEntity<?> response = ticketController.findAll(authentication);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

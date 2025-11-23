@@ -1,7 +1,10 @@
-package br.com.bd_notifica; // Verifique se o nome do seu pacote está correto
+package br.com.bd_notifica;
 
+import br.com.bd_notifica.config.SecurityTokenFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,19 +24,32 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  @Autowired
+  private SecurityTokenFilter securityTokenFilter;
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        // Desabilita CSRF, pois usaremos uma abordagem stateless (sem sessão)
         .csrf(csrf -> csrf.disable())
-        // Configura o CORS usando o bean 'corsConfigurationSource' abaixo
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        // Define a política de criação de sessão como STATELESS
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        // Autoriza todas as requisições HTTP - para simplificar durante o
-        // desenvolvimento
         .authorizeHttpRequests(authorize -> authorize
-            .anyRequest().permitAll());
+            // Rotas públicas
+            .requestMatchers("/api/auth/**").permitAll()
+            // Rotas de usuários - apenas ADMIN pode criar/deletar
+            .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyRole("ADMIN", "GESTOR")
+            .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAnyRole("ADMIN", "GESTOR")
+            // Rotas de tickets - todos autenticados podem acessar
+            .requestMatchers("/api/tickets/**").authenticated()
+            // Rotas de suporte - apenas ADMIN e FUNCIONARIO
+            .requestMatchers("/api/suporte/**").hasAnyRole("ADMIN", "FUNCIONARIO")
+            // Rotas de salas e cursos - ADMIN, GESTOR e PROFESSOR
+            .requestMatchers("/api/salas/**", "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
+            // Todas as outras rotas precisam de autenticação
+            .anyRequest().authenticated())
+        .addFilterBefore(securityTokenFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 

@@ -1,6 +1,7 @@
 package br.com.bd_notifica.services;
 
 import br.com.bd_notifica.entities.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,19 @@ public class TokenService {
                     .compact();
         } catch (Exception exception){
             throw new RuntimeException("Erro ao gerar token jwt", exception);
+        }
+    }
+
+    public String validateToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            return claims.getSubject();
+        } catch (Exception exception) {
+            return null;
         }
     }
 
