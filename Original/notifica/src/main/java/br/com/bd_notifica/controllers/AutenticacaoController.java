@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.logging.Logger;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,9 +37,19 @@ public class AutenticacaoController {
         var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
         var authentication = manager.authenticate(authenticationToken);
 
-        var tokenJWT = tokenService.gerarToken((User) authentication.getPrincipal());
+        User user = (User) authentication.getPrincipal();
+        var tokenJWT = tokenService.gerarToken(user);
 
-        return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
+        // Retornando dados completos do usuário
+        var response = Map.of(
+            "token", tokenJWT,
+            "id", user.getId(),
+            "nome", user.getNome(),
+            "email", user.getEmail(),
+            "role", user.getRole().name()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
@@ -47,6 +58,6 @@ public class AutenticacaoController {
             user.setRole(br.com.bd_notifica.enums.UserRole.ESTUDANTE);
         }
         User savedUser = userService.save(user);
-        return ResponseEntity.status(201).body("Usuário criado com sucesso");
+        return ResponseEntity.status(201).body(Map.of("message", "Usuário criado com sucesso", "id", savedUser.getId()));
     }
 }

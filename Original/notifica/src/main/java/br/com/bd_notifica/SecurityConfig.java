@@ -36,8 +36,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorize -> authorize
             // Rotas públicas
             .requestMatchers("/api/auth/**").permitAll()
-            // Rotas de usuários - apenas ADMIN pode criar/deletar
-            .requestMatchers(HttpMethod.POST, "/api/usuarios/**").hasRole("ADMIN")
+            .requestMatchers("/api/admin/clear-users").permitAll()
+            .requestMatchers("/api/admin/list-users").permitAll()
+            // Rotas de usuários - apenas ADMIN pode criar/deletar (exceto registro público)
+            .requestMatchers(HttpMethod.POST, "/api/usuarios/save").hasRole("ADMIN")
             .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyRole("ADMIN", "GESTOR")
             .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAnyRole("ADMIN", "GESTOR")
