@@ -69,6 +69,16 @@ public class TicketService {
         return ticketRepository.findByUserId(userId);
     }
 
+    // Busca tickets por status
+    public List<Ticket> findByStatus(Status status) {
+        return ticketRepository.findByStatus(status);
+    }
+
+    // Busca tickets por usuário e status
+    public List<Ticket> findByUserIdAndStatus(Integer userId, Status status) {
+        return ticketRepository.findByUserIdAndStatus(userId, status);
+    }
+
     public Ticket update(Integer id, Ticket ticket) {
         Ticket existingTicket = findById(id);
 

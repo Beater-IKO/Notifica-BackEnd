@@ -187,6 +187,8 @@ public class TicketController {
                 }
         }
 
+
+
         // Listar todos os tickets (admin) ou apenas do usuário logado
         @GetMapping("/findAll")
         public ResponseEntity<?> findAll(org.springframework.security.core.Authentication auth) {
@@ -200,6 +202,26 @@ public class TicketController {
                         tickets = ticketService.findByUserId(user.getId());
                 }
                 return ResponseEntity.ok(tickets);
+        }
+
+        // Buscar tickets por status
+        @GetMapping("/status/{status}")
+        public ResponseEntity<?> findByStatus(@PathVariable String status, org.springframework.security.core.Authentication auth) {
+                try {
+                        br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
+                        br.com.bd_notifica.enums.Status statusEnum = br.com.bd_notifica.enums.Status.valueOf(status);
+                        
+                        List<Ticket> tickets;
+                        if (user.getRole() == br.com.bd_notifica.enums.UserRole.ADMIN ||
+                                        user.getRole() == br.com.bd_notifica.enums.UserRole.GESTOR) {
+                                tickets = ticketService.findByStatus(statusEnum);
+                        } else {
+                                tickets = ticketService.findByUserIdAndStatus(user.getId(), statusEnum);
+                        }
+                        return ResponseEntity.ok(tickets);
+                } catch (Exception e) {
+                        return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
+                }
         }
 
         // Buscar tickets por categoria
@@ -236,5 +258,36 @@ public class TicketController {
 
                 return ResponseEntity.noContent().build();
 
+        }
+
+        // Listar tickets do usuário logado (rota principal) - DEVE SER O ÚNICO ENDPOINT SEM PATH
+        @GetMapping
+        public ResponseEntity<?> getTickets(org.springframework.security.core.Authentication auth) {
+                System.out.println("=== GET /api/tickets CHAMADO ===");
+                
+                if (auth == null) {
+                        System.out.println("ERRO: Authentication é null");
+                        return ResponseEntity.status(401).body(java.util.Map.of("error", "Não autenticado"));
+                }
+                
+                try {
+                        br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
+                        System.out.println("Usuário autenticado: " + user.getEmail() + " | Role: " + user.getRole());
+
+                        List<Ticket> tickets;
+                        if (user.getRole() == br.com.bd_notifica.enums.UserRole.ADMIN ||
+                                        user.getRole() == br.com.bd_notifica.enums.UserRole.GESTOR) {
+                                tickets = ticketService.findAll();
+                                System.out.println("Admin/Gestor - Buscando todos os tickets: " + tickets.size());
+                        } else {
+                                tickets = ticketService.findByUserId(user.getId());
+                                System.out.println("Usuário comum - Buscando tickets do usuário " + user.getId() + ": " + tickets.size());
+                        }
+                        return ResponseEntity.ok(tickets);
+                } catch (Exception e) {
+                        System.out.println("ERRO no getTickets: " + e.getMessage());
+                        e.printStackTrace();
+                        return ResponseEntity.status(500).body(java.util.Map.of("error", e.getMessage()));
+                }
         }
 }
