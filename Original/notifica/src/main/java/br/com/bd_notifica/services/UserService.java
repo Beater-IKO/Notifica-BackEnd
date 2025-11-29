@@ -131,4 +131,28 @@ public class UserService {
     public User authenticate(String usuario, String senha) {
         return userRepository.findByUsuarioAndSenha(usuario, senha);
     }
+
+    @Transactional
+    public int removeDuplicateUsers() {
+        List<User> allUsers = userRepository.findAll();
+        java.util.Map<String, List<User>> usersByEmail = new java.util.HashMap<>();
+        
+        // Agrupar por email
+        for (User user : allUsers) {
+            usersByEmail.computeIfAbsent(user.getEmail(), k -> new java.util.ArrayList<>()).add(user);
+        }
+        
+        int removedCount = 0;
+        // Remover duplicatas (manter apenas o primeiro)
+        for (List<User> duplicates : usersByEmail.values()) {
+            if (duplicates.size() > 1) {
+                for (int i = 1; i < duplicates.size(); i++) {
+                    userRepository.delete(duplicates.get(i));
+                    removedCount++;
+                }
+            }
+        }
+        
+        return removedCount;
+    }
 }

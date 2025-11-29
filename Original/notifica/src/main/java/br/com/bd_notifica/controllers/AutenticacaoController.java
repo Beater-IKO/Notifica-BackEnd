@@ -75,4 +75,14 @@ public class AutenticacaoController {
         User savedUser = userService.save(user);
         return ResponseEntity.status(201).body(Map.of("message", "Usuário criado com sucesso", "id", savedUser.getId()));
     }
+
+    @PostMapping("/fix-duplicates")
+    public ResponseEntity<?> fixDuplicates() {
+        try {
+            int removed = userService.removeDuplicateUsers();
+            return ResponseEntity.ok(Map.of("message", "Usuários duplicados removidos", "count", removed));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
 }

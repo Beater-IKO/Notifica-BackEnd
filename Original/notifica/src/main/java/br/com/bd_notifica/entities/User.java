@@ -38,7 +38,7 @@ public class User implements UserDetails {
 
     // Email válido
     @Email(message = "O email precisa estar no formato correto")
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     // Nome de usuário para login
