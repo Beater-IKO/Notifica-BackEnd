@@ -44,7 +44,6 @@ public class TicketControllerTest {
         ticket = new Ticket();
         ticket.setId(1);
         ticket.setProblema("Computador não liga");
-        ticket.setArea(Area.INTERNA);
         ticket.setPrioridade(GrauDePrioridade.URGENTE);
         ticket.setStatus(Status.EM_ANDAMENTO);
 

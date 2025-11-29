@@ -40,13 +40,22 @@ public class TokenService {
 
     public String validateToken(String token) {
         try {
+            System.out.println("=== TOKEN VALIDATION DEBUG ===");
+            System.out.println("Secret usado: " + secret);
+            System.out.println("Token recebido: " + token.substring(0, Math.min(50, token.length())) + "...");
+            
             Claims claims = Jwts.parser()
                     .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
+            
+            System.out.println("Token válido! Subject: " + claims.getSubject());
+            System.out.println("Expiração: " + claims.getExpiration());
             return claims.getSubject();
         } catch (Exception exception) {
+            System.out.println("Erro na validação do token: " + exception.getMessage());
+            exception.printStackTrace();
             return null;
         }
     }

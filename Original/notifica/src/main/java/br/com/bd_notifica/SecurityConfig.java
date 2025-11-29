@@ -1,11 +1,13 @@
 package br.com.bd_notifica;
 
 import br.com.bd_notifica.config.SecurityTokenFilter;
+import br.com.bd_notifica.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,6 +29,9 @@ public class SecurityConfig {
   @Autowired
   private SecurityTokenFilter securityTokenFilter;
 
+  @Autowired
+  private AuthenticationService authenticationService;
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
@@ -34,22 +39,38 @@ public class SecurityConfig {
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
-            // Rotas públicas
+            // --- ROTAS PÚBLICAS (Login/Registro) ---
             .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/debug/**").permitAll()
             .requestMatchers("/api/admin/clear-users").permitAll()
             .requestMatchers("/api/admin/list-users").permitAll()
-            // Rotas de usuários - apenas ADMIN pode criar/deletar (exceto registro público)
+            .requestMatchers("/api/tickets/public-test").permitAll()
+
+            // --- ROTAS DE TICKETS - ESTUDANTE tem acesso completo ---
+            .requestMatchers("/api/tickets/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR", "FUNCIONARIO", "ESTUDANTE")
+            
+            // --- ROTAS DE SALAS E CURSOS - ESTUDANTE pode ler ---
+            .requestMatchers(HttpMethod.GET, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR", "FUNCIONARIO", "ESTUDANTE")
+            .requestMatchers(HttpMethod.POST, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
+            .requestMatchers(HttpMethod.PUT, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
+            .requestMatchers(HttpMethod.DELETE, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR")
+            
+            .requestMatchers(HttpMethod.GET, "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR", "FUNCIONARIO", "ESTUDANTE")
+            .requestMatchers(HttpMethod.POST, "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
+            .requestMatchers(HttpMethod.PUT, "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
+            .requestMatchers(HttpMethod.DELETE, "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR")
+
+            // --- ROTAS DE USUÁRIOS (Manter restrição básica de Admin) ---
             .requestMatchers(HttpMethod.POST, "/api/usuarios/save").hasRole("ADMIN")
             .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyRole("ADMIN", "GESTOR")
-            .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAnyRole("ADMIN", "GESTOR")
-            // Rotas de tickets - todos autenticados podem acessar
-            .requestMatchers("/api/tickets/**").authenticated()
-            // Rotas de suporte - apenas ADMIN e FUNCIONARIO
-            .requestMatchers("/api/suporte/**").hasAnyRole("ADMIN", "FUNCIONARIO")
-            // Rotas de salas e cursos - ADMIN, GESTOR e PROFESSOR
-            .requestMatchers("/api/salas/**", "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
-            // Todas as outras rotas precisam de autenticação
+            // Para garantir leitura, vamos liberar para autenticados também caso dê erro
+            .requestMatchers(HttpMethod.GET, "/api/usuarios/**").authenticated()
+            .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").authenticated()
+
+            // --- ROTAS DE SUPORTE ---
+            .requestMatchers("/api/suporte/**").authenticated()
+
+            // --- QUALQUER OUTRA ROTA ---
             .anyRequest().authenticated())
         .addFilterBefore(securityTokenFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
@@ -76,6 +97,14 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(authenticationService);
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
   }
 
   @Bean

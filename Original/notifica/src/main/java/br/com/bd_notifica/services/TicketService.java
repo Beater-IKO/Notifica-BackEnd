@@ -23,8 +23,21 @@ public class TicketService {
 
     public Ticket save(Ticket ticket) {
         // Validação de campos obrigatórios
+
         if (ticket.getProblema() == null || ticket.getProblema().isBlank()) {
             throw new ValidationException("Problema é obrigatório");
+        }
+
+        if (ticket.getPrioridade() == null) {
+            throw new ValidationException("Prioridade é obrigatória");
+        }
+
+        if (ticket.getDescricao() == null || ticket.getDescricao().isBlank()) {
+            throw new ValidationException("Descrição é obrigatória");
+        }
+
+        if (ticket.getSala() == null) {
+            throw new ValidationException("Sala é obrigatória");
         }
 
         // Define status inicial automaticamente
@@ -70,10 +83,6 @@ public class TicketService {
 
         if (ticket.getProblema() != null) {
             existingTicket.setProblema(ticket.getProblema());
-        }
-
-        if (ticket.getArea() != null) {
-            existingTicket.setArea(ticket.getArea());
         }
 
         if (ticket.getPrioridade() != null) {

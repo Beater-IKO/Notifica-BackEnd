@@ -33,23 +33,38 @@ public class AutenticacaoController {
 
     @PostMapping("/login")
     public ResponseEntity efetuarLogin(@RequestBody DadosAutenticacao dados) {
-        logger.info("Endpoint /api/auth/login foi chamado com email: " + dados.email());
-        var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
-        var authentication = manager.authenticate(authenticationToken);
+        logger.info("=== LOGIN ATTEMPT ===");
+        logger.info("Email: " + dados.email());
+        logger.info("Senha fornecida: " + (dados.senha() != null ? "[PRESENTE]" : "[AUSENTE]"));
+        
+        try {
+            var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+            logger.info("AuthenticationToken criado");
+            
+            var authentication = manager.authenticate(authenticationToken);
+            logger.info("Autenticação bem-sucedida!");
 
-        User user = (User) authentication.getPrincipal();
-        var tokenJWT = tokenService.gerarToken(user);
+            User user = (User) authentication.getPrincipal();
+            logger.info("Usuário autenticado: " + user.getEmail() + " | Role: " + user.getRole());
+            
+            var tokenJWT = tokenService.gerarToken(user);
+            logger.info("Token JWT gerado com sucesso");
 
-        // Retornando dados completos do usuário
-        var response = Map.of(
-            "token", tokenJWT,
-            "id", user.getId(),
-            "nome", user.getNome(),
-            "email", user.getEmail(),
-            "role", user.getRole().name()
-        );
+            // Retornando dados completos do usuário
+            var response = Map.of(
+                "token", tokenJWT,
+                "id", user.getId(),
+                "nome", user.getNome(),
+                "email", user.getEmail(),
+                "role", user.getRole().name()
+            );
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.severe("Erro na autenticação: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(403).body(Map.of("error", "Credenciais inválidas", "details", e.getMessage()));
+        }
     }
 
     @PostMapping("/register")

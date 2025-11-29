@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/salas")
-@CrossOrigin(origins = "http://localhost:60058")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SalaController {
 
     private final SalaService salaService;

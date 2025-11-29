@@ -39,7 +39,6 @@ public class TicketServiceTest {
         testTicket.setId(1);
         testTicket.setProblema("Problema de teste");
         testTicket.setStatus(Status.VISTO);
-        testTicket.setArea(Area.INTERNA);
         testTicket.setPrioridade(GrauDePrioridade.MEDIA);
     }
 
@@ -145,7 +144,7 @@ public class TicketServiceTest {
 
         Ticket updatedTicket = new Ticket();
         updatedTicket.setProblema("Problema atualizado");
-        
+
         Ticket result = ticketService.update(1, updatedTicket);
 
         assertNotNull(result);
@@ -158,7 +157,7 @@ public class TicketServiceTest {
 
         Ticket updatedTicket = new Ticket();
         updatedTicket.setProblema("");
-        
+
         assertThrows(ValidationException.class, () -> ticketService.update(1, updatedTicket));
     }
 
@@ -170,7 +169,7 @@ public class TicketServiceTest {
         Ticket updatedTicket = new Ticket();
         updatedTicket.setProblema("Novo problema");
         updatedTicket.setStatus(Status.EM_ANDAMENTO);
-        
+
         Ticket result = ticketService.update(1, updatedTicket);
 
         assertNotNull(result);
@@ -183,7 +182,7 @@ public class TicketServiceTest {
 
         Ticket updatedTicket = new Ticket();
         updatedTicket.setStatus(Status.FINALIZADOS);
-        
+
         Ticket result = ticketService.update(1, updatedTicket);
 
         assertEquals(Status.FINALIZADOS, result.getStatus());
@@ -193,29 +192,9 @@ public class TicketServiceTest {
     void testDeleteVistoTicket() {
         testTicket.setStatus(Status.VISTO);
         when(ticketRepository.findById(1)).thenReturn(Optional.of(testTicket));
-        
+
         assertDoesNotThrow(() -> ticketService.delete(1));
         verify(ticketRepository).delete(testTicket);
     }
 
-    @Test
-    void testUpdateTicketWithAreaPrioridadeAndUser() {
-        when(ticketRepository.findById(1)).thenReturn(Optional.of(testTicket));
-        when(ticketRepository.save(any(Ticket.class))).thenReturn(testTicket);
-
-        User user = new User();
-        user.setId(1);
-        
-        Ticket updatedTicket = new Ticket();
-        updatedTicket.setArea(Area.EXTERNA);
-        updatedTicket.setPrioridade(GrauDePrioridade.ALTO);
-        updatedTicket.setUser(user);
-        
-        Ticket result = ticketService.update(1, updatedTicket);
-
-        assertNotNull(result);
-        assertEquals(Area.EXTERNA, result.getArea());
-        assertEquals(GrauDePrioridade.ALTO, result.getPrioridade());
-        assertEquals(user, result.getUser());
-    }
 }

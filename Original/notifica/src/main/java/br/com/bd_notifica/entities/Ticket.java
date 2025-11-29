@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import br.com.bd_notifica.enums.Area;
 import br.com.bd_notifica.enums.GrauDePrioridade;
 import br.com.bd_notifica.enums.Status;
 import jakarta.persistence.Column;
@@ -36,15 +35,13 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    // Descrição do problema
+    // Titulo do Ticket
     @NotBlank(message = "O problema não pode ser nulo")
     @Column(name = "problema")
     private String problema;
 
-    // Área responsável
-    @Enumerated(EnumType.STRING)
-    @Column(name = "area")
-    private Area area;
+    @Column(name = "descricao")
+    private String descricao;
 
     // Prioridade do chamado
     @Enumerated(EnumType.STRING)
@@ -61,6 +58,12 @@ public class Ticket {
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties("ticket")
     private User user;
+
+    // Sala onde ocorreu o problema (obrigatório)
+    @ManyToOne
+    @JoinColumn(name = "sala_id", nullable = false)
+    @JsonIgnoreProperties("tickets")
+    private Sala sala;
 
     // Categoria do problema
     @ManyToOne
