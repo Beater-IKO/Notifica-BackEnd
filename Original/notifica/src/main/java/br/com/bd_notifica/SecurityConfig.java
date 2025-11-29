@@ -45,9 +45,10 @@ public class SecurityConfig {
             .requestMatchers("/api/admin/clear-users").permitAll()
             .requestMatchers("/api/admin/list-users").permitAll()
             .requestMatchers("/api/tickets/public-test").permitAll()
+            .requestMatchers("/api/tickets/bypass-test").permitAll()
 
             // --- ROTAS DE TICKETS - ESTUDANTE tem acesso completo ---
-            .requestMatchers("/api/tickets/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR", "FUNCIONARIO", "ESTUDANTE")
+            .requestMatchers("/api/tickets/**").authenticated()
             
             // --- ROTAS DE SALAS E CURSOS - ESTUDANTE pode ler ---
             .requestMatchers(HttpMethod.GET, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR", "FUNCIONARIO", "ESTUDANTE")

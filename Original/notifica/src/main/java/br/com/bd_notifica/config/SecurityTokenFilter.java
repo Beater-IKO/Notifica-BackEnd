@@ -33,7 +33,22 @@ public class SecurityTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         
         String uri = request.getRequestURI();
-        logger.info("=== SecurityTokenFilter - Processando: {} {} ===", request.getMethod(), uri);
+        String method = request.getMethod();
+        logger.info("=== SecurityTokenFilter - Processando: {} {} ===", method, uri);
+        
+        // Pular requisições OPTIONS (CORS preflight)
+        if ("OPTIONS".equals(method)) {
+            logger.info("Requisição OPTIONS detectada, pulando validação de token");
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
+        // Pular rotas públicas
+        if (uri.contains("/api/auth/") || uri.contains("/api/tickets/public-test") || uri.contains("/api/debug/")) {
+            logger.info("Rota pública detectada, pulando validação de token");
+            filterChain.doFilter(request, response);
+            return;
+        }
         
         String token = recuperarToken(request);
         logger.info("Token encontrado: {}", token != null ? "SIM (" + token.substring(0, Math.min(20, token.length())) + "...)" : "NÃO");

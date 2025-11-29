@@ -39,10 +39,24 @@ public class TicketController {
 
         }
 
-        // Teste público
+        // Teste público GET
+        @GetMapping("/public-test")
+        public ResponseEntity<?> publicTestGet() {
+                return ResponseEntity.ok(java.util.Map.of("message", "GET público funcionando"));
+        }
+
+        // Teste público POST
         @PostMapping("/public-test")
         public ResponseEntity<?> publicTest() {
-                return ResponseEntity.ok(java.util.Map.of("message", "Endpoint público funcionando"));
+                return ResponseEntity.ok(java.util.Map.of("message", "POST público funcionando"));
+        }
+
+        // Bypass completo para teste
+        @PostMapping("/bypass-test")
+        public ResponseEntity<?> bypassTest(@RequestBody java.util.Map<String, Object> dados) {
+                System.out.println("=== BYPASS TEST CHAMADO ===");
+                System.out.println("Dados recebidos: " + dados);
+                return ResponseEntity.ok(java.util.Map.of("message", "Bypass funcionando", "dados", dados));
         }
 
         // Debug de autenticação
@@ -63,23 +77,57 @@ public class TicketController {
 
         // Criar ticket na rota principal
         @PostMapping
-        public ResponseEntity<Ticket> create(@RequestBody br.com.bd_notifica.dto.TicketCreateDTO dto, org.springframework.security.core.Authentication auth) {
-                br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
+        public ResponseEntity<?> create(@RequestBody java.util.Map<String, Object> dados) {
+                System.out.println("=== CONTROLLER CREATE CHAMADO ===");
+                System.out.println("Dados recebidos: " + dados);
                 
-                Ticket ticket = new Ticket();
-                ticket.setProblema(dto.getProblema());
-                ticket.setDescricao(dto.getDescricao());
-                ticket.setPrioridade(dto.getPrioridade());
-                ticket.setUser(user);
-                
-                if (dto.getSalaId() != null) {
-                        br.com.bd_notifica.entities.Sala sala = new br.com.bd_notifica.entities.Sala();
-                        sala.setId(dto.getSalaId());
-                        ticket.setSala(sala);
+                try {
+                        Ticket ticket = new Ticket();
+                        ticket.setProblema((String) dados.get("problema"));
+                        
+                        // Tentar pegar descrição ou usar problema como descrição
+                        String descricao = (String) dados.get("descricao");
+                        if (descricao == null || descricao.isBlank()) {
+                                descricao = (String) dados.get("problema"); // usar problema como descrição
+                        }
+                        ticket.setDescricao(descricao);
+                        
+                        String prioridadeStr = (String) dados.get("prioridade");
+                        if (prioridadeStr != null) {
+                                ticket.setPrioridade(br.com.bd_notifica.enums.GrauDePrioridade.valueOf(prioridadeStr));
+                        }
+                        
+                        // Tentar pegar salaId ou sala
+                        Integer salaId = null;
+                        Object salaObj = dados.get("salaId");
+                        if (salaObj == null) {
+                                salaObj = dados.get("sala");
+                        }
+                        if (salaObj != null) {
+                                if (salaObj instanceof Integer) {
+                                        salaId = (Integer) salaObj;
+                                } else if (salaObj instanceof String) {
+                                        salaId = Integer.parseInt((String) salaObj);
+                                }
+                        }
+                        if (salaId != null) {
+                                br.com.bd_notifica.entities.Sala sala = new br.com.bd_notifica.entities.Sala();
+                                sala.setId(salaId);
+                                ticket.setSala(sala);
+                        }
+                        
+                        // Usar usuário autenticado
+                        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+                        br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
+                        ticket.setUser(user);
+                        
+                        Ticket ticketSalvo = ticketService.save(ticket);
+                        return ResponseEntity.ok(java.util.Map.of("message", "Ticket criado", "id", ticketSalvo.getId()));
+                } catch (Exception e) {
+                        System.out.println("Erro: " + e.getMessage());
+                        e.printStackTrace();
+                        return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
                 }
-                
-                Ticket ticketSalvo = ticketService.save(ticket);
-                return new ResponseEntity<>(ticketSalvo, HttpStatus.CREATED);
         }
 
         // Endpoint de teste simples

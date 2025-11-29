@@ -42,7 +42,13 @@ public class MainApplication {
             authPreview = auth.length() > 60 ? auth.substring(0, 60) + "..." : auth;
           }
           Authentication a = SecurityContextHolder.getContext().getAuthentication();
-          String principal = a == null ? "null" : String.valueOf(a.getPrincipal());
+          String principal = "null";
+          if (a != null && a.getPrincipal() instanceof br.com.bd_notifica.entities.User) {
+            br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) a.getPrincipal();
+            principal = user.getEmail();
+          } else if (a != null) {
+            principal = a.getPrincipal().getClass().getSimpleName();
+          }
           Object authorities = a == null ? "null" : a.getAuthorities();
           log.info("REQ {} {} | Authorization present: {} | authPreview: {} | principal: {} | authorities: {}",
               request.getMethod(), request.getRequestURI(),

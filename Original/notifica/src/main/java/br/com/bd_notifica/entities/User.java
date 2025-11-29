@@ -63,16 +63,19 @@ public class User implements UserDetails {
     // Tickets criados pelo usuário
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("user")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Ticket> tickets = new ArrayList<>();
 
     // Protocolos de requisição
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties("user")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Protocolo> protocolos = new ArrayList<>();
 
     // Chamados de suporte
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties("user")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Suporte> suportes = new ArrayList<>();
 
     @Override

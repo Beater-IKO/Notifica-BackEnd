@@ -44,7 +44,7 @@ public class Ticket {
     private String descricao;
 
     // Prioridade do chamado
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "prioridade")
     private GrauDePrioridade prioridade;
 

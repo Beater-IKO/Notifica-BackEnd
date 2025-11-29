@@ -39,7 +39,7 @@ public class TicketServiceTest {
         testTicket.setId(1);
         testTicket.setProblema("Problema de teste");
         testTicket.setStatus(Status.VISTO);
-        testTicket.setPrioridade(GrauDePrioridade.MEDIA);
+        testTicket.setPrioridade(GrauDePrioridade.MEDIO);
     }
 
     @Test
