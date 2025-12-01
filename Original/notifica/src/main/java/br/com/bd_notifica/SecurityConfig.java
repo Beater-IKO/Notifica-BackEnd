@@ -82,23 +82,27 @@ public class SecurityConfig {
     return http.build();
   }
 
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
+@Bean
+public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    // Permite requisições da origem do seu front-end
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-    // Permite os métodos HTTP, incluindo o OPTIONS
+    // Origens permitidas
+    configuration.setAllowedOrigins(Arrays.asList(
+        "http://localhost:4200",
+        "http://localhost:8080",
+        "http://localhost:57247",
+        "http://localhost:60058"
+    ));
+    // Métodos HTTP permitidos
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-    // Permite todos os cabeçalhos
+    // Todos os cabeçalhos permitidos
     configuration.setAllowedHeaders(Arrays.asList("*"));
-    // Permite o envio de credenciais (cookies, etc.)
+    // Permite enviar credenciais (cookies, auth headers, etc)
     configuration.setAllowCredentials(true);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    // Aplica esta configuração para todas as rotas da sua aplicação
     source.registerCorsConfiguration("/**", configuration);
     return source;
-  }
+}
 
   @Bean
   public PasswordEncoder passwordEncoder() {
