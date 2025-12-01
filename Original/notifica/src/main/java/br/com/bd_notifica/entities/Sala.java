@@ -49,4 +49,9 @@ public class Sala {
     @JoinColumn(name = "curso_id")
     @JsonIgnoreProperties("salas")
     private Curso curso;
+
+    // Tickets da sala
+    @JsonIgnore
+    @OneToMany(mappedBy = "sala")
+    private List<Ticket> tickets;
 }

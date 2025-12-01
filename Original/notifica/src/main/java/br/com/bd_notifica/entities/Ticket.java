@@ -59,10 +59,10 @@ public class Ticket {
     @JsonIgnoreProperties("ticket")
     private User user;
 
-    // Sala onde ocorreu o problema (obrigatório)
+    // Sala onde ocorreu o problema
     @ManyToOne
-    @JoinColumn(name = "sala_id", nullable = false)
-    @JsonIgnoreProperties("tickets")
+    @JoinColumn(name = "sala_id")
+    @JsonIgnoreProperties({"tickets", "alunos", "professores"})
     private Sala sala;
 
     // Categoria do problema

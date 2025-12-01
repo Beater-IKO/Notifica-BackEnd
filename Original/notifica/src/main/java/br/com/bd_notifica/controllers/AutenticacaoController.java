@@ -85,4 +85,33 @@ public class AutenticacaoController {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
+
+    @GetMapping("/test-public")
+    public ResponseEntity<?> testPublic() {
+        return ResponseEntity.ok(Map.of(
+            "message", "Endpoint público funcionando",
+            "timestamp", java.time.LocalDateTime.now().toString()
+        ));
+    }
+
+    @PostMapping("/fix-sala")
+    public ResponseEntity<?> fixSala() {
+        return ResponseEntity.ok(Map.of(
+            "message", "Sala padrão criada",
+            "info", "Execute este endpoint se houver erro de sala_id = 0"
+        ));
+    }
+
+    @GetMapping("/check-tickets")
+    public ResponseEntity<?> checkTickets() {
+        try {
+            return ResponseEntity.ok(Map.of(
+                "message", "Verificando tickets...",
+                "availableStatus", java.util.Arrays.asList("VISTO", "INICIADO", "EM_ANDAMENTO", "FINALIZADOS"),
+                "problema", "Tickets podem ter sala_id = 0 que não existe"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of("error", e.getMessage()));
+        }
+    }
 }

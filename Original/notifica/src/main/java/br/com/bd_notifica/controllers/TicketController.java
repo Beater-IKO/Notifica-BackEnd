@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,6 +50,34 @@ public class TicketController {
         @PostMapping("/public-test")
         public ResponseEntity<?> publicTest() {
                 return ResponseEntity.ok(java.util.Map.of("message", "POST público funcionando"));
+        }
+
+        // Teste PATCH
+        @PatchMapping("/test-patch")
+        public ResponseEntity<?> testPatch(@RequestBody java.util.Map<String, Object> dados) {
+                return ResponseEntity.ok(java.util.Map.of("message", "PATCH funcionando", "dados", dados));
+        }
+
+        // Debug - listar todos os tickets com seus status
+        @GetMapping("/debug-status")
+        public ResponseEntity<?> debugStatus() {
+                List<Ticket> allTickets = ticketService.findAll();
+                java.util.Map<String, Integer> statusCount = new java.util.HashMap<>();
+                
+                for (Ticket ticket : allTickets) {
+                        String status = ticket.getStatus() != null ? ticket.getStatus().name() : "NULL";
+                        statusCount.put(status, statusCount.getOrDefault(status, 0) + 1);
+                }
+                
+                return ResponseEntity.ok(java.util.Map.of(
+                        "totalTickets", allTickets.size(),
+                        "statusCount", statusCount,
+                        "tickets", allTickets.stream().map(t -> java.util.Map.of(
+                                "id", t.getId(),
+                                "problema", t.getProblema(),
+                                "status", t.getStatus() != null ? t.getStatus().name() : "NULL"
+                        )).toList()
+                ));
         }
 
         // Bypass completo para teste
@@ -139,11 +168,24 @@ public class TicketController {
                 }
 
                 br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
+                
+                // Adicionar debug dos tickets aqui
+                List<Ticket> allTickets = ticketService.findAll();
+                java.util.Map<String, Integer> statusCount = new java.util.HashMap<>();
+                
+                for (Ticket ticket : allTickets) {
+                        String status = ticket.getStatus() != null ? ticket.getStatus().name() : "NULL";
+                        statusCount.put(status, statusCount.getOrDefault(status, 0) + 1);
+                }
+                
                 return ResponseEntity.ok(java.util.Map.of(
                                 "message", "Token válido!",
                                 "authenticated", true,
                                 "user", user.getEmail(),
-                                "role", user.getRole().name()));
+                                "role", user.getRole().name(),
+                                "totalTickets", allTickets.size(),
+                                "statusCount", statusCount
+                ));
         }
 
         // Criar ticket simplificado para teste
@@ -207,19 +249,39 @@ public class TicketController {
         // Buscar tickets por status
         @GetMapping("/status/{status}")
         public ResponseEntity<?> findByStatus(@PathVariable String status, org.springframework.security.core.Authentication auth) {
+                System.out.println("=== GET STATUS CHAMADO ===");
+                System.out.println("Status solicitado: " + status);
+                
+                if (auth == null) {
+                        System.out.println("ERRO: Authentication é null");
+                        return ResponseEntity.status(401).body(java.util.Map.of("error", "Não autenticado"));
+                }
+                
                 try {
                         br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
+                        System.out.println("Usuário: " + user.getEmail() + " | Role: " + user.getRole());
+                        
                         br.com.bd_notifica.enums.Status statusEnum = br.com.bd_notifica.enums.Status.valueOf(status);
+                        System.out.println("Status enum: " + statusEnum);
                         
                         List<Ticket> tickets;
                         if (user.getRole() == br.com.bd_notifica.enums.UserRole.ADMIN ||
                                         user.getRole() == br.com.bd_notifica.enums.UserRole.GESTOR) {
                                 tickets = ticketService.findByStatus(statusEnum);
+                                System.out.println("Admin/Gestor - Todos os tickets com status " + status + ": " + tickets.size());
                         } else {
                                 tickets = ticketService.findByUserIdAndStatus(user.getId(), statusEnum);
+                                System.out.println("Usuário " + user.getId() + " - Tickets com status " + status + ": " + tickets.size());
                         }
+                        
+                        System.out.println("Retornando " + tickets.size() + " tickets");
                         return ResponseEntity.ok(tickets);
+                } catch (IllegalArgumentException e) {
+                        System.out.println("Status inválido: " + status);
+                        return ResponseEntity.badRequest().body(java.util.Map.of("error", "Status inválido: " + status));
                 } catch (Exception e) {
+                        System.out.println("Erro: " + e.getMessage());
+                        e.printStackTrace();
                         return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
                 }
         }
@@ -239,6 +301,48 @@ public class TicketController {
                 Ticket ticket = ticketService.findById(id);
                 return ResponseEntity.ok(ticket);
 
+        }
+
+        // Alterar status do ticket
+        @PutMapping("/{id}/status")
+        @PatchMapping("/{id}/status")
+        public ResponseEntity<?> updateStatus(@PathVariable Integer id, @RequestBody java.util.Map<String, String> dados, org.springframework.security.core.Authentication auth) {
+                System.out.println("=== UPDATE STATUS CHAMADO ===");
+                System.out.println("ID: " + id);
+                System.out.println("Dados: " + dados);
+                
+                if (auth == null) {
+                        System.out.println("ERRO: Authentication é null");
+                        return ResponseEntity.status(401).body(java.util.Map.of("error", "Não autenticado"));
+                }
+                
+                try {
+                        br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
+                        System.out.println("Usuário: " + user.getEmail() + " | Role: " + user.getRole());
+                        
+                        String novoStatus = dados.get("status");
+                        if (novoStatus == null) {
+                                return ResponseEntity.badRequest().body(java.util.Map.of("error", "Status é obrigatório"));
+                        }
+                        
+                        System.out.println("Novo status: " + novoStatus);
+                        br.com.bd_notifica.enums.Status statusEnum = br.com.bd_notifica.enums.Status.valueOf(novoStatus);
+                        Ticket ticketAtualizado = ticketService.updateStatus(id, statusEnum);
+                        
+                        System.out.println("Status atualizado com sucesso!");
+                        return ResponseEntity.ok(java.util.Map.of(
+                                "message", "Status atualizado com sucesso",
+                                "ticketId", ticketAtualizado.getId(),
+                                "novoStatus", ticketAtualizado.getStatus().name()
+                        ));
+                } catch (IllegalArgumentException e) {
+                        System.out.println("Erro - Status inválido: " + e.getMessage());
+                        return ResponseEntity.badRequest().body(java.util.Map.of("error", "Status inválido: " + dados.get("status")));
+                } catch (Exception e) {
+                        System.out.println("Erro geral: " + e.getMessage());
+                        e.printStackTrace();
+                        return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
+                }
         }
 
         // Atualizar ticket

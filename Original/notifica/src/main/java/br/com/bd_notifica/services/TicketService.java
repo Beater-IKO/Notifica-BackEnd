@@ -79,6 +79,19 @@ public class TicketService {
         return ticketRepository.findByUserIdAndStatus(userId, status);
     }
 
+    // Atualizar apenas o status do ticket
+    public Ticket updateStatus(Integer id, Status novoStatus) {
+        Ticket ticket = findById(id);
+        
+        // Validações de negócio
+        if (ticket.getStatus() == Status.FINALIZADOS) {
+            throw new Unauthorized("Não é possível alterar status de ticket finalizado");
+        }
+        
+        ticket.setStatus(novoStatus);
+        return ticketRepository.save(ticket);
+    }
+
     public Ticket update(Integer id, Ticket ticket) {
         Ticket existingTicket = findById(id);
 

@@ -46,9 +46,14 @@ public class SecurityConfig {
             .requestMatchers("/api/admin/list-users").permitAll()
             .requestMatchers("/api/tickets/public-test").permitAll()
             .requestMatchers("/api/tickets/bypass-test").permitAll()
+            .requestMatchers("/api/tickets/debug-status").permitAll()
 
             // --- ROTAS DE TICKETS - ESTUDANTE tem acesso completo ---
-            .requestMatchers("/api/tickets/**").authenticated()
+            .requestMatchers(HttpMethod.GET, "/api/tickets/**").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/tickets/**").authenticated()
+            .requestMatchers(HttpMethod.PUT, "/api/tickets/**").authenticated()
+            .requestMatchers(HttpMethod.PATCH, "/api/tickets/**").authenticated()
+            .requestMatchers(HttpMethod.DELETE, "/api/tickets/**").authenticated()
             
             // --- ROTAS DE SALAS E CURSOS - ESTUDANTE pode ler ---
             .requestMatchers(HttpMethod.GET, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR", "FUNCIONARIO", "ESTUDANTE")
@@ -83,7 +88,7 @@ public class SecurityConfig {
     // Permite requisições da origem do seu front-end
     configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
     // Permite os métodos HTTP, incluindo o OPTIONS
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     // Permite todos os cabeçalhos
     configuration.setAllowedHeaders(Arrays.asList("*"));
     // Permite o envio de credenciais (cookies, etc.)
