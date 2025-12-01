@@ -20,7 +20,7 @@ import br.com.bd_notifica.services.TicketService;
 
 @RestController
 @RequestMapping("/api/tickets")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class TicketController {
 
         private final TicketService ticketService;
@@ -63,21 +63,20 @@ public class TicketController {
         public ResponseEntity<?> debugStatus() {
                 List<Ticket> allTickets = ticketService.findAll();
                 java.util.Map<String, Integer> statusCount = new java.util.HashMap<>();
-                
+
                 for (Ticket ticket : allTickets) {
                         String status = ticket.getStatus() != null ? ticket.getStatus().name() : "NULL";
                         statusCount.put(status, statusCount.getOrDefault(status, 0) + 1);
                 }
-                
+
                 return ResponseEntity.ok(java.util.Map.of(
-                        "totalTickets", allTickets.size(),
-                        "statusCount", statusCount,
-                        "tickets", allTickets.stream().map(t -> java.util.Map.of(
-                                "id", t.getId(),
-                                "problema", t.getProblema(),
-                                "status", t.getStatus() != null ? t.getStatus().name() : "NULL"
-                        )).toList()
-                ));
+                                "totalTickets", allTickets.size(),
+                                "statusCount", statusCount,
+                                "tickets", allTickets.stream().map(t -> java.util.Map.of(
+                                                "id", t.getId(),
+                                                "problema", t.getProblema(),
+                                                "status", t.getStatus() != null ? t.getStatus().name() : "NULL"))
+                                                .toList()));
         }
 
         // Bypass completo para teste
@@ -94,14 +93,13 @@ public class TicketController {
                 if (auth == null) {
                         return ResponseEntity.ok(java.util.Map.of("error", "Sem autenticação"));
                 }
-                
+
                 br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
                 return ResponseEntity.ok(java.util.Map.of(
-                        "authenticated", true,
-                        "email", user.getEmail(),
-                        "role", user.getRole().name(),
-                        "authorities", user.getAuthorities().toString()
-                ));
+                                "authenticated", true,
+                                "email", user.getEmail(),
+                                "role", user.getRole().name(),
+                                "authorities", user.getAuthorities().toString()));
         }
 
         // Criar ticket na rota principal
@@ -109,23 +107,23 @@ public class TicketController {
         public ResponseEntity<?> create(@RequestBody java.util.Map<String, Object> dados) {
                 System.out.println("=== CONTROLLER CREATE CHAMADO ===");
                 System.out.println("Dados recebidos: " + dados);
-                
+
                 try {
                         Ticket ticket = new Ticket();
                         ticket.setProblema((String) dados.get("problema"));
-                        
+
                         // Tentar pegar descrição ou usar problema como descrição
                         String descricao = (String) dados.get("descricao");
                         if (descricao == null || descricao.isBlank()) {
                                 descricao = (String) dados.get("problema"); // usar problema como descrição
                         }
                         ticket.setDescricao(descricao);
-                        
+
                         String prioridadeStr = (String) dados.get("prioridade");
                         if (prioridadeStr != null) {
                                 ticket.setPrioridade(br.com.bd_notifica.enums.GrauDePrioridade.valueOf(prioridadeStr));
                         }
-                        
+
                         // Tentar pegar salaId ou sala
                         Integer salaId = null;
                         Object salaObj = dados.get("salaId");
@@ -144,14 +142,16 @@ public class TicketController {
                                 sala.setId(salaId);
                                 ticket.setSala(sala);
                         }
-                        
+
                         // Usar usuário autenticado
-                        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+                        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder
+                                        .getContext().getAuthentication();
                         br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
                         ticket.setUser(user);
-                        
+
                         Ticket ticketSalvo = ticketService.save(ticket);
-                        return ResponseEntity.ok(java.util.Map.of("message", "Ticket criado", "id", ticketSalvo.getId()));
+                        return ResponseEntity
+                                        .ok(java.util.Map.of("message", "Ticket criado", "id", ticketSalvo.getId()));
                 } catch (Exception e) {
                         System.out.println("Erro: " + e.getMessage());
                         e.printStackTrace();
@@ -168,24 +168,23 @@ public class TicketController {
                 }
 
                 br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
-                
+
                 // Adicionar debug dos tickets aqui
                 List<Ticket> allTickets = ticketService.findAll();
                 java.util.Map<String, Integer> statusCount = new java.util.HashMap<>();
-                
+
                 for (Ticket ticket : allTickets) {
                         String status = ticket.getStatus() != null ? ticket.getStatus().name() : "NULL";
                         statusCount.put(status, statusCount.getOrDefault(status, 0) + 1);
                 }
-                
+
                 return ResponseEntity.ok(java.util.Map.of(
                                 "message", "Token válido!",
                                 "authenticated", true,
                                 "user", user.getEmail(),
                                 "role", user.getRole().name(),
                                 "totalTickets", allTickets.size(),
-                                "statusCount", statusCount
-                ));
+                                "statusCount", statusCount));
         }
 
         // Criar ticket simplificado para teste
@@ -229,8 +228,6 @@ public class TicketController {
                 }
         }
 
-
-
         // Listar todos os tickets (admin) ou apenas do usuário logado
         @GetMapping("/findAll")
         public ResponseEntity<?> findAll(org.springframework.security.core.Authentication auth) {
@@ -248,37 +245,41 @@ public class TicketController {
 
         // Buscar tickets por status
         @GetMapping("/status/{status}")
-        public ResponseEntity<?> findByStatus(@PathVariable String status, org.springframework.security.core.Authentication auth) {
+        public ResponseEntity<?> findByStatus(@PathVariable String status,
+                        org.springframework.security.core.Authentication auth) {
                 System.out.println("=== GET STATUS CHAMADO ===");
                 System.out.println("Status solicitado: " + status);
-                
+
                 if (auth == null) {
                         System.out.println("ERRO: Authentication é null");
                         return ResponseEntity.status(401).body(java.util.Map.of("error", "Não autenticado"));
                 }
-                
+
                 try {
                         br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
                         System.out.println("Usuário: " + user.getEmail() + " | Role: " + user.getRole());
-                        
+
                         br.com.bd_notifica.enums.Status statusEnum = br.com.bd_notifica.enums.Status.valueOf(status);
                         System.out.println("Status enum: " + statusEnum);
-                        
+
                         List<Ticket> tickets;
                         if (user.getRole() == br.com.bd_notifica.enums.UserRole.ADMIN ||
                                         user.getRole() == br.com.bd_notifica.enums.UserRole.GESTOR) {
                                 tickets = ticketService.findByStatus(statusEnum);
-                                System.out.println("Admin/Gestor - Todos os tickets com status " + status + ": " + tickets.size());
+                                System.out.println("Admin/Gestor - Todos os tickets com status " + status + ": "
+                                                + tickets.size());
                         } else {
                                 tickets = ticketService.findByUserIdAndStatus(user.getId(), statusEnum);
-                                System.out.println("Usuário " + user.getId() + " - Tickets com status " + status + ": " + tickets.size());
+                                System.out.println("Usuário " + user.getId() + " - Tickets com status " + status + ": "
+                                                + tickets.size());
                         }
-                        
+
                         System.out.println("Retornando " + tickets.size() + " tickets");
                         return ResponseEntity.ok(tickets);
                 } catch (IllegalArgumentException e) {
                         System.out.println("Status inválido: " + status);
-                        return ResponseEntity.badRequest().body(java.util.Map.of("error", "Status inválido: " + status));
+                        return ResponseEntity.badRequest()
+                                        .body(java.util.Map.of("error", "Status inválido: " + status));
                 } catch (Exception e) {
                         System.out.println("Erro: " + e.getMessage());
                         e.printStackTrace();
@@ -306,38 +307,42 @@ public class TicketController {
         // Alterar status do ticket
         @PutMapping("/{id}/status")
         @PatchMapping("/{id}/status")
-        public ResponseEntity<?> updateStatus(@PathVariable Integer id, @RequestBody java.util.Map<String, String> dados, org.springframework.security.core.Authentication auth) {
+        public ResponseEntity<?> updateStatus(@PathVariable Integer id,
+                        @RequestBody java.util.Map<String, String> dados,
+                        org.springframework.security.core.Authentication auth) {
                 System.out.println("=== UPDATE STATUS CHAMADO ===");
                 System.out.println("ID: " + id);
                 System.out.println("Dados: " + dados);
-                
+
                 if (auth == null) {
                         System.out.println("ERRO: Authentication é null");
                         return ResponseEntity.status(401).body(java.util.Map.of("error", "Não autenticado"));
                 }
-                
+
                 try {
                         br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
                         System.out.println("Usuário: " + user.getEmail() + " | Role: " + user.getRole());
-                        
+
                         String novoStatus = dados.get("status");
                         if (novoStatus == null) {
-                                return ResponseEntity.badRequest().body(java.util.Map.of("error", "Status é obrigatório"));
+                                return ResponseEntity.badRequest()
+                                                .body(java.util.Map.of("error", "Status é obrigatório"));
                         }
-                        
+
                         System.out.println("Novo status: " + novoStatus);
-                        br.com.bd_notifica.enums.Status statusEnum = br.com.bd_notifica.enums.Status.valueOf(novoStatus);
+                        br.com.bd_notifica.enums.Status statusEnum = br.com.bd_notifica.enums.Status
+                                        .valueOf(novoStatus);
                         Ticket ticketAtualizado = ticketService.updateStatus(id, statusEnum);
-                        
+
                         System.out.println("Status atualizado com sucesso!");
                         return ResponseEntity.ok(java.util.Map.of(
-                                "message", "Status atualizado com sucesso",
-                                "ticketId", ticketAtualizado.getId(),
-                                "novoStatus", ticketAtualizado.getStatus().name()
-                        ));
+                                        "message", "Status atualizado com sucesso",
+                                        "ticketId", ticketAtualizado.getId(),
+                                        "novoStatus", ticketAtualizado.getStatus().name()));
                 } catch (IllegalArgumentException e) {
                         System.out.println("Erro - Status inválido: " + e.getMessage());
-                        return ResponseEntity.badRequest().body(java.util.Map.of("error", "Status inválido: " + dados.get("status")));
+                        return ResponseEntity.badRequest()
+                                        .body(java.util.Map.of("error", "Status inválido: " + dados.get("status")));
                 } catch (Exception e) {
                         System.out.println("Erro geral: " + e.getMessage());
                         e.printStackTrace();
@@ -364,16 +369,17 @@ public class TicketController {
 
         }
 
-        // Listar tickets do usuário logado (rota principal) - DEVE SER O ÚNICO ENDPOINT SEM PATH
+        // Listar tickets do usuário logado (rota principal) - DEVE SER O ÚNICO ENDPOINT
+        // SEM PATH
         @GetMapping
         public ResponseEntity<?> getTickets(org.springframework.security.core.Authentication auth) {
                 System.out.println("=== GET /api/tickets CHAMADO ===");
-                
+
                 if (auth == null) {
                         System.out.println("ERRO: Authentication é null");
                         return ResponseEntity.status(401).body(java.util.Map.of("error", "Não autenticado"));
                 }
-                
+
                 try {
                         br.com.bd_notifica.entities.User user = (br.com.bd_notifica.entities.User) auth.getPrincipal();
                         System.out.println("Usuário autenticado: " + user.getEmail() + " | Role: " + user.getRole());
@@ -385,7 +391,8 @@ public class TicketController {
                                 System.out.println("Admin/Gestor - Buscando todos os tickets: " + tickets.size());
                         } else {
                                 tickets = ticketService.findByUserId(user.getId());
-                                System.out.println("Usuário comum - Buscando tickets do usuário " + user.getId() + ": " + tickets.size());
+                                System.out.println("Usuário comum - Buscando tickets do usuário " + user.getId() + ": "
+                                                + tickets.size());
                         }
                         return ResponseEntity.ok(tickets);
                 } catch (Exception e) {

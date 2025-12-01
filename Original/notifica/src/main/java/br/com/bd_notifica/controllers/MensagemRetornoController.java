@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 // Controller para mensagens de retorno
 @RestController
 @RequestMapping("/api/mensagemretorno")
+@CrossOrigin(origins = "*")
 public class MensagemRetornoController {
 
     private final MensagemRetornoService mensagemRetornoService;

@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 // Controller para gestão de materiais
 @RestController
 @RequestMapping("/api/materiais")
+@CrossOrigin(origins = "*")
 public class MaterialController {
 
     private final MaterialService materialService;

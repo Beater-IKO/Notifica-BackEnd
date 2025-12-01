@@ -1,6 +1,7 @@
 package br.com.bd_notifica.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 // Nome explícito do bean para evitar conflito com br.com.bd_notifica.controllers.DebugController
 @RestController("debugControllerAlt")
+@CrossOrigin(origins = "*")
 public class DebugController {
 
     @GetMapping("/api/debug/token")

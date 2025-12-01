@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 // API para requisições de materiais
 @RestController
 @RequestMapping("/api/protocolos")
+@CrossOrigin(origins = "*")
 public class ProtocoloController {
 
     private final ProtocoloService protocoloService;

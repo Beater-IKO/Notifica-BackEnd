@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class AutenticacaoController {
 
     private static final Logger logger = Logger.getLogger(AutenticacaoController.class.getName());
@@ -36,28 +36,27 @@ public class AutenticacaoController {
         logger.info("=== LOGIN ATTEMPT ===");
         logger.info("Email: " + dados.email());
         logger.info("Senha fornecida: " + (dados.senha() != null ? "[PRESENTE]" : "[AUSENTE]"));
-        
+
         try {
             var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
             logger.info("AuthenticationToken criado");
-            
+
             var authentication = manager.authenticate(authenticationToken);
             logger.info("Autenticação bem-sucedida!");
 
             User user = (User) authentication.getPrincipal();
             logger.info("Usuário autenticado: " + user.getEmail() + " | Role: " + user.getRole());
-            
+
             var tokenJWT = tokenService.gerarToken(user);
             logger.info("Token JWT gerado com sucesso");
 
             // Retornando dados completos do usuário
             var response = Map.of(
-                "token", tokenJWT,
-                "id", user.getId(),
-                "nome", user.getNome(),
-                "email", user.getEmail(),
-                "role", user.getRole().name()
-            );
+                    "token", tokenJWT,
+                    "id", user.getId(),
+                    "nome", user.getNome(),
+                    "email", user.getEmail(),
+                    "role", user.getRole().name());
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -73,7 +72,8 @@ public class AutenticacaoController {
             user.setRole(br.com.bd_notifica.enums.UserRole.ESTUDANTE);
         }
         User savedUser = userService.save(user);
-        return ResponseEntity.status(201).body(Map.of("message", "Usuário criado com sucesso", "id", savedUser.getId()));
+        return ResponseEntity.status(201)
+                .body(Map.of("message", "Usuário criado com sucesso", "id", savedUser.getId()));
     }
 
     @PostMapping("/fix-duplicates")
@@ -89,27 +89,24 @@ public class AutenticacaoController {
     @GetMapping("/test-public")
     public ResponseEntity<?> testPublic() {
         return ResponseEntity.ok(Map.of(
-            "message", "Endpoint público funcionando",
-            "timestamp", java.time.LocalDateTime.now().toString()
-        ));
+                "message", "Endpoint público funcionando",
+                "timestamp", java.time.LocalDateTime.now().toString()));
     }
 
     @PostMapping("/fix-sala")
     public ResponseEntity<?> fixSala() {
         return ResponseEntity.ok(Map.of(
-            "message", "Sala padrão criada",
-            "info", "Execute este endpoint se houver erro de sala_id = 0"
-        ));
+                "message", "Sala padrão criada",
+                "info", "Execute este endpoint se houver erro de sala_id = 0"));
     }
 
     @GetMapping("/check-tickets")
     public ResponseEntity<?> checkTickets() {
         try {
             return ResponseEntity.ok(Map.of(
-                "message", "Verificando tickets...",
-                "availableStatus", java.util.Arrays.asList("VISTO", "INICIADO", "EM_ANDAMENTO", "FINALIZADOS"),
-                "problema", "Tickets podem ter sala_id = 0 que não existe"
-            ));
+                    "message", "Verificando tickets...",
+                    "availableStatus", java.util.Arrays.asList("VISTO", "INICIADO", "EM_ANDAMENTO", "FINALIZADOS"),
+                    "problema", "Tickets podem ter sala_id = 0 que não existe"));
         } catch (Exception e) {
             return ResponseEntity.ok(Map.of("error", e.getMessage()));
         }

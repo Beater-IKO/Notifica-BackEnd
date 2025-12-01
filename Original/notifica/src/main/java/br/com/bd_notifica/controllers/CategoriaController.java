@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 // Controller para categorias de tickets
 @RestController
 @RequestMapping("/categorias")
+@CrossOrigin(origins = "*")
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
