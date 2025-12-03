@@ -39,44 +39,14 @@ public class SecurityConfig {
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
-            // --- ROTAS PÚBLICAS (Login/Registro) ---
+            // LIBERAR OPTIONS PARA CORS PREFLIGHT
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            // ROTAS PÚBLICAS
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/debug/**").permitAll()
-            .requestMatchers("/api/admin/clear-users").permitAll()
-            .requestMatchers("/api/admin/list-users").permitAll()
-            .requestMatchers("/api/tickets/public-test").permitAll()
-            .requestMatchers("/api/tickets/bypass-test").permitAll()
-            .requestMatchers("/api/tickets/debug-status").permitAll()
-
-            // --- ROTAS DE TICKETS - ESTUDANTE tem acesso completo ---
-            .requestMatchers(HttpMethod.GET, "/api/tickets/**").authenticated()
-            .requestMatchers(HttpMethod.POST, "/api/tickets/**").authenticated()
-            .requestMatchers(HttpMethod.PUT, "/api/tickets/**").authenticated()
-            .requestMatchers(HttpMethod.PATCH, "/api/tickets/**").authenticated()
-            .requestMatchers(HttpMethod.DELETE, "/api/tickets/**").authenticated()
-            
-            // --- ROTAS DE SALAS E CURSOS - ESTUDANTE pode ler ---
-            .requestMatchers(HttpMethod.GET, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR", "FUNCIONARIO", "ESTUDANTE")
-            .requestMatchers(HttpMethod.POST, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
-            .requestMatchers(HttpMethod.PUT, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
-            .requestMatchers(HttpMethod.DELETE, "/api/salas/**").hasAnyRole("ADMIN", "GESTOR")
-            
-            .requestMatchers(HttpMethod.GET, "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR", "FUNCIONARIO", "ESTUDANTE")
-            .requestMatchers(HttpMethod.POST, "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
-            .requestMatchers(HttpMethod.PUT, "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR", "PROFESSOR")
-            .requestMatchers(HttpMethod.DELETE, "/api/cursos/**").hasAnyRole("ADMIN", "GESTOR")
-
-            // --- ROTAS DE USUÁRIOS (Manter restrição básica de Admin) ---
-            .requestMatchers(HttpMethod.POST, "/api/usuarios/save").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
-            // Para garantir leitura, vamos liberar para autenticados também caso dê erro
-            .requestMatchers(HttpMethod.GET, "/api/usuarios/**").authenticated()
-            .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").authenticated()
-
-            // --- ROTAS DE SUPORTE ---
-            .requestMatchers("/api/suporte/**").authenticated()
-
-            // --- QUALQUER OUTRA ROTA ---
+            .requestMatchers("/api/admin/**").permitAll()
+            .requestMatchers("/error").permitAll()
+            // TODAS AS OUTRAS ROTAS REQUEREM AUTENTICAÇÃO
             .anyRequest().authenticated())
         .addFilterBefore(securityTokenFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
@@ -85,20 +55,19 @@ public class SecurityConfig {
 @Bean
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    // Origens permitidas
-    configuration.setAllowedOrigins(Arrays.asList(
-        "http://localhost:4200",
-        "http://localhost:8080",
-        "http://localhost:57247",
-        "http://localhost:60058"
-    ));
-    // Métodos HTTP permitidos
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-    // Todos os cabeçalhos permitidos
+    
+    // A MÁGICA: Use setAllowedOriginPatterns("*") com allowCredentials(true)
+    configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+    
+    // Libera todos os métodos (inclusive OPTIONS)
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
+    
+    // Libera todos os headers (Authorization, x-auth-token, etc)
     configuration.setAllowedHeaders(Arrays.asList("*"));
-    // Permite enviar credenciais (cookies, auth headers, etc)
+    
+    // Permite credenciais (cookies, headers de auth)
     configuration.setAllowCredentials(true);
-
+    
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;

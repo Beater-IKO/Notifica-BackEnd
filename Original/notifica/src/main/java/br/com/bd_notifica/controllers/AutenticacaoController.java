@@ -68,12 +68,27 @@ public class AutenticacaoController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registrar(@Valid @RequestBody User user) {
-        if (user.getRole() == null) {
-            user.setRole(br.com.bd_notifica.enums.UserRole.ESTUDANTE);
+        logger.info("=== REGISTER ATTEMPT ===");
+        logger.info("Nome: " + user.getNome());
+        logger.info("Email: " + user.getEmail());
+        logger.info("Role: " + user.getRole());
+        
+        try {
+            if (user.getRole() == null) {
+                user.setRole(br.com.bd_notifica.enums.UserRole.ESTUDANTE);
+                logger.info("Role definido como ESTUDANTE");
+            }
+            
+            User savedUser = userService.save(user);
+            logger.info("Usuário salvo com sucesso - ID: " + savedUser.getId());
+            
+            return ResponseEntity.status(201)
+                    .body(Map.of("message", "Usuário criado com sucesso", "id", savedUser.getId()));
+        } catch (Exception e) {
+            logger.severe("Erro no registro: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
         }
-        User savedUser = userService.save(user);
-        return ResponseEntity.status(201)
-                .body(Map.of("message", "Usuário criado com sucesso", "id", savedUser.getId()));
     }
 
     @PostMapping("/fix-duplicates")
@@ -110,5 +125,28 @@ public class AutenticacaoController {
         } catch (Exception e) {
             return ResponseEntity.ok(Map.of("error", e.getMessage()));
         }
+    }
+
+    @PostMapping("/test-register")
+    public ResponseEntity<?> testRegister(@RequestBody Map<String, Object> data) {
+        logger.info("=== TEST REGISTER ENDPOINT ===");
+        logger.info("Dados recebidos: " + data);
+        return ResponseEntity.ok(Map.of(
+                "message", "Endpoint de registro está funcionando",
+                "received", data,
+                "timestamp", java.time.LocalDateTime.now().toString()));
+    }
+
+    @GetMapping("/test-token")
+    public ResponseEntity<?> testToken(jakarta.servlet.http.HttpServletRequest request) {
+        logger.info("=== TEST TOKEN ENDPOINT ===");
+        String authHeader = request.getHeader("Authorization");
+        logger.info("Authorization header: " + (authHeader != null ? authHeader : "[AUSENTE]"));
+        
+        return ResponseEntity.ok(Map.of(
+                "message", "Teste de token",
+                "authHeader", authHeader != null ? authHeader : "AUSENTE",
+                "hasBearer", authHeader != null && authHeader.startsWith("Bearer "),
+                "timestamp", java.time.LocalDateTime.now().toString()));
     }
 }

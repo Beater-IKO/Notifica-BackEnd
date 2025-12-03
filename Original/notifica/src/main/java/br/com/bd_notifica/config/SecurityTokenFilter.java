@@ -44,7 +44,7 @@ public class SecurityTokenFilter extends OncePerRequestFilter {
         }
         
         // Pular rotas públicas
-        if (uri.contains("/api/auth/") || uri.contains("/api/tickets/public-test") || uri.contains("/api/debug/")) {
+        if (uri.startsWith("/api/auth/") || uri.contains("/api/tickets/public-test") || uri.contains("/api/debug/") || uri.contains("/api/admin/")) {
             logger.info("Rota pública detectada, pulando validação de token");
             filterChain.doFilter(request, response);
             return;
